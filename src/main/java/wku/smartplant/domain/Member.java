@@ -4,8 +4,6 @@ package wku.smartplant.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.Array;
-import org.hibernate.annotations.CollectionId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -18,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Getter
-public class Member {
+public class Member extends BaseTimeEntity {
     @Id @GeneratedValue
     @Column(name = "member_id")
     private Long id;
@@ -33,8 +31,4 @@ public class Member {
     @Embedded
     private Address Address;
 
-    @CreatedDate
-    private LocalDateTime createdDate;
-    @LastModifiedDate
-    private LocalDateTime modifiedDate;
 }

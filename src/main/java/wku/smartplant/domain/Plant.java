@@ -15,13 +15,13 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @RequiredArgsConstructor
 @Getter
-public class Plant {
+public class Plant extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "plant_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -32,10 +32,5 @@ public class Plant {
 
     @OneToMany(mappedBy = "plant")
     private List<PlantHistory> plantHistory = new ArrayList<>();
-
-    @CreatedDate
-    private LocalDateTime createdDate;
-    @LastModifiedDate
-    private LocalDateTime modifiedDate;
 
 }
