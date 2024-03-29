@@ -29,7 +29,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal (HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        System.out.println("dofilter 실행");
 
         if (authorizationHeader == null) {
             filterChain.doFilter(request, response);
@@ -67,7 +66,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         // loginMember 로 UsernamePasswordAuthenticationToken 발급
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                loginMember.getId(), null, List.of(new SimpleGrantedAuthority(loginMember.getRole()))
+                memberId, null, List.of(new SimpleGrantedAuthority(loginMember.getRole()))
         );
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

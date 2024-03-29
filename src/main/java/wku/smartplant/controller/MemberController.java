@@ -4,11 +4,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import wku.smartplant.config.SecurityUtil;
 import wku.smartplant.domain.Member;
 import wku.smartplant.dto.member.MemberJoinRequest;
 import wku.smartplant.dto.ResponseDTO;
@@ -35,15 +35,15 @@ public class MemberController {
                     .collect(Collectors.joining(" / "));
             return new ResponseEntity<>(ResponseDTO.builder()
                     .statusCode(HttpStatus.BAD_REQUEST)
-                    .resultMsg(errorMessage)
+                    .message(errorMessage)
                     .build(), HttpStatus.BAD_REQUEST);
         }
 
         Member joinedMember = memberService.joinMember(memberJoinRequest);
         return new ResponseEntity<>(ResponseDTO.builder()
                 .statusCode(HttpStatus.OK)
-                .resultMsg("가입 성공")
-                .resultData(joinedMember)
+                .message("가입 성공")
+                .content(joinedMember)
                 .build(),HttpStatus.OK);
     }
 
@@ -53,14 +53,22 @@ public class MemberController {
 
         if (memberLoginResponse.getToken() == null) {
             return new ResponseEntity<>(ResponseDTO.builder()
-                    .resultMsg("이메일 또는 패스워드가 불일치 합니다.").build(), HttpStatus.BAD_REQUEST);
+                    .message("이메일 또는 패스워드가 불일치 합니다.").build(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(ResponseDTO.builder()
-                .resultMsg("로그인 성공.")
-                .resultData(memberLoginResponse).build(), HttpStatus.OK);
+                .message("로그인 성공.")
+                .content(memberLoginResponse).build(), HttpStatus.OK);
     }
 
     @PostMapping("/test")
+    @Transactional
+    public String test() {
+        System.out.println("현재 멤버 아디: " + SecurityUtil.getCurrentMemberId());
+        Long loginMemberId = SecurityUtil.getCurrentMemberId();
+        return loginMemberId.toString();
+    }
+
+    /*@PostMapping("/test")
     public Member test() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
@@ -71,6 +79,9 @@ public class MemberController {
             return memberService.findMemberById(memberId);
         }
         return new Member();
-    }
+    }*/
+
+
+
 
 }

@@ -22,7 +22,7 @@ class SmartPlantApplicationTests {
 	void test(){
 		ResponseDTO reponseDTO = ResponseDTO.builder()
 				.statusCode(HttpStatus.ACCEPTED)
-				.resultMsg("성공").build();
+				.message("성공").build();
 	}
 
 }

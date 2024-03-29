@@ -37,7 +37,7 @@ public class MemberService {
                     .build();
         }
 
-        String token = JwtTokenUtil.createToken(findMember.getId().toString(),  10000);
+        String token = JwtTokenUtil.createToken(findMember.getId().toString(),  1000000);
 
         return MemberLoginResponse.builder()
                 .email(findMember.getEmail())
@@ -50,4 +50,5 @@ public class MemberService {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다."));
     }
+
 }

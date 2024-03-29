@@ -14,6 +14,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor()
 @EntityListeners(AuditingEntityListener.class)
+@ToString(exclude = {"id","username","email","password","role","address"})
 @Getter
 public class Member extends BaseTimeEntity {
     @Id @GeneratedValue
@@ -29,7 +30,7 @@ public class Member extends BaseTimeEntity {
     private String role;
 
     @Embedded
-    private Address Address;
+    private Address address;
 
     @Builder
     public Member(String username, String email, String password, Address address) {
@@ -39,6 +40,6 @@ public class Member extends BaseTimeEntity {
         this.email = email;
         this.password = password;
         this.role = "USER";
-        this.Address = address;
+        this.address = address;
     }
 }
