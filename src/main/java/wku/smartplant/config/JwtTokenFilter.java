@@ -44,10 +44,19 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String token = authorizationHeader.split(" ")[1];
         System.out.println("token = " + token);
 
-        if (JwtTokenUtil.isExpired(token)) {
-            filterChain.doFilter(request, response);
+        try {
+            if (JwtTokenUtil.isExpired(token)) {
+            }
+
+        } catch (JwtTokenUtil.TokenValidationException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 코드 설정
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"error\": \"" + e.getMessage() + "\"}");
             return;
         }
+
+
 
         //jwt token에서 memberId 추출
         String memberIdStr = JwtTokenUtil.getMemberId(token);

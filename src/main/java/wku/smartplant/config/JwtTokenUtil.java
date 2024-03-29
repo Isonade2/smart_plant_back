@@ -49,23 +49,15 @@ public class JwtTokenUtil {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
-            // 토큰이 만료된 경우의 예외 처리
-            throw new RuntimeException("Token expired");
-        } catch (UnsupportedJwtException e) {
-            // 지원되지 않는 JWT 형식인 경우의 예외 처리
-            throw new RuntimeException("Unsupported JWT token");
-        } catch (MalformedJwtException e) {
-            // 구조적으로 잘못된 JWT인 경우의 예외 처리
-            throw new RuntimeException("Invalid JWT token");
-        } catch (SignatureException e) {
-            // JWT 서명 검증 실패의 예외 처리
-            throw new RuntimeException("Invalid JWT signature");
-        } catch (IllegalArgumentException e) {
-            // 비정상적인 인자 (예: null 또는 빈 토큰)의 예외 처리
-            throw new RuntimeException("Token is blank or null");
+            throw new TokenValidationException("Token expired");
         } catch (JwtException e) {
-            // 그 외 JWT 처리 중 발생하는 예외 처리
-            throw new RuntimeException("Error in JWT processing: " + e.getMessage());
+            throw new TokenValidationException("Error in JWT processing: " + e.getMessage());
+        }
+    }
+
+    public static class TokenValidationException extends RuntimeException {
+        public TokenValidationException(String message) {
+            super(message);
         }
     }
 }

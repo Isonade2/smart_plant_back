@@ -13,6 +13,7 @@ class SmartPlantApplicationTests {
 	@Autowired
 	private EntityManager em;
 
+
 	@Test
 	void contextLoads() {
 	}

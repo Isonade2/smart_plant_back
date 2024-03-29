@@ -1,4 +1,4 @@
-package wku.smartplant.controller;
+package wku.smartplant;
 
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.persistence.EntityNotFoundException;
