@@ -62,11 +62,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         Long memberId = Long.parseLong(memberIdStr);
 
-        Member loginMember = memberService.findMemberById(memberId);
+//        Member loginMember = memberService.findMemberById(memberId);
 
         // loginMember 로 UsernamePasswordAuthenticationToken 발급
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                memberId, null, List.of(new SimpleGrantedAuthority(loginMember.getRole()))
+                memberId, null, List.of(new SimpleGrantedAuthority("USER"))
         );
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

@@ -19,5 +19,11 @@ public class ArduinoController {
         return "ok";
     }
 
+    @GetMapping("/admin/test")
+    public String test() {
+        return "ok";
+    }
+
+
 
 }
