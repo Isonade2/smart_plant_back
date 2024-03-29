@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor()
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 public class Member extends BaseTimeEntity {

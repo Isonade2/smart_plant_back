@@ -1,5 +1,6 @@
 package wku.smartplant.config;
 
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +22,6 @@ import java.util.List;
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final MemberService memberService;
-    private final String secretKey;
 
     @Override
     protected void doFilterInternal (HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -38,14 +38,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
         String token = authorizationHeader.split(" ")[1];
+        System.out.println("token = " + token);
 
-        if (JwtTokenUtil.isExpired(token,secretKey)) {
+        if (JwtTokenUtil.isExpired(token)) {
             filterChain.doFilter(request, response);
             return;
         }
 
         //jwt token에서 memberId 추출
-        String memberIdStr = JwtTokenUtil.getMemberId(token, secretKey);
+        String memberIdStr = JwtTokenUtil.getMemberId(token);
 
         Long memberId = Long.parseLong(memberIdStr);
 

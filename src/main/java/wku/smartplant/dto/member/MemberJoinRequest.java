@@ -1,4 +1,4 @@
-package wku.smartplant.dto;
+package wku.smartplant.dto.member;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -7,7 +7,7 @@ import lombok.Setter;
 import wku.smartplant.domain.Member;
 
 @Getter @Setter
-public class MemberJoinDto {
+public class MemberJoinRequest {
 
     @NotBlank(message = "회원 이름은 필수 입력값입니다.")
     private String username;

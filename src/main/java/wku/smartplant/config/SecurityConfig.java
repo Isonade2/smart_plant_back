@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,19 +20,22 @@ import wku.smartplant.service.MemberService;
 public class SecurityConfig {
 
     private final MemberService memberService;
-    @Value("${jwt.secret")
-    private String secretKey;
+//    @Value("${jwt.secret}")
+//    private String secretKey;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(new JwtTokenFilter(memberService, secretKey), UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests()
-                .requestMatchers("/user/join","/user/login").permitAll() // join, login은 언제나 가능
-                .requestMatchers("/**").authenticated() //인증된 사용자 인지 확인
-                .requestMatchers("/jwt-login/admin/**").hasAuthority("ADMIN")
-                .and().build();
+                .authorizeHttpRequests(
+                        requests -> {
+                            requests.requestMatchers("/member/login","/member/join").permitAll(); // join, login은 언제나 가능
+                            requests.requestMatchers(HttpMethod.POST,"/member/**").authenticated(); //인증된 사용자 인지 확인
+                            //requests.requestMatchers("/jwt-login/admin/**").hasAuthority("ADMIN");
+                        }
+                )
+                .addFilterBefore(new JwtTokenFilter(memberService), UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean
