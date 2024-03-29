@@ -16,7 +16,7 @@ public class PlantHistory extends BaseTimeEntity {
     @Column(name = "plantHistory_id")
     private Long id;
 
-    private Double temperature; //온도
+    private Double temp; //온도
     private Double humidity; //습도
     private Double water;  // 물 용량
     private Double light; // 조도
