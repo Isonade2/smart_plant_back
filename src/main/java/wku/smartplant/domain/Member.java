@@ -2,8 +2,7 @@ package wku.smartplant.domain;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 public class Member extends BaseTimeEntity {
@@ -27,8 +26,19 @@ public class Member extends BaseTimeEntity {
     private String username;
     private String email;
     private String password;
+    private String role;
 
     @Embedded
     private Address Address;
 
+    @Builder
+    public Member(String username, String email, String password, Address address) {
+        this.id = null;
+        this.plants = null;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = "USER";
+        this.Address = address;
+    }
 }
