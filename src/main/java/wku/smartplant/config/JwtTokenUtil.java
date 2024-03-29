@@ -1,12 +1,11 @@
 package wku.smartplant.config;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.MalformedInputException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,10 +42,30 @@ public class JwtTokenUtil {
 
     // token 파싱
     private static Claims extractClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts.parser()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            // 토큰이 만료된 경우의 예외 처리
+            throw new RuntimeException("Token expired");
+        } catch (UnsupportedJwtException e) {
+            // 지원되지 않는 JWT 형식인 경우의 예외 처리
+            throw new RuntimeException("Unsupported JWT token");
+        } catch (MalformedJwtException e) {
+            // 구조적으로 잘못된 JWT인 경우의 예외 처리
+            throw new RuntimeException("Invalid JWT token");
+        } catch (SignatureException e) {
+            // JWT 서명 검증 실패의 예외 처리
+            throw new RuntimeException("Invalid JWT signature");
+        } catch (IllegalArgumentException e) {
+            // 비정상적인 인자 (예: null 또는 빈 토큰)의 예외 처리
+            throw new RuntimeException("Token is blank or null");
+        } catch (JwtException e) {
+            // 그 외 JWT 처리 중 발생하는 예외 처리
+            throw new RuntimeException("Error in JWT processing: " + e.getMessage());
+        }
     }
 }
