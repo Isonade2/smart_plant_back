@@ -28,11 +28,14 @@ public class Member extends BaseTimeEntity {
     private String password;
     private String role;
 
+    @Enumerated(EnumType.STRING)
+    private MemberType memberType;
+
     @Embedded
     private Address Address;
 
     @Builder
-    public Member(String username, String email, String password, Address address) {
+    public Member(String username, String email, String password, Address address, MemberType memberType) {
         this.id = null;
         this.plants = null;
         this.username = username;
@@ -40,5 +43,6 @@ public class Member extends BaseTimeEntity {
         this.password = password;
         this.role = "USER";
         this.Address = address;
+        this.memberType = memberType;
     }
 }
