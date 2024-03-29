@@ -19,8 +19,13 @@ public class ArduinoController {
         return "ok";
     }
 
-    @GetMapping("/admin/test")
-    public String test() {
+    @GetMapping("/status/{uuid}")
+    public String getStatus(@PathVariable("uuid") String uuid,
+                            @RequestParam("temp") Double temp,
+                            @RequestParam("humidity") Double humidity,
+                            @RequestParam("water") Double water,
+                            @RequestParam("light") Double light) {
+        //checkStatus(temp, humidity, water, light);
         return "ok";
     }
 
