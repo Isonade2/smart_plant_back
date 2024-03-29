@@ -1,6 +1,7 @@
 package wku.smartplant.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -21,6 +22,7 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_id")
     private Long id;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Plant> plants = new ArrayList<>();
 

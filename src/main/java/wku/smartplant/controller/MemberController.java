@@ -60,6 +60,12 @@ public class MemberController {
                 .content(memberLoginResponse).build(), HttpStatus.OK);
     }
 
+    @GetMapping("/{memberId}")
+    public Member findMember(@PathVariable Long memberId) {
+        Member findMember = memberService.findMemberById(memberId);
+        return findMember;
+    }
+
     @PostMapping("/test")
     @Transactional
     public String test() {
