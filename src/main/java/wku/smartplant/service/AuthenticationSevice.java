@@ -1,7 +1,7 @@
 package wku.smartplant.service;
 
 import org.springframework.stereotype.Service;
-import wku.smartplant.config.SecurityUtil;
+import wku.smartplant.jwt.SecurityUtil;
 @Service
 public class AuthenticationSevice {
     //로그인 여부 확인

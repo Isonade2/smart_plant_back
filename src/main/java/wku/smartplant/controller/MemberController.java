@@ -2,13 +2,12 @@ package wku.smartplant.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import wku.smartplant.config.SecurityUtil;
+import wku.smartplant.jwt.SecurityUtil;
 import wku.smartplant.domain.Member;
 import wku.smartplant.dto.member.MemberJoinRequest;
 import wku.smartplant.dto.ResponseDTO;
@@ -19,6 +18,9 @@ import wku.smartplant.service.MemberService;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.http.HttpStatus.*;
+import static wku.smartplant.dto.ResponseEntityBuilder.*;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/member")
@@ -28,21 +30,16 @@ public class MemberController {
 
     @PostMapping("/join")
     public ResponseEntity<ResponseDTO<?>> join(@Valid @RequestBody MemberJoinRequest memberJoinRequest, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) { //정규식 체크
             List<FieldError> errorList = bindingResult.getFieldErrors();
             String errorMessage = errorList.stream()
                     .map(FieldError::getDefaultMessage)
-                    .collect(Collectors.joining(" / "));
-            return new ResponseEntity<>(ResponseDTO.builder()
-                    .message(errorMessage)
-                    .build(), HttpStatus.BAD_REQUEST);
+                    .collect(Collectors.joining(", "));
+            return build(errorMessage, BAD_REQUEST);
         }
 
         Member joinedMember = memberService.joinMember(memberJoinRequest);
-        return new ResponseEntity<>(ResponseDTO.builder()
-                .message("가입 성공")
-                .content(joinedMember)
-                .build(),HttpStatus.OK);
+        return build("가입 성공", OK, joinedMember);
     }
 
     @PostMapping("/login")
@@ -50,12 +47,9 @@ public class MemberController {
         MemberLoginResponse memberLoginResponse = memberService.loginMember(memberLoginRequest);
 
         if (memberLoginResponse.getToken() == null) {
-            return new ResponseEntity<>(ResponseDTO.builder()
-                    .message("이메일 또는 패스워드가 불일치 합니다.").build(), HttpStatus.BAD_REQUEST);
+            return build("이메일 또는 패스워드가 불일치 합니다.", BAD_REQUEST);
         }
-        return new ResponseEntity<>(ResponseDTO.builder()
-                .message("로그인 성공.")
-                .content(memberLoginResponse).build(), HttpStatus.OK);
+        return build("로그인 성공.", OK, memberLoginResponse);
     }
 
     @GetMapping("/{memberId}")

@@ -11,4 +11,8 @@ import org.springframework.http.HttpStatus;
 public class ResponseDTO<T> {
     private String message;
     private T content;
+
+    public ResponseDTO(String message) {
+        this.message = message;
+    }
 }

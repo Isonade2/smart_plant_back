@@ -6,12 +6,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import wku.smartplant.config.JwtTokenUtil;
+import wku.smartplant.jwt.JwtTokenUtil;
 import wku.smartplant.domain.Member;
 import wku.smartplant.dto.member.MemberJoinRequest;
 import wku.smartplant.dto.member.MemberLoginRequest;
 import wku.smartplant.dto.member.MemberLoginResponse;
+import wku.smartplant.exception.EmailAlreadyExistsException;
 import wku.smartplant.repository.MemberRepository;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +27,11 @@ public class MemberService {
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Transactional
     public Member joinMember(MemberJoinRequest memberJoinRequest) {
+        Optional<Member> findMember = memberRepository.findByEmail(memberJoinRequest.getEmail());
+        if(findMember.isPresent()) {
+            throw new EmailAlreadyExistsException("이미 등록된 이메일입니다: " + memberJoinRequest.getEmail());
+        }
+
         memberJoinRequest.setPassword(passwordEncoder.encode(memberJoinRequest.getPassword()));
         return memberRepository.save(memberJoinRequest.toEntity());
     }

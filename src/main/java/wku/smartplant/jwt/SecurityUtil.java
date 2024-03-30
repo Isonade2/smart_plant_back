@@ -1,4 +1,4 @@
-package wku.smartplant.config;
+package wku.smartplant.jwt;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

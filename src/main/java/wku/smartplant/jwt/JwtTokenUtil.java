@@ -1,4 +1,4 @@
-package wku.smartplant.config;
+package wku.smartplant.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
