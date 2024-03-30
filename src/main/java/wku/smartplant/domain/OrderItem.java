@@ -28,7 +28,25 @@ public class OrderItem {
 
     @Builder
     public OrderItem(Order order, Item item, int orderPrice, int count){
+        this.order = order;
+        this.item = item;
         this.orderPrice = orderPrice;
         this.count = count;
+    }
+
+    public OrderItem(Item item, int orderPrice, int count){
+        this.item = item;
+        this.orderPrice = orderPrice;
+        this.count = count;
+    }
+
+    public void changeOrder(Order order){
+        this.order = order;
+    }
+
+    public static OrderItem createOrderItem(Item item, int orderPrice, int count){
+        OrderItem orderItem = new OrderItem(item, orderPrice, count);
+        item.removeStock(count);
+        return orderItem;
     }
 }
