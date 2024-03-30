@@ -21,7 +21,6 @@ class SmartPlantApplicationTests {
 	@Test
 	void test(){
 		ResponseDTO reponseDTO = ResponseDTO.builder()
-				.statusCode(HttpStatus.ACCEPTED)
 				.message("성공").build();
 	}
 

@@ -34,14 +34,12 @@ public class MemberController {
                     .map(FieldError::getDefaultMessage)
                     .collect(Collectors.joining(" / "));
             return new ResponseEntity<>(ResponseDTO.builder()
-                    .statusCode(HttpStatus.BAD_REQUEST)
                     .message(errorMessage)
                     .build(), HttpStatus.BAD_REQUEST);
         }
 
         Member joinedMember = memberService.joinMember(memberJoinRequest);
         return new ResponseEntity<>(ResponseDTO.builder()
-                .statusCode(HttpStatus.OK)
                 .message("가입 성공")
                 .content(joinedMember)
                 .build(),HttpStatus.OK);
