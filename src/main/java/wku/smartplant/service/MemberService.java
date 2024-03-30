@@ -45,7 +45,7 @@ public class MemberService {
                     .build();
         }
 
-        String token = JwtTokenUtil.createToken(findMember.getId().toString(),  20000);
+        String token = JwtTokenUtil.createToken(findMember.getId().toString(),  1000000);
 
         return MemberLoginResponse.builder()
                 .email(findMember.getEmail())
