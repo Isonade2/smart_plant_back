@@ -32,8 +32,9 @@ public class SecurityConfig {
                         requests -> {
                             requests.requestMatchers("/member/login","/member/join").permitAll(); // join, login은 언제나 가능
                             requests.requestMatchers(HttpMethod.GET,"/arduino/admin/**").hasAuthority("ADMIN");
-                            requests.requestMatchers(HttpMethod.POST,"/member/**").authenticated(); //인증된 사용자 인지 확인
+                            //requests.requestMatchers(HttpMethod.POST,"/member/**").authenticated(); //인증된 사용자 인지 확인
                             requests.requestMatchers("/arduino/**").authenticated(); //인증된 사용자 인지 확인
+                            requests.anyRequest().permitAll();
 
                         }
                 )

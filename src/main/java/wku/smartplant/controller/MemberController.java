@@ -58,12 +58,18 @@ public class MemberController {
         return findMember;
     }
 
-    @PostMapping("/test")
-    @Transactional
+    @GetMapping("/test")
     public String test() {
         System.out.println("현재 멤버 아디: " + SecurityUtil.getCurrentMemberId());
         Long loginMemberId = SecurityUtil.getCurrentMemberId();
         return loginMemberId.toString();
+    }
+
+    @GetMapping("/test2")
+    public String test2() {
+//        System.out.println("현재 멤버 아디: " + SecurityUtil.getCurrentMemberId());
+//        Long loginMemberId = SecurityUtil.getCurrentMemberId();
+        return "ok";
     }
 
     /*@PostMapping("/test")

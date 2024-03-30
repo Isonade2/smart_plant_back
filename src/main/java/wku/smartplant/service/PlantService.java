@@ -17,7 +17,7 @@ public class PlantService {
     private final PlantRepository plantRepository;
     private final PlantHistoryRepository plantHistoryRepository;
 
-    public Long join(Plant plant){
+    public Long createPlant(Plant plant){
         plantRepository.save(plant);
         return plant.getId();
     }
