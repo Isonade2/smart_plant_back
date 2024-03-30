@@ -19,8 +19,9 @@ public class Order {
     @JoinColumn(name = "plant_id")
     private Plant plant;
 
-//    private PaymentMethod paymentMethod;
-//    private OrderStatus orderStatus;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
+
     private Address address;
 
 }

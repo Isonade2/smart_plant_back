@@ -16,6 +16,7 @@ public class InitDb {
     @PostConstruct
     public void init(){
         initService.dbInit();
+        initService.dbInit2();
     }
 
     @Component
@@ -43,8 +44,23 @@ public class InitDb {
 
         }
 
-        public void dbInit2(){ // 초기 더미데이터 생성, Order 엔티티
-            
+        public void dbInit2(){ // 초기 더미데이터 생성, Item 엔티티 생성
+            Item item1 = createItem("상추",3000,50);
+            Item item2 = createItem("양파",4000,60);
+            Item item3 = createItem("대파",5000,70);
+
+            em.persist(item1);
+            em.persist(item2);
+            em.persist(item3);
+        }
+
+
+        public static Item createItem(String name, int price, int stockQuantity){
+            return Item.builder()
+                    .name(name)
+                    .price(price)
+                    .stockQuantity(stockQuantity)
+                    .build();
         }
 
         private static Plant createPlant(String name, PlantType plantType, Member member) {

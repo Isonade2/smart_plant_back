@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wku.smartplant.dto.ResponseDTO;
+import wku.smartplant.jwt.SecurityUtil;
 import wku.smartplant.service.AuthenticationSevice;
 import wku.smartplant.service.PlantService;
 
@@ -35,11 +36,12 @@ public class PlantController {
     @PostMapping("/join")
     public ResponseEntity<ResponseDTO<?>> join(){
         log.info("join");
-        try{
-            Long id = authenticationSevice.isLoggedIn();
-        } catch (Exception e){
-            return build(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        }
+        SecurityUtil.getCurrentMemberId();
+        //try{
+        //    Long id = authenticationSevice.isLoggedIn();
+        //} catch (Exception e){
+         //   return build(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        //}
 
         return build("식물 등록 성공", HttpStatus.OK);
     }

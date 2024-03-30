@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import wku.smartplant.exception.EmailAlreadyExistsException;
 import wku.smartplant.service.MemberService;
 
 import java.io.IOException;
@@ -29,7 +30,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         if (authorizationHeader == null) {
             filterChain.doFilter(request, response);
-            System.out.println("헤더 없음");
             return;
         }
 
@@ -41,6 +41,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String token = authorizationHeader.split(" ")[1];
         System.out.println("token = " + token);
 
+
         try {
             if (JwtTokenUtil.isExpired(token)) {
             }
@@ -49,7 +50,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 코드 설정
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("{\"error\": \"" + e.getMessage() + "\"}");
+            response.getWriter().write("{\"message\": \"" + "로그인 정보에 문제가 있습니다. 다시 로그인 해주세요." + "\"}");
             return;
         }
 
