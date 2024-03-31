@@ -2,6 +2,7 @@ package wku.smartplant.dto.member;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter

@@ -47,8 +47,8 @@ public class OrderController {
         if (bindingResult.hasErrors()) {
             return ResponseEntityBuilder.build(bindingResult.getAllErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
-        //Long currentMemberId = SecurityUtil.getCurrentMemberId();
-        Long orderOne = orderService.createOrderOne(1L, orderRequest);
+        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+        Long orderOne = orderService.createOrderOne(currentMemberId, orderRequest);
 
         return ResponseEntityBuilder.build("주문 성공", HttpStatus.OK, orderOne);
     }

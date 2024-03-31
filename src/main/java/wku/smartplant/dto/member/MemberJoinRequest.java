@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import wku.smartplant.domain.Member;
 import wku.smartplant.domain.MemberType;
@@ -23,10 +24,6 @@ public class MemberJoinRequest {
 
     private MemberType memberType;
 
-    public void setMemberType(MemberType memberType) {
-        this.memberType = memberType;
-    }
-
     public MemberJoinRequest(String username, String email, String password) {
         this.username = username;
         this.email = email;
@@ -34,7 +31,6 @@ public class MemberJoinRequest {
         this.memberType = MemberType.LOCAL;
     }
 
-    @Builder
     public Member toEntity() {
         return Member.builder()
                 .username(username)

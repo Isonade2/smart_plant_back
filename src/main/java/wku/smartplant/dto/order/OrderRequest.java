@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
@@ -17,4 +18,6 @@ public class OrderRequest {
     @Max(value = 100, message = "상품의 수량은 100개 이하이어야 합니다.")
     private int count;
 
+    public OrderRequest() {
+    }
 }
