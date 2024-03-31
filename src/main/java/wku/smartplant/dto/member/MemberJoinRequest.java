@@ -34,6 +34,7 @@ public class MemberJoinRequest {
         this.memberType = MemberType.LOCAL;
     }
 
+    @Builder
     public Member toEntity() {
         return Member.builder()
                 .username(username)
