@@ -12,8 +12,6 @@ import wku.smartplant.repository.MemberRepository;
 import wku.smartplant.repository.OrderItemRepository;
 import wku.smartplant.repository.OrderRepository;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -24,6 +22,8 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final OrderItemRepository orderItemRepository;
 
+
+    // 상품 주문 서비스
     public Long createOrderOne(Long memberid, OrderRequest orderRequest) {
         log.info("OrderService.createOrder");
         log.info("orderRequest : {}", orderRequest);
@@ -34,9 +34,16 @@ public class OrderService {
 
         OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), orderRequest.getCount());
         orderItemRepository.save(orderItem);
+
         Order order = new Order(member, OrderStatus.준비, new Address("서울", "강가", "123-123", "1232"));
         order.addOrderItem(orderItem);
         orderRepository.save(order);
+
         return order.getId();
+    }
+
+    public void cancelOrder(Long orderId){
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
+        order.cancel();
     }
 }

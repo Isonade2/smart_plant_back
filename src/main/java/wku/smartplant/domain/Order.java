@@ -60,4 +60,15 @@ public class Order {
     public void changeMember(Member member){
         this.member = member;
     }
+
+    public void cancel(){
+        if (this.orderStatus != OrderStatus.준비){
+            throw new IllegalStateException("이미 배송중이거나 완료된 상품은 취소가 불가능합니다.");
+        }
+
+        this.orderStatus = OrderStatus.취소;
+        for(OrderItem orderItem : orderItems){
+            orderItem.cancel();
+        }
+    }
 }
