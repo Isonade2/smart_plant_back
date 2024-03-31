@@ -1,8 +1,17 @@
 package wku.smartplant.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import wku.smartplant.domain.Member;
+import wku.smartplant.domain.MemberType;
+import wku.smartplant.dto.member.KakaoMemberDTO;
+import wku.smartplant.dto.member.MemberJoinRequest;
+import wku.smartplant.dto.member.MemberLoginRequest;
+import wku.smartplant.dto.member.MemberLoginResponse;
+import wku.smartplant.exception.EmailAlreadyExistsException;
+import wku.smartplant.repository.MemberRepository;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,10 +20,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
-public class KakaoService {
+@RequiredArgsConstructor
+public class KakaoLoginService {
+
+    private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     private static final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
     private static final String KAKAO_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me";
@@ -33,7 +47,29 @@ public class KakaoService {
         return extractTokensAndLog(jsonMap);
     }
 
-    public HashMap<String, Object> getUserInfo(String accessToken) throws IOException {
+
+    public MemberLoginResponse joinOrLoginMember(String accessToken) throws IOException {
+        HashMap<String, Object> userInfo = getUserInfo(accessToken);
+
+        // HashMap에서 필요한 정보를 추출
+        Long id = Long.parseLong(String.valueOf(userInfo.get("id")));
+        String nickname = (String) userInfo.get("nickname");
+        String email = (String) userInfo.get("email");
+
+        Optional<Member> findMember = memberRepository.findByEmail(email);
+
+        findMember.ifPresent(member -> {
+            if (member.getMemberType() != MemberType.KAKAO) {
+                throw new EmailAlreadyExistsException("이미 다른 플랫폼으로 가입한 이메일입니다.");
+            }
+        });
+
+        if(findMember.isEmpty()) {
+            memberService.joinMember(new MemberJoinRequest(nickname,email,id+nickname, MemberType.KAKAO));
+        }
+        return memberService.loginMember(new MemberLoginRequest(email,id+nickname));
+    }
+    private HashMap<String, Object> getUserInfo(String accessToken) throws IOException {
         String response = makeHttpRequest(KAKAO_USER_INFO_URL, GET_METHOD, accessToken);
 
         logResponse(response);
@@ -81,6 +117,7 @@ public class KakaoService {
         userInfo.put("nickname", properties.get("nickname"));
         //userInfo.put("profileImage", properties.get("profile_image"));
         userInfo.put("email", kakaoAccount.get("email"));
+        log.info("{}",userInfo);
 
         return userInfo;
     }
