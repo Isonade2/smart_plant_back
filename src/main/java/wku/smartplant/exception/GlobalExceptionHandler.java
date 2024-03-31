@@ -49,4 +49,18 @@ public class GlobalExceptionHandler {
         // 오류 메시지와 HTTP 상태 코드를 설정하여 응답 생성
         return build(ex.getMessage(), BAD_REQUEST);
     }
+
+    // GlobalExceptionHandler.java
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<ResponseDTO<?>> handleOrderNotFoundException(OrderNotFoundException ex) {
+        // 오류 메시지와 HTTP 상태 코드를 설정하여 응답 생성
+        return build(ex.getMessage(), BAD_REQUEST);
+    }
+
+    // GlobalExceptionHandler.java
+    @ExceptionHandler(ItemNotFoundException.class)
+    public ResponseEntity<ResponseDTO<?>> handleItemNotFoundException(ItemNotFoundException ex) {
+        // 오류 메시지와 HTTP 상태 코드를 설정하여 응답 생성
+        return build(ex.getMessage(), BAD_REQUEST);
+    }
 }

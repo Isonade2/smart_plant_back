@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Repository;
+import wku.smartplant.exception.OrderNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,7 @@ public class Order {
 
     public void cancel(){
         if (this.status != OrderStatus.준비){
-            throw new IllegalStateException("이미 배송중이거나 완료된 상품은 취소가 불가능합니다.");
+            throw new OrderNotFoundException("이미 배송중이거나 완료된 상품은 취소가 불가능합니다.");
         }
 
         this.status = OrderStatus.취소;

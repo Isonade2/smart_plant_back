@@ -32,7 +32,7 @@ public class OrderController {
 
 
 
-    @GetMapping
+    @GetMapping // 주문 목록 조회
     public ResponseEntity<ResponseDTO<?>> getOrder(){
         log.info("OrderController.getOrder");
         Long currentMemberId = SecurityUtil.getCurrentMemberId();
@@ -40,7 +40,7 @@ public class OrderController {
         return ResponseEntityBuilder.build("주문 조회 성공", HttpStatus.OK,orders);
     }
 
-    @PostMapping
+    @PostMapping // 주문 생성
     public ResponseEntity<ResponseDTO<?>> createOrder(@Valid @RequestBody OrderRequest orderRequest, BindingResult bindingResult){
         log.info("OrderController.createOrder");
         log.info("orderRequest : {}", orderRequest);
@@ -53,7 +53,7 @@ public class OrderController {
         return ResponseEntityBuilder.build("주문 성공", HttpStatus.OK, orderOne);
     }
 
-    @PostMapping("/cancel/{orderId}/cancel")
+    @PostMapping("/{orderId}/cancel") // 주문 취소
     public ResponseEntity<ResponseDTO<?>> cancelOrder(
             @Valid @RequestBody OrderCancelRequest orderCancelRequest, BindingResult bindingResult){
         log.info("OrderController.cancelOrder");

@@ -9,6 +9,7 @@ import wku.smartplant.domain.*;
 import wku.smartplant.dto.order.OrderDTO;
 import wku.smartplant.dto.order.OrderRequest;
 import wku.smartplant.dto.orderitem.OrderItemDTO;
+import wku.smartplant.exception.OrderNotFoundException;
 import wku.smartplant.repository.ItemRepository;
 import wku.smartplant.repository.MemberRepository;
 import wku.smartplant.repository.OrderItemRepository;
@@ -62,7 +63,7 @@ public class OrderService {
     }
 
     public void cancelOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException("존재하지 않는 주문입니다."));
         order.cancel();
     }
 }
