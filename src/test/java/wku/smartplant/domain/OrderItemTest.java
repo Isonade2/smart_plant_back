@@ -10,6 +10,8 @@ import wku.smartplant.repository.MemberRepository;
 import wku.smartplant.repository.OrderItemRepository;
 import wku.smartplant.repository.OrderRepository;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -50,4 +52,27 @@ class OrderItemTest {
 
     }
 
+    @Test
+    public void Test2() {
+        Member memberA = Member.builder()
+                .username("memberA")
+                .email("c1004sos@naver.com")
+                .password("1234")
+                .build();
+
+        memberRepository.save(memberA);
+
+        Item item = new Item("상추", 10000, 15);
+        itemRepository.save(item);
+
+        OrderItem orderItem = OrderItem.createOrderItem(item, 10000, 10);
+        orderItemRepository.save(orderItem);
+
+        Order order = new Order(memberA, OrderStatus.준비, new Address("서울", "강가", "123-123", "1232"));
+        order.addOrderItem(orderItem);
+        orderRepository.save(order);
+
+
+        List<Order> byUserId = orderRepository.findByMemberId(memberA.getId());
+    }
 }

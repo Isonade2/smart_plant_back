@@ -7,11 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.*;
+import wku.smartplant.dto.order.OrderRequest;
+import wku.smartplant.service.OrderService;
 
 @Component
 @RequiredArgsConstructor
 public class InitDb {
     private final InitService initService;
+
 
     @PostConstruct
     public void init(){
@@ -24,6 +27,7 @@ public class InitDb {
     @Transactional
     public static class InitService{
         private final EntityManager em;
+        private final OrderService orderService;
 
         public void dbInit(){ // 초기 더미데이터 생성. Member, Plant 엔티티 생성
             Member member1 = createMember("António Lee", "c1004sos@naver.com", "0000", MemberType.LOCAL, new Address("서울", "무왕로5길", "53224", "104-607"));
@@ -42,16 +46,24 @@ public class InitDb {
             Plant plant5 = createPlant("메타몽", PlantType.대파, member3);
             em.persist(plant1); em.persist(plant2); em.persist(plant3); em.persist(plant4); em.persist(plant5);
 
-        }
-
-        public void dbInit2(){ // 초기 더미데이터 생성, Item 엔티티 생성
             Item item1 = createItem("상추",3000,50);
             Item item2 = createItem("양파",4000,60);
             Item item3 = createItem("대파",5000,70);
-
             em.persist(item1);
             em.persist(item2);
             em.persist(item3);
+
+            orderService.createOrderOne(1L, new OrderRequest(1L, 1));
+            orderService.createOrderOne(1L, new OrderRequest(1L, 2));
+            orderService.createOrderOne(1L, new OrderRequest(1L, 3));
+
+        }
+
+        public void dbInit2(){ // 초기 더미데이터 생성, Item 엔티티 생성
+
+
+
+
         }
 
 

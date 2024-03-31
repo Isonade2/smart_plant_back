@@ -8,29 +8,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import wku.smartplant.domain.Member;
 import wku.smartplant.dto.ResponseDTO;
 import wku.smartplant.dto.ResponseEntityBuilder;
 import wku.smartplant.dto.order.OrderCancelRequest;
+import wku.smartplant.dto.order.OrderDTO;
 import wku.smartplant.dto.order.OrderRequest;
 import wku.smartplant.jwt.SecurityUtil;
 import wku.smartplant.repository.MemberRepository;
 import wku.smartplant.service.OrderService;
 
 import java.security.Security;
+import java.util.List;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/order")
+@RequestMapping("/orders")
 public class OrderController {
     private final OrderService orderService;
     private final MemberRepository memberRepository;
 
+
+
+    @GetMapping
+    public ResponseEntity<ResponseDTO<?>> getOrder(){
+        log.info("OrderController.getOrder");
+        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+        List<OrderDTO> orders = orderService.getOrders(currentMemberId);
+        return ResponseEntityBuilder.build("주문 조회 성공", HttpStatus.OK,orders);
+    }
 
     @PostMapping
     public ResponseEntity<ResponseDTO<?>> createOrder(@Valid @RequestBody OrderRequest orderRequest, BindingResult bindingResult){
@@ -45,9 +53,10 @@ public class OrderController {
         return ResponseEntityBuilder.build("주문 성공", HttpStatus.OK, orderOne);
     }
 
-    @PostMapping("/cancel")
-    public ResponseEntity<ResponseDTO<?>> cancelOrder(@Valid @RequestBody OrderCancelRequest orderCancelRequest, BindingResult bindingResult){
-log.info("OrderController.cancelOrder");
+    @PostMapping("/cancel/{orderId}/cancel")
+    public ResponseEntity<ResponseDTO<?>> cancelOrder(
+            @Valid @RequestBody OrderCancelRequest orderCancelRequest, BindingResult bindingResult){
+        log.info("OrderController.cancelOrder");
         log.info("orderCancelRequest : {}", orderCancelRequest);
         if (bindingResult.hasErrors()) {
             return ResponseEntityBuilder.build(bindingResult.getAllErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST);
@@ -57,6 +66,10 @@ log.info("OrderController.cancelOrder");
     }
 
 
+
+
+
+
     @PostMapping("/test")
     public String test(){
         log.info("OrderController.test");
@@ -64,6 +77,5 @@ log.info("OrderController.cancelOrder");
         System.out.println("member = " + member);
 
         return "test";
-
     }
 }

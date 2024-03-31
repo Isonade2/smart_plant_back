@@ -26,7 +26,7 @@ public class Order {
     private Plant plant;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
+    private OrderStatus status;
 
     private Address address;
 
@@ -38,16 +38,16 @@ public class Order {
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @Builder
-    public Order(OrderStatus orderStatus, Address address){
+    public Order(OrderStatus status, Address address){
         this.id = null;
         this.plant = null;
-        this.orderStatus = orderStatus;
+        this.status = status;
         this.address = address;
     }
 
-    public Order(Member member,OrderStatus orderStatus, Address address){
+    public Order(Member member, OrderStatus status, Address address){
         changeMember(member);
-        this.orderStatus = orderStatus;
+        this.status = status;
         this.address = address;
     }
 
@@ -62,11 +62,11 @@ public class Order {
     }
 
     public void cancel(){
-        if (this.orderStatus != OrderStatus.준비){
+        if (this.status != OrderStatus.준비){
             throw new IllegalStateException("이미 배송중이거나 완료된 상품은 취소가 불가능합니다.");
         }
 
-        this.orderStatus = OrderStatus.취소;
+        this.status = OrderStatus.취소;
         for(OrderItem orderItem : orderItems){
             orderItem.cancel();
         }

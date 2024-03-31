@@ -6,11 +6,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.*;
+import wku.smartplant.dto.order.OrderDTO;
 import wku.smartplant.dto.order.OrderRequest;
+import wku.smartplant.dto.orderitem.OrderItemDTO;
 import wku.smartplant.repository.ItemRepository;
 import wku.smartplant.repository.MemberRepository;
 import wku.smartplant.repository.OrderItemRepository;
 import wku.smartplant.repository.OrderRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +47,21 @@ public class OrderService {
         return order.getId();
     }
 
-    public void cancelOrder(Long orderId){
+    public List<OrderDTO> getOrders(Long memberId) {
+        List<Order> orders = orderRepository.findByMemberId(memberId);
+
+        List<OrderDTO> collect = orders.stream()
+                .map(order -> {
+                    List<OrderItemDTO> orderItemDTOs = order.getOrderItems().stream()
+                            .map(OrderItemDTO::new) // OrderItem 객체를 OrderItemDTO 객체로 변환
+                            .collect(Collectors.toList());
+                    return new OrderDTO(order.getId(), order.getStatus(), order.getAddress(), orderItemDTOs);
+                })
+                .collect(Collectors.toList());
+        return collect;
+    }
+
+    public void cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
         order.cancel();
     }
