@@ -1,4 +1,4 @@
-package wku.smartplant.dto;
+package wku.smartplant.dto.plant;
 
 
 import lombok.Data;

@@ -1,15 +1,10 @@
 package wku.smartplant.exception;
 
-import io.jsonwebtoken.MalformedJwtException;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import wku.smartplant.dto.ResponseDTO;
-import wku.smartplant.dto.ResponseEntityBuilder;
 import wku.smartplant.jwt.JwtTokenUtil;
 
 import java.util.HashMap;
@@ -33,11 +28,21 @@ public class GlobalExceptionHandler {
         return build(ex.getMessage(), BAD_REQUEST);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ResponseDTO<?>> handleRuntimeException(RuntimeException ex) {
+    @ExceptionHandler(IllegalAccessException.class)
+    public ResponseEntity<ResponseDTO<?>> handleIllegalAccessException(IllegalAccessException ex) {
         // 오류 메시지와 HTTP 상태 코드를 설정하여 응답 생성
-        return build(ex.getMessage(), BAD_REQUEST);
+        System.out.println("IllegalAccessException ex.getMessage() = " + ex.getMessage());
+        return build(ex.getMessage(), FORBIDDEN);
     }
+
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<ResponseDTO<?>> handleRuntimeException(RuntimeException ex) {
+//        // 오류 메시지와 HTTP 상태 코드를 설정하여 응답 생성
+//        System.out.println("RuntimeException ex.getMessage() = " + ex.getMessage());
+//        return build(ex.getMessage(), BAD_REQUEST);
+//    }
+
+
 
     @ExceptionHandler(JwtTokenUtil.TokenValidationException.class)
     public ResponseEntity<ResponseDTO<?>> handleTokenValidationException(RuntimeException ex) {

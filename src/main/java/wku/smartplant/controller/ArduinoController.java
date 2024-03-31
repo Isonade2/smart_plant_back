@@ -9,7 +9,12 @@ import wku.smartplant.dto.ResponseDTO;
 @RequestMapping("/arduino")
 public class ArduinoController {
 
-    @GetMapping("/{uuid}/")
+    @GetMapping("/test")
+    public String test() {
+        return "ok";
+    }
+
+    @GetMapping("/{uuid}")
     public String getSensor(@PathVariable("uuid") String uuid,
                             @RequestParam("temp") Double temp,
                             @RequestParam("humidity") Double humidity) {

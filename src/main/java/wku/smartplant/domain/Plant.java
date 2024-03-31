@@ -32,6 +32,8 @@ public class Plant extends BaseTimeEntity {
     private PlantType plantType;
 
     private Long exp;
+    private String uuid;
+    private Boolean activate;
 
     @OneToMany(mappedBy = "plant")
     private List<PlantHistory> plantHistory = new ArrayList<>();
