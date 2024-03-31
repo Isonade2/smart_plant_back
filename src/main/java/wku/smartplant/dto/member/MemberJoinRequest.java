@@ -23,18 +23,15 @@ public class MemberJoinRequest {
 
     private MemberType memberType;
 
+    public void setMemberType(MemberType memberType) {
+        this.memberType = memberType;
+    }
+
     public MemberJoinRequest(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.memberType = MemberType.LOCAL;
-    }
-
-    public MemberJoinRequest(String username, String email, String password, MemberType memberType) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.memberType = memberType;
     }
 
     public Member toEntity() {

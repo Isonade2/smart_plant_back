@@ -1,5 +1,9 @@
 package wku.smartplant.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +22,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @Slf4j
 public class KakaoLoginController {
@@ -28,6 +32,14 @@ public class KakaoLoginController {
     @Value("${kakao.client_id}")
     private String client_id;
 
+    @Operation(summary = "카카오 로그인 콜백",
+            description = "성공 시 사용자는 지정된 URL로 리다이렉트됩니다. 리다이렉트 URL은 다음과 같은 쿼리 파라미터를 포함합니다: 'email', 'username', 'token'. 각 파라미터는 URL 인코딩됩니다.",
+            responses = {
+                    @ApiResponse(responseCode = "302", description = "'프론트주소/loginSuccess?email=xxx&username=xxx&token=xxx' 성공 시 이런식으로 리턴",
+                            content = @Content(schema = @Schema(implementation = Void.class))),
+                    @ApiResponse(responseCode = "400", description = "'프론트주소/errorPage?message=xxx' 실패 시 파람에 에러메세지 담아서 리다이렉트"),
+                    @ApiResponse(responseCode = "500", description = "서버 에러")
+            })
     @GetMapping("/user/kakao/callback")
     public void callback(@RequestParam("code") String code, HttpServletResponse response) throws IOException {
         try {

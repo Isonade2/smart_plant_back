@@ -65,7 +65,9 @@ public class KakaoLoginService {
         });
 
         if(findMember.isEmpty()) {
-            memberService.joinMember(new MemberJoinRequest(nickname,email,id+nickname, MemberType.KAKAO));
+            MemberJoinRequest newMember = new MemberJoinRequest(nickname,email,id+nickname);
+            newMember.setMemberType(MemberType.KAKAO);
+            memberService.joinMember(newMember);
         }
         return memberService.loginMember(new MemberLoginRequest(email,id+nickname));
     }
