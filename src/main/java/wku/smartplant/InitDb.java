@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.*;
+import wku.smartplant.dto.member.MemberJoinRequest;
 import wku.smartplant.dto.order.OrderRequest;
+import wku.smartplant.service.MemberService;
 import wku.smartplant.service.OrderService;
 
 @Component
@@ -28,23 +30,21 @@ public class InitDb {
     public static class InitService{
         private final EntityManager em;
         private final OrderService orderService;
-
+        private final MemberService memberService;
         public void dbInit(){ // 초기 더미데이터 생성. Member, Plant 엔티티 생성
-            Member member1 = createMember("António Lee", "c1004sos@naver.com", "0000", MemberType.LOCAL, new Address("서울", "무왕로5길", "53224", "104-607"));
-            Member member2 = createMember("Sani Raut", "playgm1@naver.com", "0000", MemberType.LOCAL, new Address("익산", "부송1로", "54556", "101-503"));
-            Member member3 = createMember("Qing Ye", "playgm1@naver.com", "1111", MemberType.LOCAL, new Address("서울", "한강로3가", "13224", "202-201"));
-            em.persist(member1);
-            em.persist(member2);
-            em.persist(member3);
 
-            Plant plant1 = createPlant("모람이", PlantType.대파, member1);
-            Plant plant2 = createPlant("이모람", PlantType.상추, member1);
+            memberService.joinMember(new MemberJoinRequest("koala","plagy1m@naver.com","0000"));
+            memberService.joinMember(new MemberJoinRequest("malneif","plag432y1m@naver.com","0000"));
+            memberService.joinMember(new MemberJoinRequest("ksdfoala","cfjfekm@naver.com","0000"));
 
-            Plant plant3 = createPlant("피카추", PlantType.상추, member2);
-            Plant plant4 = createPlant("피카모", PlantType.양파, member2);
-
-            Plant plant5 = createPlant("메타몽", PlantType.대파, member3);
-            em.persist(plant1); em.persist(plant2); em.persist(plant3); em.persist(plant4); em.persist(plant5);
+//            Plant plant1 = createPlant("모람이", PlantType.대파, member1);
+//            Plant plant2 = createPlant("이모람", PlantType.상추, member1);
+//
+//            Plant plant3 = createPlant("피카추", PlantType.상추, member2);
+//            Plant plant4 = createPlant("피카모", PlantType.양파, member2);
+//
+//            Plant plant5 = createPlant("메타몽", PlantType.대파, member3);
+//            em.persist(plant1); em.persist(plant2); em.persist(plant3); em.persist(plant4); em.persist(plant5);
 
             Item item1 = createItem("상추",3000,50);
             Item item2 = createItem("양파",4000,60);

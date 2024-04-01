@@ -1,6 +1,8 @@
 package wku.smartplant.exception;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,6 +16,7 @@ import static org.springframework.http.HttpStatus.*;
 import static wku.smartplant.dto.ResponseEntityBuilder.*;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
@@ -33,6 +36,13 @@ public class GlobalExceptionHandler {
         // 오류 메시지와 HTTP 상태 코드를 설정하여 응답 생성
         System.out.println("IllegalAccessException ex.getMessage() = " + ex.getMessage());
         return build(ex.getMessage(), FORBIDDEN);
+    }
+
+    @ExceptionHandler(NoUserAuthorizationException.class)
+    public ResponseEntity<ResponseDTO<?>> handleNoUserAuthorization(NoUserAuthorizationException ex) {
+        // 오류 메시지와 HTTP 상태 코드를 설정하여 응답 생성
+        System.out.println("NoUserAuthorizationException ex.getMessage() = " + ex.getMessage());
+        return build(ex.getMessage(), UNAUTHORIZED);
     }
 
 //    @ExceptionHandler(RuntimeException.class)
