@@ -33,9 +33,9 @@ public class InitDb {
         private final MemberService memberService;
         public void dbInit(){ // 초기 더미데이터 생성. Member, Plant 엔티티 생성
 
-            memberService.joinMember(MemberJoinRequest.builder().username("koala").email("koala@naver.com").password("0000").build());
-            memberService.joinMember(MemberJoinRequest.builder().username("manbo").email("manbo@naver.com").password("0000").build());
-            memberService.joinMember(MemberJoinRequest.builder().username("peach").email("peach@google.com").password("0000").build());
+            memberService.joinMember(MemberJoinRequest.builder().username("koala").email("koala@naver.com").password("0000").memberPlatform(MemberPlatform.GOOGLE).build());
+            memberService.joinMember(MemberJoinRequest.builder().username("manbo").email("manbo@naver.com").password("0000").memberPlatform(MemberPlatform.GOOGLE).build());
+            memberService.joinMember(MemberJoinRequest.builder().username("peach").email("peach@google.com").password("0000").memberPlatform(MemberPlatform.GOOGLE).build());
 
 //            Plant plant1 = createPlant("모람이", PlantType.대파, member1);
 //            Plant plant2 = createPlant("이모람", PlantType.상추, member1);

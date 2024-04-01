@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import wku.smartplant.dto.ResponseDTO;
@@ -33,29 +34,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalAccessException.class)
     public ResponseEntity<ResponseDTO<?>> handleIllegalAccessException(IllegalAccessException ex) {
-        // 오류 메시지와 HTTP 상태 코드를 설정하여 응답 생성
-        System.out.println("IllegalAccessException ex.getMessage() = " + ex.getMessage());
         return build(ex.getMessage(), FORBIDDEN);
     }
 
     @ExceptionHandler(NoUserAuthorizationException.class)
     public ResponseEntity<ResponseDTO<?>> handleNoUserAuthorization(NoUserAuthorizationException ex) {
-        // 오류 메시지와 HTTP 상태 코드를 설정하여 응답 생성
-        System.out.println("NoUserAuthorizationException ex.getMessage() = " + ex.getMessage());
         return build(ex.getMessage(), UNAUTHORIZED);
     }
 
-//    @ExceptionHandler(RuntimeException.class)
-//    public ResponseEntity<ResponseDTO<?>> handleRuntimeException(RuntimeException ex) {
-//        // 오류 메시지와 HTTP 상태 코드를 설정하여 응답 생성
-//        System.out.println("RuntimeException ex.getMessage() = " + ex.getMessage());
-//        return build(ex.getMessage(), BAD_REQUEST);
-//    }
-
-
-
     @ExceptionHandler(JwtTokenUtil.TokenValidationException.class)
-    public ResponseEntity<ResponseDTO<?>> handleTokenValidationException(RuntimeException ex) {
+    public ResponseEntity<ResponseDTO<?>> handleTokenValidationException(JwtTokenUtil.TokenValidationException ex) {
         // 오류 메시지와 HTTP 상태 코드를 설정하여 응답 생성
         return build(ex.getMessage(), BAD_REQUEST);
     }
@@ -70,6 +58,18 @@ public class GlobalExceptionHandler {
     // GlobalExceptionHandler.java
     @ExceptionHandler(ItemNotFoundException.class)
     public ResponseEntity<ResponseDTO<?>> handleItemNotFoundException(ItemNotFoundException ex) {
+        // 오류 메시지와 HTTP 상태 코드를 설정하여 응답 생성
+        return build(ex.getMessage(), BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ResponseDTO<?>> handleBadCredentialsException(ItemNotFoundException ex) {
+        // 오류 메시지와 HTTP 상태 코드를 설정하여 응답 생성
+        return build(ex.getMessage(), BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ResponseDTO<?>> handleIllegalStateException(IllegalStateException ex) {
         // 오류 메시지와 HTTP 상태 코드를 설정하여 응답 생성
         return build(ex.getMessage(), BAD_REQUEST);
     }

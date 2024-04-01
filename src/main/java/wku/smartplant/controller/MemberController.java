@@ -1,14 +1,10 @@
 package wku.smartplant.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +16,7 @@ import wku.smartplant.dto.member.MemberLoginRequest;
 import wku.smartplant.dto.member.MemberLoginResponse;
 import wku.smartplant.service.MemberService;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +30,9 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    @Value("${client.url}")
+    private String clientId;
+
     @PostMapping("/join")
     public ResponseEntity<ResponseDTO<?>> join(@Valid @RequestBody MemberJoinRequest memberJoinRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) { //정규식 체크
@@ -44,7 +44,7 @@ public class MemberController {
         }
 
         Member joinedMember = memberService.joinMember(memberJoinRequest);
-        return build("가입 성공", OK, joinedMember);
+        return build("가입 성공 " + joinedMember.getEmail() + "을 확인하여 계정을 활성화시켜주세요.", OK);
     }
 
     @PostMapping("/login")
@@ -55,6 +55,13 @@ public class MemberController {
             return build("이메일 또는 패스워드가 불일치 합니다.", BAD_REQUEST);
         }
         return build("로그인 성공.", OK, memberLoginResponse);
+    }
+
+    @GetMapping("/verify")
+    public void callback(@RequestParam("code") String uuid, HttpServletResponse response) throws IOException {
+        memberService.verifyAndActivateMember(uuid);
+        response.sendRedirect(clientId + "/login");
+
     }
 
     @GetMapping("/{memberId}")
@@ -70,12 +77,6 @@ public class MemberController {
         return loginMemberId.toString();
     }
 
-    @GetMapping("/test2")
-    public String test2() {
-//        System.out.println("현재 멤버 아디: " + SecurityUtil.getCurrentMemberId());
-//        Long loginMemberId = SecurityUtil.getCurrentMemberId();
-        return "ok";
-    }
 
     /*@PostMapping("/test")
     public Member test() {

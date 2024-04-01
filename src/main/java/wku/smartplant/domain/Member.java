@@ -12,16 +12,12 @@ import java.util.List;
 @Entity
 @NoArgsConstructor()
 @EntityListeners(AuditingEntityListener.class)
-@ToString(exclude = {"id","username","email","password","role","address"})
+@ToString(exclude = {"plants", "emailVerify"})
 @Getter
 public class Member extends BaseTimeEntity {
     @Id @GeneratedValue
     @Column(name = "member_id")
     private Long id;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "member")
-    private List<Plant> plants = new ArrayList<>();
 
     private String username;
     private String email;
@@ -34,6 +30,21 @@ public class Member extends BaseTimeEntity {
 
     @Embedded
     private Address address;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "member")
+    private List<Plant> plants = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
+    private EmailVerify emailVerify;
+
+    public void changeEmailVerify(EmailVerify emailVerify) {
+        this.emailVerify = emailVerify;
+    }
+
+    public void changeActivate(Boolean activate) {
+        this.activate = activate;
+    }
 
     @Builder
     public Member(String username, String email, String password, Address address, MemberPlatform memberPlatform, Boolean activate){

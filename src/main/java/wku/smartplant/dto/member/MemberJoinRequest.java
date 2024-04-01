@@ -6,11 +6,13 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import wku.smartplant.domain.Member;
 import wku.smartplant.domain.MemberPlatform;
 
 @Getter @Setter
 @Builder
+@ToString
 public class MemberJoinRequest {
 
     @NotBlank(message = "회원 이름은 필수 입력값입니다.")
@@ -23,9 +25,9 @@ public class MemberJoinRequest {
     @NotBlank(message = "비밀번호는 필수 입력값입니다.")
     private String password;
 
-    @JsonIgnore
+    @JsonIgnore @Builder.Default
     private MemberPlatform memberPlatform = MemberPlatform.LOCAL; //기본은 로컬, 카카오 가입시에만 생성자로 지정
-    @JsonIgnore
+    @JsonIgnore @Builder.Default
     private boolean activate = false;
 
 //    public MemberJoinRequest(String username, String email, String password) {
