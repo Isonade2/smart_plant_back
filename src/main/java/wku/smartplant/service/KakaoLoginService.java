@@ -1,12 +1,12 @@
 package wku.smartplant.service;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import wku.smartplant.domain.Member;
-import wku.smartplant.domain.MemberType;
-import wku.smartplant.dto.member.KakaoMemberDTO;
+import wku.smartplant.domain.MemberPlatform;
 import wku.smartplant.dto.member.MemberJoinRequest;
 import wku.smartplant.dto.member.MemberLoginRequest;
 import wku.smartplant.dto.member.MemberLoginResponse;
@@ -40,7 +40,8 @@ public class KakaoLoginService {
         String response = makeHttpRequest(KAKAO_TOKEN_URL + "?" + parameters, POST_METHOD, null);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> jsonMap = objectMapper.readValue(response, new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> jsonMap = objectMapper.readValue(response, new TypeReference<Map<String, Object>>() {
+        });
 
         logResponse(response);
 
@@ -58,19 +59,27 @@ public class KakaoLoginService {
 
         Optional<Member> findMember = memberRepository.findByEmail(email);
 
-        findMember.ifPresent(member -> {
-            if (member.getMemberType() != MemberType.KAKAO) {
+        findMember.ifPresent(member -> { //다른 플랫폼에서 이미 사용한 이메일일경우
+            if (member.getMemberPlatform() != MemberPlatform.KAKAO) {
                 throw new EmailAlreadyExistsException("이미 다른 플랫폼으로 가입한 이메일입니다.");
             }
         });
 
-        if(findMember.isEmpty()) {
-            MemberJoinRequest newMember = new MemberJoinRequest(nickname,email,id+nickname);
-            newMember.setMemberType(MemberType.KAKAO);
+        if (findMember.isEmpty()) { //가입이 안되있으면 자동 가입 후 로그인
+            MemberJoinRequest newMember =
+                    MemberJoinRequest.builder()
+                            .username(nickname)
+                            .email(email)
+                            .password(id+nickname)
+                            .memberPlatform(MemberPlatform.KAKAO)
+                            .activate(true).build();
+
+
             memberService.joinMember(newMember);
         }
-        return memberService.loginMember(new MemberLoginRequest(email,id+nickname));
+        return memberService.loginMember(new MemberLoginRequest(email, id + nickname));
     }
+
     private HashMap<String, Object> getUserInfo(String accessToken) throws IOException {
         String response = makeHttpRequest(KAKAO_USER_INFO_URL, GET_METHOD, accessToken);
 
@@ -109,7 +118,8 @@ public class KakaoLoginService {
 
     private HashMap<String, Object> parseUserInfo(String response) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> jsonMap = objectMapper.readValue(response, new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> jsonMap = objectMapper.readValue(response, new TypeReference<Map<String, Object>>() {
+        });
 
         Map<String, Object> properties = (Map<String, Object>) jsonMap.get("properties");
         Map<String, Object> kakaoAccount = (Map<String, Object>) jsonMap.get("kakao_account");
@@ -119,7 +129,7 @@ public class KakaoLoginService {
         userInfo.put("nickname", properties.get("nickname"));
         //userInfo.put("profileImage", properties.get("profile_image"));
         userInfo.put("email", kakaoAccount.get("email"));
-        log.info("{}",userInfo);
+        log.info("{}", userInfo);
 
         return userInfo;
     }

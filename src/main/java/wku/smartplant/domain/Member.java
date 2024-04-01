@@ -4,11 +4,8 @@ package wku.smartplant.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,15 +27,16 @@ public class Member extends BaseTimeEntity {
     private String email;
     private String password;
     private String role;
+    private Boolean activate; //이메일 인증 여부
 
     @Enumerated(EnumType.STRING)
-    private MemberType memberType;
+    private MemberPlatform memberPlatform;
 
     @Embedded
     private Address address;
 
     @Builder
-    public Member(String username, String email, String password, Address address,MemberType memberType){
+    public Member(String username, String email, String password, Address address, MemberPlatform memberPlatform, Boolean activate){
         this.id = null;
         this.plants = null;
         this.username = username;
@@ -46,6 +44,7 @@ public class Member extends BaseTimeEntity {
         this.password = password;
         this.role = "USER";
         this.address = address;
-        this.memberType = memberType;
+        this.memberPlatform = memberPlatform;
+        this.activate = activate;
     }
 }

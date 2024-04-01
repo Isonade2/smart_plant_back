@@ -1,5 +1,5 @@
 package wku.smartplant.domain;
 
-public enum MemberType {
+public enum MemberPlatform {
     LOCAL, GOOGLE, KAKAO
 }
