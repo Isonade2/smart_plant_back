@@ -58,10 +58,10 @@ public class KakaoLoginService {
         String email = (String) userInfo.get("email");
 
         // 정규 표현식을 사용하여 nickname 검증 및 설정
-        String pattern = "^[a-zA-Z가-힣]{2,8}$"; //2~8자 한글 영어만 허용
+        String pattern = "^[a-zA-Z가-힣\\d]{2,8}$"; //2~8자 한글 영어 숫자만 허용
         boolean matches = nickname.matches(pattern);
         if (!matches) {
-            nickname = "무럭이";
+            nickname = "무럭이"; //강제 닉변
         }
 
         Optional<Member> findMember = memberRepository.findByEmail(email);

@@ -18,7 +18,7 @@ import wku.smartplant.domain.MemberPlatform;
 public class MemberJoinRequest {
 
     @NotBlank(message = "회원 이름은 필수 입력값입니다.")
-    @Pattern(regexp = "^[a-zA-Z가-힣]{2,8}$", message = "2글자 이상 8글자 이하의 영어 또는 한글만 사용 가능합니다.")
+    @Pattern(regexp = "^[a-zA-Z가-힣\\d]{2,8}$", message = "2글자 이상 8글자 이하의 영어, 한글, 숫자만 사용 가능합니다.")
     private String username;
 
     @NotBlank(message = "이메일은 필수 입력값입니다.")

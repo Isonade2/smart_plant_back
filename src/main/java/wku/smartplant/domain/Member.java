@@ -3,6 +3,7 @@ package wku.smartplant.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -17,13 +18,20 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_id")
     private Long id;
 
+    @NotBlank
     private String username;
+
+    @Column(unique = true)
     private String email;
+
+    @NotBlank
     private String password;
+    @NotBlank
     private String role;
     private Boolean activate; //이메일 인증 여부
 
     @Enumerated(EnumType.STRING)
+    @NotBlank
     private MemberPlatform memberPlatform;
 
     @Embedded
