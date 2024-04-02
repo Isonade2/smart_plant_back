@@ -1,5 +1,9 @@
 package wku.smartplant.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,21 +38,13 @@ public class MemberController {
     private String clientId;
 
     @PostMapping("/join")
-    public ResponseEntity<ResponseDTO<?>> join(@Valid @RequestBody MemberJoinRequest memberJoinRequest, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) { //정규식 체크
-            List<FieldError> errorList = bindingResult.getFieldErrors();
-            String errorMessage = errorList.stream()
-                    .map(FieldError::getDefaultMessage)
-                    .collect(Collectors.joining(", "));
-            return build(errorMessage, BAD_REQUEST);
-        }
-
+    public ResponseEntity<ResponseDTO<?>> join(@Valid @RequestBody MemberJoinRequest memberJoinRequest) {
         Member joinedMember = memberService.joinMember(memberJoinRequest);
-        return build("가입 성공 " + joinedMember.getEmail() + "을 확인하여 계정을 활성화시켜주세요.", OK);
+        return build("가입 성공 " + joinedMember.getEmail() + " 메일함을 확인하여 계정을 활성화시켜주세요.", OK);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseDTO<?>> login(@RequestBody MemberLoginRequest memberLoginRequest) {
+    public ResponseEntity<ResponseDTO<?>> login(@Valid @RequestBody MemberLoginRequest memberLoginRequest) {
         MemberLoginResponse memberLoginResponse = memberService.loginMember(memberLoginRequest);
 
         if (memberLoginResponse.getToken() == null) {
@@ -57,10 +53,15 @@ public class MemberController {
         return build("로그인 성공.", OK, memberLoginResponse);
     }
 
+    @Operation(summary = "카카오 로그인 콜백",
+            description = "성공 시 사용자는 지정된 URL로 리다이렉트됩니다. 리다이렉트 URL은 다음과 같은 쿼리 파라미터를 포함합니다: 'email', 'username', 'token'. 각 파라미터는 URL 인코딩됩니다.",
+            responses = {
+                    @ApiResponse(responseCode = "302", description = "'프론트주소/login?activate=true' 성공 시 이런식으로 리턴")
+            })
     @GetMapping("/verify")
     public void callback(@RequestParam("code") String uuid, HttpServletResponse response) throws IOException {
         memberService.verifyAndActivateMember(uuid);
-        response.sendRedirect(clientId + "/login");
+        response.sendRedirect(clientId + "/login?activate=true");
 
     }
 

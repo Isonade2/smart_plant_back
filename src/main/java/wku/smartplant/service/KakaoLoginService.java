@@ -57,6 +57,13 @@ public class KakaoLoginService {
         String nickname = (String) userInfo.get("nickname");
         String email = (String) userInfo.get("email");
 
+        // 정규 표현식을 사용하여 nickname 검증 및 설정
+        String pattern = "^[a-zA-Z가-힣]{2,8}$"; //2~8자 한글 영어만 허용
+        boolean matches = nickname.matches(pattern);
+        if (!matches) {
+            nickname = "무럭이";
+        }
+
         Optional<Member> findMember = memberRepository.findByEmail(email);
 
         findMember.ifPresent(member -> { //다른 플랫폼에서 이미 사용한 이메일일경우
@@ -77,7 +84,7 @@ public class KakaoLoginService {
 
             memberService.joinMember(newMember);
         }
-        return memberService.loginMember(new MemberLoginRequest(email, id + nickname));
+        return memberService.loginMember(new MemberLoginRequest(email, id + nickname, MemberPlatform.KAKAO));
     }
 
     private HashMap<String, Object> getUserInfo(String accessToken) throws IOException {

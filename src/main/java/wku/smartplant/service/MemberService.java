@@ -2,6 +2,7 @@ package wku.smartplant.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,8 +21,11 @@ import wku.smartplant.repository.MemberRepository;
 
 import java.util.Optional;
 
+import static wku.smartplant.domain.MemberPlatform.*;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
 
     private final EmailService emailService;
@@ -39,15 +43,11 @@ public class MemberService {
         }
 
         memberJoinRequest.setPassword(passwordEncoder.encode(memberJoinRequest.getPassword()));
-        System.out.println("memberJoinRequest = " + memberJoinRequest);
 
-        if (memberJoinRequest.getMemberPlatform() == null) { //기본 가입 시
-            memberJoinRequest.setMemberPlatform(MemberPlatform.LOCAL);
-        }
         Member member = memberJoinRequest.toEntity(); //엔티티화
 
-        if (member.getMemberPlatform() == MemberPlatform.LOCAL) {
-            EmailVerify emailVerify = new EmailVerify(member);
+        if (member.getMemberPlatform() == LOCAL) {
+            EmailVerify emailVerify = new EmailVerify(member, member.getEmail());
             member.changeEmailVerify(emailVerify);
             emailService.sendVerifyMail(memberJoinRequest.getEmail(), emailVerify.getUuid());
         }
@@ -59,16 +59,30 @@ public class MemberService {
         Member findMember = memberRepository.findByEmail(memberLoginRequest.getEmail())
                 .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다."));
 
+        if (findMember.getMemberPlatform() == KAKAO
+                && memberLoginRequest.getMemberPlatform() == LOCAL) {
+            //카카오로 가입했는데 로컬 로그인으로 시도했을경우
+            throw new IllegalStateException("카카오로 가입했으나 로컬 로그인으로 시도했습니다. \n올바른 플랫폼 로그인을 선택해주세요.");
+        }
+
+        if (findMember.getMemberPlatform() == LOCAL
+                && memberLoginRequest.getMemberPlatform() == KAKAO) {
+            //로컬로 가입했는데 카카오 로그인으로 시도했을경우
+            throw new IllegalStateException("로컬 이메일로 가입했으나 카카오 로그인으로 시도했습니다. \n올바른 플랫폼 로그인을 선택해주세요.");
+        }
+
         if (!passwordEncoder.matches(memberLoginRequest.getPassword(), findMember.getPassword())) {
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
 
         if (!findMember.getActivate()) {
-            throw new IllegalStateException(findMember.getEmail() + " 이메일을 확인하여 계정을 활성화 이후 다시 로그인 해주세요. " +
+            throw new IllegalStateException(findMember.getEmail() + " 메일함을 확인하여 계정을 활성화 이후 다시 로그인 해주세요. " +
                     "메일이 보이지 않을 경우 스팸 메일함을 확인해보세요.");
         }
 
         String token = JwtTokenUtil.createToken(findMember.getId().toString(),  1000000);
+
+        log.info("{} 로그인. 토근 = {}", findMember.getEmail(), token);
 
         return MemberLoginResponse.builder()
                 .email(findMember.getEmail())
@@ -84,7 +98,10 @@ public class MemberService {
 
         System.out.println("findEmailVerify.getMember() = " + findEmailVerify.getMember());
         findEmailVerify.getMember().changeActivate(true);
+        findEmailVerify.getMember().changeEmailVerify(null);
         emailVerifyRepository.delete(findEmailVerify);
+
+        log.info("{} 계정 활성화. UUID = {}", findEmailVerify.getEmail(), findEmailVerify.getUuid());
     }
     @Transactional
     public Member findMemberById(Long id) {
