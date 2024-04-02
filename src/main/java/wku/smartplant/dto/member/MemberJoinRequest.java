@@ -29,9 +29,10 @@ public class MemberJoinRequest {
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "최소 8자리 이상이면서, 알파벳과 숫자를 모두 포함해야 합니다.")
     private String password;
 
-
+    @JsonIgnore
     private MemberPlatform memberPlatform;
 
+    @JsonIgnore
     private boolean activate;
 
     @JsonCreator

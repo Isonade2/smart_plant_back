@@ -83,6 +83,7 @@ public class KakaoLoginService {
 
 
             memberService.joinMember(newMember);
+            log.info("카카오 회원가입 : {}", newMember.getEmail());
         }
         return memberService.loginMember(new MemberLoginRequest(email, id + nickname, MemberPlatform.KAKAO));
     }
