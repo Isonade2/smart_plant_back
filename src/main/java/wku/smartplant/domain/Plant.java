@@ -42,6 +42,7 @@ public class Plant extends BaseTimeEntity {
         this.plantType = plantType;
         this.uuid = UUID.randomUUID().toString();
         this.exp = 0L;
+        this.activate = false;
     }
 
 

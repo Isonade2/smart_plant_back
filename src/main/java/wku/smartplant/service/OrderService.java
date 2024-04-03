@@ -27,6 +27,7 @@ public class OrderService {
     private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
     private final OrderItemRepository orderItemRepository;
+    private final PlantService plantService;
 
 
     // 상품 주문 서비스
@@ -44,6 +45,7 @@ public class OrderService {
         Order order = new Order(member, OrderStatus.준비, new Address("서울", "강가", "123-123", "1232"));
         order.addOrderItem(orderItem);
         orderRepository.save(order);
+
 
         return order.getId();
     }
