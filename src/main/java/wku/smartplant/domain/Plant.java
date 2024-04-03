@@ -19,16 +19,16 @@ public class Plant extends BaseTimeEntity {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    private Long exp;
+    private String uuid;
+    private Boolean activate;
 
     @Enumerated(EnumType.STRING)
     private PlantType plantType;
 
-    private Long exp;
-    private String uuid;
-    private Boolean activate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @OneToMany(mappedBy = "plant")
     private List<PlantHistory> plantHistory = new ArrayList<>();

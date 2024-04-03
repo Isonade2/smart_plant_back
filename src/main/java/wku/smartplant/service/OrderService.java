@@ -51,7 +51,7 @@ public class OrderService {
     public List<OrderDTO> getOrders(Long memberId) {
         List<Order> orders = orderRepository.findByMemberId(memberId);
 
-        List<OrderDTO> collect = orders.stream()
+        List<OrderDTO> orderDto = orders.stream()
                 .map(order -> {
                     List<OrderItemDTO> orderItemDTOs = order.getOrderItems().stream()
                             .map(OrderItemDTO::new) // OrderItem 객체를 OrderItemDTO 객체로 변환
@@ -59,7 +59,7 @@ public class OrderService {
                     return new OrderDTO(order.getId(), order.getStatus(), order.getAddress(), orderItemDTOs);
                 })
                 .collect(Collectors.toList());
-        return collect;
+        return orderDto;
     }
 
     public void cancelOrder(Long orderId) {
