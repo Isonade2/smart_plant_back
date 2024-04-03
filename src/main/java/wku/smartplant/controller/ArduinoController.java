@@ -22,9 +22,8 @@ public class ArduinoController {
 
     @GetMapping("/{uuid}")
     public String getStatus(@PathVariable("uuid") String uuid,
-                            @RequestParam PlantHistoryDTO plantHistoryDTO) {
-        plantHistoryService.writeHistory(uuid, plantHistoryDTO);
-        return "ok";
+                            @ModelAttribute PlantHistoryDTO plantHistoryDTO) {
+        return plantHistoryService.writeHistory(uuid, plantHistoryDTO);
     }
 //    @GetMapping("/{uuid}")
 //    public String getStatus(@PathVariable("uuid") String uuid,

@@ -3,10 +3,12 @@ package wku.smartplant.dto.plant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import wku.smartplant.domain.PlantHistory;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class PlantHistoryDTO {
     private Long id;

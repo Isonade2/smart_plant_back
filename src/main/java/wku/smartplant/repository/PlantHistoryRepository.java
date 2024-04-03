@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import wku.smartplant.domain.PlantHistory;
 
 public interface PlantHistoryRepository extends JpaRepository<PlantHistory, Long> {
-    Page<PlantHistory> findByPlantId(Long plantId, Pageable pageable);
+    Page<PlantHistory> findByPlantIdAndMemberId(Long plantId, Long memberId, Pageable pageable);
 }

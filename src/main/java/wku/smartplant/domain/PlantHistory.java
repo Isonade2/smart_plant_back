@@ -13,6 +13,8 @@ public class PlantHistory extends BaseTimeEntity {
     @Id @GeneratedValue
     @Column(name = "plant_history_id")
     private Long id;
+    
+    private Long memberId; //유저 인증용
 
     private Double temp; //온도
     private Double humidity; //습도
@@ -24,7 +26,9 @@ public class PlantHistory extends BaseTimeEntity {
     private Plant plant;
 
     @Builder
-    public PlantHistory(Double temp, Double humidity, Double water, Double light, Plant plant) {
+    public PlantHistory(Long id, Long memberId, Double temp, Double humidity, Double water, Double light, Plant plant) {
+        this.id = id;
+        this.memberId = memberId;
         this.temp = temp;
         this.humidity = humidity;
         this.water = water;

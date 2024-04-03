@@ -19,14 +19,14 @@ public class AdminCheckAspect {
     @Pointcut("execution(* wku.smartplant.controller.ArduinoController.*(..))")
     public void adminMethods() {}
 
-    @Before("adminMethods()")
-    public void checkAdminRole() throws IllegalAccessException {
-        System.out.println("checkadmin 실행");
-        Member findMember = memberService.findMemberById(SecurityUtil.getCurrentMemberId());
-        if (findMember == null || !findMember.getRole().equals("ADMIN")) {
-            System.out.println("어드민이 아님");
-            throw new IllegalAccessException("Not authorized");
-        }
-    }
+//    @Before("adminMethods()")
+//    public void checkAdminRole() throws IllegalAccessException {
+//        System.out.println("checkadmin 실행");
+//        Member findMember = memberService.findMemberById(SecurityUtil.getCurrentMemberId());
+//        if (findMember == null || !findMember.getRole().equals("ADMIN")) {
+//            System.out.println("어드민이 아님");
+//            throw new IllegalAccessException("Not authorized");
+//        }
+//    }
 
 }
