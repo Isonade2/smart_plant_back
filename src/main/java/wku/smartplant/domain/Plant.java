@@ -44,4 +44,6 @@ public class Plant extends BaseTimeEntity {
         this.exp = 0L;
     }
 
+
+
 }
