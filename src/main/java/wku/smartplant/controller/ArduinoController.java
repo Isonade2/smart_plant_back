@@ -21,16 +21,6 @@ public class ArduinoController {
     }
 
     @GetMapping("/{uuid}")
-    public String getSensor(@PathVariable("uuid") String uuid,
-                            @RequestParam("temp") Double temp,
-                            @RequestParam("humidity") Double humidity) {
-
-        System.out.println("uuid = " + uuid);
-
-        return "ok";
-    }
-
-    @GetMapping("/{uuid}")
     public String getStatus(@PathVariable("uuid") String uuid,
                             @RequestParam PlantHistoryDTO plantHistoryDTO) {
         plantHistoryService.writeHistory(uuid, plantHistoryDTO);

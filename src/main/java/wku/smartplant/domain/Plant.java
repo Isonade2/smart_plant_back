@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @RequiredArgsConstructor
@@ -39,6 +40,7 @@ public class Plant extends BaseTimeEntity {
         this.name = name;
         this.member = member;
         this.plantType = plantType;
+        this.uuid = UUID.randomUUID().toString();
         this.exp = 0L;
     }
 

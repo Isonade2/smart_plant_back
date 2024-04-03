@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +32,12 @@ public class Member extends BaseTimeEntity {
     private Boolean activate; //이메일 인증 여부
 
     @Enumerated(EnumType.STRING)
-    @NotBlank
     private MemberPlatform memberPlatform;
 
     @Embedded
     private Address address;
 
-    @JsonIgnore
+    @JsonIgnore @BatchSize(size = 50)
     @OneToMany(mappedBy = "member")
     private List<Plant> plants = new ArrayList<>();
 

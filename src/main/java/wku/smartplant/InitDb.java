@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.*;
 import wku.smartplant.dto.member.MemberJoinRequest;
 import wku.smartplant.dto.order.OrderRequest;
+import wku.smartplant.repository.PlantRepository;
 import wku.smartplant.service.MemberService;
 import wku.smartplant.service.OrderService;
 
@@ -31,9 +32,10 @@ public class InitDb {
         private final EntityManager em;
         private final OrderService orderService;
         private final MemberService memberService;
+        private final PlantRepository plantRepository;
         public void dbInit(){ // 초기 더미데이터 생성. Member, Plant 엔티티 생성
-
-            memberService.joinMember(MemberJoinRequest.builder().username("koala").email("koala@naver.com").password("0000").memberPlatform(MemberPlatform.GOOGLE).build());
+            Member koalaMember = memberService.joinMember(MemberJoinRequest.builder().username("koala").email("koala@naver.com").password("0000").memberPlatform(MemberPlatform.GOOGLE).build());
+            plantRepository.save(new Plant("무럭1",koalaMember,PlantType.상추));
             memberService.joinMember(MemberJoinRequest.builder().username("manbo").email("manbo@naver.com").password("0000").memberPlatform(MemberPlatform.GOOGLE).build());
             memberService.joinMember(MemberJoinRequest.builder().username("peach").email("peach@google.com").password("0000").memberPlatform(MemberPlatform.GOOGLE).build());
 

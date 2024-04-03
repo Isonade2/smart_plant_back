@@ -24,4 +24,5 @@ public class PlantHistoryDTO {
         water = plantHistory.getWater();
         light = plantHistory.getLight();
     }
+
 }
