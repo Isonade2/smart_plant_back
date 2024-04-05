@@ -36,6 +36,7 @@ public class PlantService {
                 .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다."));
 
         Plant plant = plantRequestDTO.toEntity(member);
+        log.info("plant: {}", plant);
         plantRepository.save(plant);
         return plant.getId();
     }

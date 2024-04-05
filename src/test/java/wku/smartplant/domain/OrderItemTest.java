@@ -37,7 +37,7 @@ class OrderItemTest {
 
         memberRepository.save(memberA);
 
-        Item item = new Item("상추", 10000, 15);
+        Item item = new Item("상추", 10000, 15,PlantType.상추);
         itemRepository.save(item);
 
         OrderItem orderItem = OrderItem.createOrderItem(item, 10000, 10);
@@ -62,7 +62,7 @@ class OrderItemTest {
 
         memberRepository.save(memberA);
 
-        Item item = new Item("상추", 10000, 15);
+        Item item = new Item("상추", 10000, 15,PlantType.상추);
         itemRepository.save(item);
 
         OrderItem orderItem = OrderItem.createOrderItem(item, 10000, 10);

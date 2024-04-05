@@ -9,6 +9,7 @@ import wku.smartplant.domain.*;
 import wku.smartplant.dto.order.OrderDTO;
 import wku.smartplant.dto.order.OrderRequest;
 import wku.smartplant.dto.orderitem.OrderItemDTO;
+import wku.smartplant.dto.plant.PlantRequestDTO;
 import wku.smartplant.exception.OrderNotFoundException;
 import wku.smartplant.repository.ItemRepository;
 import wku.smartplant.repository.MemberRepository;
@@ -42,10 +43,12 @@ public class OrderService {
         OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), orderRequest.getCount());
         orderItemRepository.save(orderItem);
 
+        log.info("orderItem : {}", orderItem);
         Order order = new Order(member, OrderStatus.준비, new Address("서울", "강가", "123-123", "1232"));
         order.addOrderItem(orderItem);
         orderRepository.save(order);
-
+        log.info("order : {}", order);
+        PlantRequestDTO plantRequestDTO = new PlantRequestDTO(item.getPlantType(), item.getName());
 
         return order.getId();
     }

@@ -11,17 +11,18 @@ public class Item {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     private Long id;
-
+    private PlantType plantType;
     private String name;
     private int price;
     private int stockQuantity;
 
     @Builder
-    public Item(String name, int price, int stockQuantity){
+    public Item(String name, int price, int stockQuantity,PlantType plantType){
         this.id = null;
         this.name = name;
         this.price = price;
         this.stockQuantity = stockQuantity;
+        this.plantType = plantType;
     }
 
     public void removeStock(int count){

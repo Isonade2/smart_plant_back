@@ -1,15 +1,13 @@
 package wku.smartplant.controller;
 
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import wku.smartplant.dto.ResponseDTO;
 import wku.smartplant.dto.plant.PlantRequestDTO;
 import wku.smartplant.jwt.SecurityUtil;
@@ -35,7 +33,7 @@ public class PlantController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<ResponseDTO<?>> join(PlantRequestDTO plantRequestDTO){
+    public ResponseEntity<ResponseDTO<?>> join(@Valid @RequestBody PlantRequestDTO plantRequestDTO){
         log.info("join");
         log.info(plantRequestDTO.toString());
         Long currentMemberId = SecurityUtil.getCurrentMemberId();
