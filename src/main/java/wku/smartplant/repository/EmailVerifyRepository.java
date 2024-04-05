@@ -13,6 +13,9 @@ public interface EmailVerifyRepository extends JpaRepository<EmailVerify, Long> 
     Optional<EmailVerify> findByUuid(String uuid);
 
     @EntityGraph(attributePaths = {"member"})
+    Optional<EmailVerify> findByEmailAndUuid(String email, String uuid);
+
+    @EntityGraph(attributePaths = {"member"})
     Optional<EmailVerify> findByEmail(String email);
 }
 

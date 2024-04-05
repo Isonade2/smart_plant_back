@@ -1,28 +1,21 @@
 package wku.smartplant.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import wku.smartplant.dto.member.*;
 import wku.smartplant.jwt.SecurityUtil;
 import wku.smartplant.domain.Member;
-import wku.smartplant.dto.member.MemberJoinRequest;
 import wku.smartplant.dto.ResponseDTO;
-import wku.smartplant.dto.member.MemberLoginRequest;
-import wku.smartplant.dto.member.MemberLoginResponse;
 import wku.smartplant.service.MemberService;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.*;
 import static wku.smartplant.dto.ResponseEntityBuilder.*;
@@ -53,15 +46,55 @@ public class MemberController {
         return build("로그인 성공.", OK, memberLoginResponse);
     }
 
-    @Operation(summary = "카카오 로그인 콜백",
-            description = "성공 시 사용자는 지정된 URL로 리다이렉트됩니다. 리다이렉트 URL은 다음과 같은 쿼리 파라미터를 포함합니다: 'email', 'username', 'token'. 각 파라미터는 URL 인코딩됩니다.",
+    @Operation(summary = "이메일 활성화",
+            description = "이메일 활성화 링크를 클릭하면 서버측 /verify 로 이동되고 유저 활성화 후 " +
+                    "'프론트/login?activate=true' 로 리다이렉트 시킴. 프론트에서는 activate param을 보고 활성화가 완료됐다는 알림을 로그인 화면에 표시해야됨 ",
             responses = {
-                    @ApiResponse(responseCode = "302", description = "'프론트주소/login?activate=true' 성공 시 이런식으로 리턴")
+                    @ApiResponse(responseCode = "302", description = "'프론트주소/login?activate=true' 성공 시 리턴")
             })
     @GetMapping("/verify")
     public void callback(@RequestParam("code") String uuid, HttpServletResponse response) throws IOException {
-        memberService.verifyAndActivateMember(uuid);
+        try {
+            memberService.verifyAndActivateMember(uuid);
+        } catch (IllegalStateException | EntityNotFoundException ex) {
+            response.sendRedirect(clientId + "/needActivate?expired=true");
+        }
+
         response.sendRedirect(clientId + "/login?activate=true");
+
+    }
+    @PostMapping("/activate/resend") //활성화 메일 재요청
+    public ResponseEntity<ResponseDTO<?>> activateReSend(@Valid @RequestBody MemberEmailRequest memberEmailRequest) {
+        String email = memberEmailRequest.getEmail();
+        memberService.resendActivateMail(email);
+
+        return build(email + " 메일함을 확인하여 계정을 활성화 시켜주세요.", CREATED);
+
+    }
+     
+    @PostMapping("/password/reset") //비밀번호 초기화 요청
+    public ResponseEntity<ResponseDTO<?>> passwordReset(@Valid @RequestBody MemberEmailRequest memberEmailRequest) {
+        String email = memberEmailRequest.getEmail();
+        memberService.passwordResetRequest(email);
+
+        return build(email + " 메일함을 확인하여 비밀번호 초기화 진행해주세요.", CREATED);
+
+    }
+
+    @PostMapping("/password/change") //바꿀 비밀번호 받기
+    public ResponseEntity<ResponseDTO<?>> passwordReset(@Valid @RequestBody MemberPasswordChangeRequest memberPasswordChangeRequest) {
+        String password = memberPasswordChangeRequest.getPassword();
+        String passwordConfirm = memberPasswordChangeRequest.getPasswordConfirm();
+        String email = memberPasswordChangeRequest.getEmail();
+        String uuid = memberPasswordChangeRequest.getUuid();
+
+        if (!password.equals(passwordConfirm)) {
+            throw new IllegalArgumentException("비밀번호와 비밀번호 확인란이 일치하지 않습니다.");
+        }
+
+        memberService.changePassword(email, password, uuid);
+
+        return build("패스워드 변경이 완료되었습니다.", CREATED);
 
     }
 

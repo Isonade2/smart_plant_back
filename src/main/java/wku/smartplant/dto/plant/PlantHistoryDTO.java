@@ -19,7 +19,7 @@ public class PlantHistoryDTO {
     private Double light; // 조도
 
     public PlantHistoryDTO(PlantHistory plantHistory) {
-        id = plantHistory.getId();
+        id = null;
         plantId = plantHistory.getPlant().getId();
         temp = plantHistory.getTemp();
         humidity = plantHistory.getHumidity();
