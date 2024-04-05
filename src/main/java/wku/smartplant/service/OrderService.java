@@ -3,6 +3,7 @@ package wku.smartplant.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.*;
@@ -32,25 +33,26 @@ public class OrderService {
 
 
     // 상품 주문 서비스
-    public Long createOrderOne(Long memberid, OrderRequest orderRequest) {
+    public OrderDTO createOrderOne(Long memberid, OrderRequest orderRequest) {
         log.info("OrderService.createOrder");
         log.info("orderRequest : {}", orderRequest);
 
-        Member member = memberRepository.findById(memberid).get();
+        Member member = memberRepository.findById(memberid).orElseThrow(() -> new OrderNotFoundException("존재하지 않는 회원입니다."));
         log.info("member : {}", member);
-        Item item = itemRepository.findById(orderRequest.getItemId()).get();
+        Item item = itemRepository.findById(orderRequest.getItemId()).orElseThrow(() -> new OrderNotFoundException("존재하지 않는 상품입니다."));
 
         OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), orderRequest.getCount());
         orderItemRepository.save(orderItem);
 
         log.info("orderItem : {}", orderItem);
-        Order order = new Order(member, OrderStatus.준비, new Address("서울", "강가", "123-123", "1232"));
+        Order order = new Order(member, OrderStatus.준비, member.getAddress());
         order.addOrderItem(orderItem);
         orderRepository.save(order);
         log.info("order : {}", order);
         PlantRequestDTO plantRequestDTO = new PlantRequestDTO(item.getPlantType(), item.getName());
+        plantService.createPlant(plantRequestDTO, memberid);
 
-        return order.getId();
+        return new OrderDTO(order.getId(), order.getStatus(), order.getAddress(), order.getOrderItems().stream().map(OrderItemDTO::new).collect(Collectors.toList()));
     }
 
     public List<OrderDTO> getOrders(Long memberId) {

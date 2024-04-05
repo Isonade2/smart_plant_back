@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -48,9 +49,8 @@ public class OrderController {
             return ResponseEntityBuilder.build(bindingResult.getAllErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
         Long currentMemberId = SecurityUtil.getCurrentMemberId();
-        Long orderOne = orderService.createOrderOne(currentMemberId, orderRequest);
-
-        return ResponseEntityBuilder.build("주문 성공", HttpStatus.OK, orderOne);
+        OrderDTO orderDTO = orderService.createOrderOne(currentMemberId, orderRequest);
+        return ResponseEntityBuilder.build("주문 성공", HttpStatus.OK, orderDTO);
     }
 
     @PostMapping("/{orderId}/cancel") // 주문 취소
