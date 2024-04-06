@@ -97,13 +97,7 @@ public class MemberService {
         EmailVerify findEmailVerify = emailVerifyRepository.findByUuid(uuid)
                 .orElseThrow(() -> new EntityNotFoundException("잘못되거나 만료된 인증입니다."));
 
-        Duration duration = Duration.between(findEmailVerify.getCreatedDate(), LocalDateTime.now());
-        if (duration.toMinutes() > 60) {
-            System.out.println("만료 삭제 : " + findEmailVerify.getEmail());
-            emailVerifyRepository.delete(findEmailVerify);
-
-            throw new IllegalStateException("메일 인증 시간이 만료되었습니다.");
-        }
+        timeExpiredCheck(findEmailVerify);
 
         System.out.println("findEmailVerify.getMember() = " + findEmailVerify.getMember());
         findEmailVerify.getMember().changeActivate(true);
@@ -112,6 +106,7 @@ public class MemberService {
 
         log.info("{} 계정 활성화. UUID = {}", findEmailVerify.getEmail(), findEmailVerify.getUuid());
     }
+
     @Transactional
     public Member findMemberById(Long id) {
         return memberRepository.findById(id)
@@ -152,9 +147,21 @@ public class MemberService {
         EmailVerify findEmailVerify = emailVerifyRepository.findByEmailAndUuid(email, uuid)
                 .orElseThrow(() -> new IllegalArgumentException("인증 정보가 잘못됐습니다."));
 
+        timeExpiredCheck(findEmailVerify);
+
         Member findMember = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("해당 유저가 존재하지 않습니다."));
 
         findMember.changePassword(passwordEncoder.encode(password));
+    }
+
+    private void timeExpiredCheck(EmailVerify findEmailVerify) {
+        Duration duration = Duration.between(findEmailVerify.getCreatedDate(), LocalDateTime.now());
+        if (duration.toMinutes() > 120) {
+            log.info("{} 활성화 이메일 만료", findEmailVerify.getEmail());
+            emailVerifyRepository.delete(findEmailVerify);
+
+            throw new IllegalStateException("메일 인증 시간이 만료되었습니다.");
+        }
     }
 }

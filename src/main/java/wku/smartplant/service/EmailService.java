@@ -29,6 +29,7 @@ public class EmailService {
         String verifyUrl = serverUrl + "/member/verify?code=" + uuid;
         String htmlContent = "<p>NAMOO 서비스 회원가입 확인</p>" +
                 "<p>아래의 링크를 클릭하여 계정을 활성화 후 로그인 해주세요.</p>" +
+                "<p>링크의 유효 시간은 2시간 입니다." +
                 "<a href='" + serverUrl + "/member/verify?code=" + uuid + "'>계정 활성화하기</a>";
 
         try {
@@ -43,6 +44,7 @@ public class EmailService {
         String verifyUrl = serverUrl + "/member/verify?code=" + uuid;
         String htmlContent = "<p>NAMOO 서비스 비밀번호 초기화</p>" +
                 "<p>아래의 링크를 클릭하여 계정의 비밀번호를 변경해주세요.</p>" +
+                "<p>링크의 유효 시간은 2시간 입니다." +
                 "<a href='" + clientUrl + "/password/reset?code=" + uuid + "&email=" + to + "'>계정 활성화하기</a>";
 
         try {
