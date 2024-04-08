@@ -5,10 +5,12 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import wku.smartplant.dto.plant.PlantHistoryDTO;
 
 @Entity
 @RequiredArgsConstructor
 @Getter
+@Builder
 public class PlantHistory extends BaseTimeEntity {
     @Id @GeneratedValue
     @Column(name = "plant_history_id")
@@ -25,14 +27,12 @@ public class PlantHistory extends BaseTimeEntity {
     @JoinColumn(name = "plant_id")
     private Plant plant;
 
-    @Builder
-    public PlantHistory(Long id, Long memberId, Double temp, Double humidity, Double water, Double light, Plant plant) {
-        this.id = id;
-        this.memberId = memberId;
-        this.temp = temp;
-        this.humidity = humidity;
-        this.water = water;
-        this.light = light;
+    public PlantHistory(PlantHistoryDTO plantHistoryDTO, Plant plant) {
+        this.memberId = plant.getMember().getId();
+        this.temp = plantHistoryDTO.getTemp();
+        this.humidity = plantHistoryDTO.getHumidity();
+        this.water = plantHistoryDTO.getWater();
+        this.light = plantHistoryDTO.getLight();
         this.plant = plant;
     }
 }

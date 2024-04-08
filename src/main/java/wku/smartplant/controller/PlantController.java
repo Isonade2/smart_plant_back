@@ -45,4 +45,9 @@ public class PlantController {
 
         return build("식물 등록 성공", HttpStatus.OK);
     }
+
+    @GetMapping
+    public ResponseEntity<ResponseDTO<?>> getPlantList() {
+        return build("식물 리스트", HttpStatus.OK, plantService.getAllPlants());
+    }
 }

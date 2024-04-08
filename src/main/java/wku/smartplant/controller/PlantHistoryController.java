@@ -15,6 +15,8 @@ import wku.smartplant.dto.plant.PlantHistoryDTO;
 import wku.smartplant.jwt.SecurityUtil;
 import wku.smartplant.service.PlantHistoryService;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
@@ -25,11 +27,16 @@ public class PlantHistoryController {
     private final PlantHistoryService plantHistoryService;
 
     @GetMapping("/{plantId}")
-    public ResponseEntity<ResponseDTO<?>> getAll(@PathVariable Long plantId, Pageable pageable) {
+    public ResponseEntity<ResponseDTO<?>> getAllByPlantId(@PathVariable Long plantId, Pageable pageable) {
         Long currentMemberId = SecurityUtil.getCurrentMemberId();
-        Page<PlantHistoryDTO> allHistory = plantHistoryService.findAllHistory(currentMemberId, plantId, pageable);
+        Page<PlantHistoryDTO> allHistory = plantHistoryService.findAllHistoryByPlantId(currentMemberId, plantId, pageable);
         return ResponseEntityBuilder.build("식물 기록입니다.", OK, allHistory);
+    }
 
+    @GetMapping
+    public ResponseEntity<ResponseDTO<?>> getAll() {
+        List<PlantHistoryDTO> allHistory = plantHistoryService.findAllHistory();
+        return ResponseEntityBuilder.build("전체 식물 기록입니다.", OK, allHistory);
     }
 
 }

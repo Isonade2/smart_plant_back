@@ -15,11 +15,13 @@ public class PlantDTO {
     private String name;
     private Long exp;
     private PlantType plantType;
+    private String uuid; //테스트 때만 사용
 
     public PlantDTO(Plant plant) {
         id = plant.getId();
         name = plant.getName();
         exp = plant.getExp();
         plantType = plant.getPlantType();
+        uuid = plant.getUuid(); //추후 삭제
     }
 }

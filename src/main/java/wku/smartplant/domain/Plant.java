@@ -34,6 +34,10 @@ public class Plant extends BaseTimeEntity {
     @OneToMany(mappedBy = "plant")
     private List<PlantHistory> plantHistory = new ArrayList<>();
 
+    public void changeExp(Long exp) {
+        this.exp = exp;
+    }
+
     @Builder
     public Plant(String name,Member member, PlantType plantType) {
         this.id = null;
