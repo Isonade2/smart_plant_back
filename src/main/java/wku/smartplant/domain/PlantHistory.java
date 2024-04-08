@@ -2,6 +2,7 @@ package wku.smartplant.domain;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import wku.smartplant.dto.plant.PlantHistoryDTO;
 @RequiredArgsConstructor
 @Getter
 @Builder
+@AllArgsConstructor
 public class PlantHistory extends BaseTimeEntity {
     @Id @GeneratedValue
     @Column(name = "plant_history_id")
