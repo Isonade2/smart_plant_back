@@ -39,7 +39,14 @@ public class PlantHistoryService {
         plantHistoryRepository.save(plantHistory);
 
         log.info("{} uuid 식물 기록 성공", uuid);
-        return "저장 성공";
+        String msg;
+        if (findPlant.getGiveWater()) {
+            msg = "water";
+            findPlant.changeGiveWater(false);
+        } else {
+            msg = "saved";
+        }
+        return msg;
     }
 
     public Page<PlantHistoryDTO> findAllHistoryByPlantId(Long memberId, Long plantId, Pageable pageable) {

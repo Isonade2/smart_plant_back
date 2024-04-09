@@ -6,10 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import wku.smartplant.dto.ResponseDTO;
 import wku.smartplant.dto.plant.PlantRequestDTO;
 import wku.smartplant.jwt.SecurityUtil;
@@ -35,7 +32,7 @@ public class PlantController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<ResponseDTO<?>> join(PlantRequestDTO plantRequestDTO){
+    public ResponseEntity<ResponseDTO<?>> join(PlantRequestDTO plantRequestDTO) {
         log.info("join");
         log.info(plantRequestDTO.toString());
         Long currentMemberId = SecurityUtil.getCurrentMemberId();
@@ -49,8 +46,14 @@ public class PlantController {
 //        } catch (Exception e){
 //            return build(e.getMessage(), HttpStatus.UNAUTHORIZED);
 //        }
+    }
 
-
+    @GetMapping("/{plantId}/water")
+    public ResponseEntity<ResponseDTO<?>> changeWaterState(@PathVariable Long plantId) {
+        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+        Boolean changedState = plantService.changeGiveWater(currentMemberId, plantId); //바뀐 상태
+        String msg = "바뀐 상태는 " + changedState + "입니다.";
+        return build(msg, HttpStatus.OK, changedState);
     }
 
     @GetMapping

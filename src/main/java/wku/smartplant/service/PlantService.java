@@ -56,12 +56,20 @@ public class PlantService {
                 .collect(toList());
     }
 
-    public PlantDTO findPlantById(Long id){
+    public PlantDTO findPlantById(Long id) {
         Plant plant = plantRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("식물을 찾을 수 없습니다."));
         return new PlantDTO(plant);
     }
 
+    public Boolean changeGiveWater(Long memberId, Long plantId) {
+        Plant plant = plantRepository.findByIdAndMemberId(plantId, memberId)
+                .orElseThrow(() -> new EntityNotFoundException("식물을 찾을 수 없습니다."));
+
+        Boolean giveWaterState = plant.getGiveWater();
+        plant.changeGiveWater(!giveWaterState);
+        return plant.getGiveWater();
+    }
 
 
 }

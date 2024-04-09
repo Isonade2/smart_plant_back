@@ -16,6 +16,7 @@ public class PlantDTO {
     private Long exp;
     private PlantType plantType;
     private String uuid; //테스트 때만 사용
+    private Boolean giveWater;
 
     public PlantDTO(Plant plant) {
         id = plant.getId();
@@ -23,5 +24,6 @@ public class PlantDTO {
         exp = plant.getExp();
         plantType = plant.getPlantType();
         uuid = plant.getUuid(); //추후 삭제
+        giveWater = plant.getGiveWater();
     }
 }

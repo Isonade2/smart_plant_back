@@ -22,6 +22,7 @@ public class Plant extends BaseTimeEntity {
 
     private Long exp;
     private String uuid;
+    private Boolean giveWater;
     private Boolean activate;
 
     @Enumerated(EnumType.STRING)
@@ -37,18 +38,19 @@ public class Plant extends BaseTimeEntity {
     public void changeExp(Long exp) {
         this.exp = exp;
     }
+    public void changeGiveWater(Boolean bool) {
+        this.giveWater = bool;
+    }
 
     @Builder
     public Plant(String name,Member member, PlantType plantType) {
-        this.id = null;
         this.name = name;
         this.member = member;
         this.plantType = plantType;
         this.uuid = UUID.randomUUID().toString();
         this.exp = 0L;
+        this.id = null;
+        this.giveWater = false;
         this.activate = false;
     }
-
-
-
 }
