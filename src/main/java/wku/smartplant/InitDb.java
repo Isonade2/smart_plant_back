@@ -35,14 +35,14 @@ public class InitDb {
         private final PlantRepository plantRepository;
 
         public void dbInit() { // 초기 더미데이터 생성. Member, Plant 엔티티 생성
-            Member koalaMember = memberService.joinMember(MemberJoinRequest.builder().username("koala").email("koala@naver.com").password("0000").memberPlatform(MemberPlatform.GOOGLE).build());
+            Member koalaMember = memberService.joinMember(MemberJoinRequest.builder().username("koala").email("koala@naver.com").password("a1234567").memberPlatform(MemberPlatform.GOOGLE).build());
             plantRepository.save(new Plant("알라의 상추", koalaMember, PlantType.상추));
             plantRepository.save(new Plant("알라의 대파", koalaMember, PlantType.대파));
             plantRepository.save(new Plant("알라의 양파", koalaMember, PlantType.양파));
-            Member manboMember = memberService.joinMember(MemberJoinRequest.builder().username("manbo").email("manbo@naver.com").password("0000").memberPlatform(MemberPlatform.GOOGLE).build());
+            Member manboMember = memberService.joinMember(MemberJoinRequest.builder().username("manbo").email("manbo@naver.com").password("a1234567").memberPlatform(MemberPlatform.GOOGLE).build());
             plantRepository.save(new Plant("만보의 무럭1", manboMember, PlantType.상추));
             plantRepository.save(new Plant("만보의 무럭2", manboMember, PlantType.상추));
-            memberService.joinMember(MemberJoinRequest.builder().username("peach").email("peach@google.com").password("0000").memberPlatform(MemberPlatform.GOOGLE).build());
+            memberService.joinMember(MemberJoinRequest.builder().username("peach").email("peach@google.com").password("a1234567").memberPlatform(MemberPlatform.GOOGLE).build());
 
 
 //            Plant plant1 = createPlant("모람이", PlantType.대파, member1);

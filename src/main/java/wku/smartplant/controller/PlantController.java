@@ -50,8 +50,8 @@ public class PlantController {
 
     @GetMapping("/{plantId}/water")
     public ResponseEntity<ResponseDTO<?>> changeWaterState(@PathVariable Long plantId) {
-        Long currentMemberId = SecurityUtil.getCurrentMemberId();
-        Boolean changedState = plantService.changeGiveWater(currentMemberId, plantId); //바뀐 상태
+        //Long currentMemberId = SecurityUtil.getCurrentMemberId(); 테스트 할떄만 주석
+        Boolean changedState = plantService.changeGiveWater(1L, plantId); //바뀐 상태
         String msg = "바뀐 상태는 " + changedState + "입니다.";
         return build(msg, HttpStatus.OK, changedState);
     }
