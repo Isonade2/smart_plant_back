@@ -57,8 +57,8 @@ public class MemberJoinRequest {
 
     public Member toEntity() {
         return Member.builder()
-                .username(username)
-                .email(email)
+                .username(username.trim())
+                .email(email.trim())
                 .password(password)
                 .memberPlatform(memberPlatform)
                 .activate(activate)

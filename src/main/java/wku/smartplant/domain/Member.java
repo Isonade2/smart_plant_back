@@ -52,6 +52,8 @@ public class Member extends BaseTimeEntity {
         this.activate = activate;
     }
 
+    public void changePassword(String password) { this.password = password; }
+
     @Builder
     public Member(String username, String email, String password, Address address, MemberPlatform memberPlatform, Boolean activate){
         this.id = null;

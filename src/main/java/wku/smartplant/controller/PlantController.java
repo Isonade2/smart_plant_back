@@ -52,4 +52,9 @@ public class PlantController {
 
 
     }
+
+    @GetMapping
+    public ResponseEntity<ResponseDTO<?>> getPlantList() {
+        return build("식물 리스트", HttpStatus.OK, plantService.getAllPlants());
+    }
 }
