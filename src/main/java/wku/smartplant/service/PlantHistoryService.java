@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.Plant;
 import wku.smartplant.domain.PlantHistory;
 import wku.smartplant.dto.plant.PlantHistoryDTO;
@@ -23,6 +24,7 @@ public class PlantHistoryService {
     private final PlantRepository plantRepository;
     private final PlantHistoryRepository plantHistoryRepository;
 
+    @Transactional
     public String saveHistoryByArduino(String uuid, PlantHistoryDTO plantHistoryDTO) {
         Optional<Plant> findPlantOptional = plantRepository.findByUuid(uuid);
 
