@@ -15,8 +15,8 @@ const char* ssid = "iPhone 13 (3)"; // WiFi 네트워크 이름
 const char* password = "11111111"; // WiFi 비밀번호
 const char* uuid = "5b44da51-62bb-4aa3-8502-4627d3a2354c";
 
-int temp;
-int humidity;
+float temp;
+float humidity;
 int light;
 String receivedData;
 // ------------ 토양 습도 센서 값 리딩 ---------------
@@ -50,8 +50,8 @@ void loop() {
   // ------------ 토양 습도 센서 값 리딩 end ---------------
   // ------------- 온습도 센서 값 리딩 start ---------------
      Serial.println("");
-     float h = dht.readHumidity();
-     float t = dht.readTemperature();
+     temp = dht.readHumidity();
+     huma = dht.readTemperature();
      Serial.print("Humidity:");
      Serial.println(h);
      Serial.print("Temperature:");
