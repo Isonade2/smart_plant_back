@@ -23,8 +23,9 @@ public class PlantHistory extends BaseTimeEntity {
     private Double temp; //온도
     private Double humidity; //습도
     private Double soilHumidity; //토양습도
-    private Double water;  // 물 용량
-    private Double light; // 조도
+    private Double remainingWater;  //남은 물 용량
+    private Boolean gaveWater; //물을 줬는지
+    private Double light; //조도
 
     @ManyToOne
     @JoinColumn(name = "plant_id")
@@ -35,7 +36,8 @@ public class PlantHistory extends BaseTimeEntity {
         this.temp = plantHistoryDTO.getTemp();
         this.humidity = plantHistoryDTO.getHumidity();
         this.soilHumidity = plantHistoryDTO.getSoilHumidity();
-        this.water = plantHistoryDTO.getWater();
+        this.remainingWater = plantHistoryDTO.getRemainingWater();
+        this.gaveWater = plantHistoryDTO.getGaveWater();
         this.light = plantHistoryDTO.getLight();
         this.plant = plant;
     }

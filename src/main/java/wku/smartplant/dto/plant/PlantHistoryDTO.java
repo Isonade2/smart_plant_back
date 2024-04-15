@@ -16,7 +16,8 @@ public class PlantHistoryDTO {
     private Double temp; //온도
     private Double humidity; //습도
     private Double soilHumidity; //토양습도
-    private Double water;  // 물 용량
+    private Double remainingWater;  // 물 용량
+    private Boolean gaveWater;
     private Double light; // 조도
 
     public PlantHistoryDTO(PlantHistory plantHistory) {
@@ -25,7 +26,8 @@ public class PlantHistoryDTO {
         temp = plantHistory.getTemp();
         humidity = plantHistory.getHumidity();
         soilHumidity = plantHistory.getSoilHumidity();
-        water = plantHistory.getWater();
+        remainingWater = plantHistory.getRemainingWater();
+        gaveWater = plantHistory.getGaveWater();
         light = plantHistory.getLight();
     }
 
