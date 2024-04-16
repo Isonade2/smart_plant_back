@@ -48,9 +48,9 @@ public class MemberController {
 
     @Operation(summary = "이메일 활성화",
             description = "이메일 활성화 링크를 클릭하면 서버측 /verify 로 이동되고 유저 활성화 후 " +
-                    "'프론트/login?activate=true' 로 리다이렉트 시킴. 프론트에서는 activate param을 보고 활성화가 완료됐다는 알림을 로그인 화면에 표시해야됨 ",
+                    "'프론트/signin?activate=true' 로 리다이렉트 시킴. 프론트에서는 activate param을 보고 활성화가 완료됐다는 알림을 로그인 화면에 표시해야됨 ",
             responses = {
-                    @ApiResponse(responseCode = "302", description = "'프론트주소/login?activate=true' 성공 시 리턴")
+                    @ApiResponse(responseCode = "302", description = "'프론트주소/signin?activate=true' 성공 시 리턴")
             })
     @GetMapping("/verify")
     public void callback(@RequestParam("code") String uuid, HttpServletResponse response) throws IOException {
@@ -60,7 +60,7 @@ public class MemberController {
             response.sendRedirect(clientId + "/needActivate?expired=true");
         }
 
-        response.sendRedirect(clientId + "/login?activate=true");
+        response.sendRedirect(clientId + "/signin?activate=true");
 
     }
     @PostMapping("/activate/resend") //활성화 메일 재요청
