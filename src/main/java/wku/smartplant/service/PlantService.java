@@ -62,6 +62,7 @@ public class PlantService {
         return new PlantDTO(plant);
     }
 
+    @Transactional
     public Boolean changeGiveWater(Long memberId, Long plantId) {
         Plant plant = plantRepository.findByIdAndMemberId(plantId, memberId)
                 .orElseThrow(() -> new EntityNotFoundException("식물을 찾을 수 없습니다."));

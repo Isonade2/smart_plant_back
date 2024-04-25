@@ -24,32 +24,6 @@ public class PlantHistoryService {
     private final PlantRepository plantRepository;
     private final PlantHistoryRepository plantHistoryRepository;
 
-    @Transactional
-    public String saveHistoryByArduino(String uuid, PlantHistoryDTO plantHistoryDTO) {
-        Optional<Plant> findPlantOptional = plantRepository.findByUuid(uuid);
-
-        if (findPlantOptional.isEmpty()) {
-            log.error("{} uuid 식물을 찾을 수 없습니다.", uuid);
-            return "Plant not found";
-        }
-
-        Plant findPlant = findPlantOptional.get();
-        findPlant.changeExp(findPlant.getExp() + 10);
-
-        PlantHistory plantHistory = new PlantHistory(plantHistoryDTO, findPlant);
-
-        plantHistoryRepository.save(plantHistory);
-
-        log.info("{} uuid 식물 기록 성공", uuid);
-        String msg;
-        if (findPlant.getGiveWater()) {
-            msg = "water";
-            findPlant.changeGiveWater(false);
-        } else {
-            msg = "saved";
-        }
-        return msg;
-    }
 
     public Page<PlantHistoryDTO> findAllHistoryByPlantId(Long memberId, Long plantId, Pageable pageable) {
         Page<PlantHistory> plantHistoryPage = plantHistoryRepository.findByPlantIdAndMemberId(plantId, memberId, pageable);

@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import wku.smartplant.domain.PlantHistory;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,6 +21,7 @@ public class PlantHistoryDTO {
     private Double remainingWater;  // 물 용량
     private Boolean gaveWater;
     private Double light; // 조도
+    private LocalDateTime createdDate; //날짜
 
     public PlantHistoryDTO(PlantHistory plantHistory) {
         id = plantHistory.getId();
@@ -29,6 +32,7 @@ public class PlantHistoryDTO {
         remainingWater = plantHistory.getRemainingWater();
         gaveWater = plantHistory.getGaveWater();
         light = plantHistory.getLight();
+        createdDate = plantHistory.getCreatedDate();
     }
 
 }

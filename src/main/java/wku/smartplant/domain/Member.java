@@ -38,7 +38,7 @@ public class Member extends BaseTimeEntity {
     private Address address;
 
     @JsonIgnore @BatchSize(size = 50)
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Plant> plants = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")

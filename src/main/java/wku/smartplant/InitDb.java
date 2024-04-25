@@ -4,6 +4,7 @@ package wku.smartplant;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.*;
@@ -28,6 +29,7 @@ public class InitDb {
     @Component
     @RequiredArgsConstructor
     @Transactional
+    @Slf4j
     public static class InitService {
         private final EntityManager em;
         private final OrderService orderService;
@@ -36,7 +38,8 @@ public class InitDb {
 
         public void dbInit() { // 초기 더미데이터 생성. Member, Plant 엔티티 생성
             Member koalaMember = memberService.joinMember(MemberJoinRequest.builder().username("koala").email("koala@naver.com").password("a1234567").memberPlatform(MemberPlatform.GOOGLE).build());
-            plantRepository.save(new Plant("알라의 상추", koalaMember, PlantType.상추));
+            Plant savedPlant = plantRepository.save(new Plant("알라의 상추", koalaMember, PlantType.상추));
+            log.info("첫번째 식물 uuid : {}", savedPlant.getUuid());
             plantRepository.save(new Plant("알라의 대파", koalaMember, PlantType.대파));
             plantRepository.save(new Plant("알라의 양파", koalaMember, PlantType.양파));
             Member manboMember = memberService.joinMember(MemberJoinRequest.builder().username("manbo").email("manbo@naver.com").password("a1234567").memberPlatform(MemberPlatform.GOOGLE).build());

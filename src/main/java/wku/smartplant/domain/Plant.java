@@ -32,7 +32,7 @@ public class Plant extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "plant")
+    @OneToMany(mappedBy = "plant", cascade = CascadeType.REMOVE)
     private List<PlantHistory> plantHistory = new ArrayList<>();
 
     public void changeExp(Long exp) {

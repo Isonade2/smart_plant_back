@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wku.smartplant.dto.plant.PlantHistoryDTO;
 
+import java.time.LocalDateTime;
+
 @Entity
 @RequiredArgsConstructor
 @Getter
@@ -27,7 +29,7 @@ public class PlantHistory extends BaseTimeEntity {
     private Boolean gaveWater; //물을 줬는지
     private Double light; //조도
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plant_id")
     private Plant plant;
 
