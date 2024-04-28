@@ -2,7 +2,6 @@
 #include <HTTPClient.h>
 #include <DHT.h>
 
-#define DHTPIN 22       // DHT11 센서가 연결된 핀 번호
 #define DHTTYPE DHT11  // 사용하는 센서 타입 DHT11
 
 
@@ -42,8 +41,10 @@ void setup() {
 }
 
 void loop() {
-  if (timeCount % 2 == 0)
-  httpConnect();
+  if (timeCount % 30 == 0) //5분마다 서버에 저장
+    saveSensingToServer();
+  if (timeCount % 2 == 0 && timeCount % 30 != 0) //20초마다 서버에서 물주기상태 체크, save랑 겹치치 않게 조건 추가
+    waterCheckToServer();
   sensing();
   delay(10000); //Send a request every 10 seconds
   timeCount++;
@@ -65,10 +66,36 @@ void sensing() {
     Serial.println(humidity);
 }
 
-void httpConnect() {
+void saveSensingToServer() {
     if(WiFi.status()== WL_CONNECTED){   //Check WiFi connection status
         HTTPClient http;
         http.begin("http://54.180.68.191:8080/arduino/" + String(uuid) + "?" + "temp=" + temp + "&humidity=" + humidity + "&light=" + light + "&soilHumidity=" + soilHumidity);  //Specify the URL
+        int httpCode = http.GET();
+
+        if (httpCode > 0) { //Check for the returning code
+            String payload = http.getString();
+            Serial.println(httpCode);
+            Serial.println(payload);
+
+            if (payload == "water") {
+              digitalWrite(AA, HIGH);
+              digitalWrite(AB, LOW);
+              delay(7000);
+              digitalWrite(AA, LOW);
+              digitalWrite(AB, LOW);
+            }
+        }
+        else {
+          Serial.println("Error on HTTP request");
+        }
+        http.end(); //Free the resources
+    }
+}
+
+void waterCheckToServer() {
+    if(WiFi.status()== WL_CONNECTED){   //Check WiFi connection status
+        HTTPClient http;
+        http.begin("http://54.180.68.191:8080/arduino/" + String(uuid) + "/water");  //Specify the URL
         int httpCode = http.GET();
 
         if (httpCode > 0) { //Check for the returning code

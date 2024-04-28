@@ -59,6 +59,7 @@ public class ArduinoService {
 
         if (findPlant.getGiveWater()) {
             findPlant.changeGiveWater(false);
+            findPlant.changeExp(findPlant.getExp() + 10);
             return "water"; //아두이노에서 water 문자를 받으면 물을 줌
         } else {
             return "water state false";
