@@ -10,9 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.*;
 import wku.smartplant.dto.member.MemberJoinRequest;
 import wku.smartplant.dto.order.OrderRequest;
+import wku.smartplant.repository.MemberRepository;
 import wku.smartplant.repository.PlantRepository;
 import wku.smartplant.service.MemberService;
 import wku.smartplant.service.OrderService;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -35,8 +38,15 @@ public class InitDb {
         private final OrderService orderService;
         private final MemberService memberService;
         private final PlantRepository plantRepository;
+        private final MemberRepository memberRepository;
 
         public void dbInit() { // 초기 더미데이터 생성. Member, Plant 엔티티 생성
+            List<Member> allMember = memberRepository.findAll();
+            if (!allMember.isEmpty()) {
+                log.info("이미 데이터가 있으므로 데이터 생성을 하지않았음");
+                return;
+            }
+
             Member koalaMember = memberService.joinMember(MemberJoinRequest.builder().username("koala").email("koala@naver.com").password("a1234567").memberPlatform(MemberPlatform.GOOGLE).build());
             Plant savedPlant = plantRepository.save(new Plant("알라의 상추", koalaMember, PlantType.상추));
             log.info("첫번째 식물 uuid : {}", savedPlant.getUuid());

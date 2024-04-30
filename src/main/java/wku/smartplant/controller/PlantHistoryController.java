@@ -36,7 +36,7 @@ public class PlantHistoryController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDTO<?>> getAll(@PageableDefault(size = 30, sort = "createdAt", direction = Sort.Direction.DESC)
+    public ResponseEntity<ResponseDTO<?>> getAll(@PageableDefault(size = 30, sort = "createdDate", direction = Sort.Direction.DESC)
                                                      Pageable pageable) {
         Page<PlantHistoryDTO> allHistory = plantHistoryService.findAllHistory(pageable);
         return ResponseEntityBuilder.build("전체 식물 기록입니다.", OK, allHistory);
