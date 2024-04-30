@@ -33,7 +33,11 @@ public class PlantController {
     }
 
     @PostMapping("/join")
+<<<<<<< HEAD
     public ResponseEntity<ResponseDTO<?>> join(@Valid @RequestBody PlantRequestDTO plantRequestDTO){
+=======
+    public ResponseEntity<ResponseDTO<?>> join(PlantRequestDTO plantRequestDTO) {
+>>>>>>> main
         log.info("join");
         log.info(plantRequestDTO.toString());
         Long currentMemberId = SecurityUtil.getCurrentMemberId();
@@ -47,7 +51,18 @@ public class PlantController {
 //        } catch (Exception e){
 //            return build(e.getMessage(), HttpStatus.UNAUTHORIZED);
 //        }
+    }
 
+    @GetMapping("/{plantId}/water")
+    public ResponseEntity<ResponseDTO<?>> changeWaterState(@PathVariable Long plantId) {
+        //Long currentMemberId = SecurityUtil.getCurrentMemberId(); 테스트 할떄만 주석
+        Boolean changedState = plantService.changeGiveWater(1L, plantId); //바뀐 상태
+        String msg = "바뀐 상태는 " + changedState + "입니다.";
+        return build(msg, HttpStatus.OK, changedState);
+    }
 
+    @GetMapping
+    public ResponseEntity<ResponseDTO<?>> getPlantList() {
+        return build("식물 리스트", HttpStatus.OK, plantService.getAllPlants());
     }
 }

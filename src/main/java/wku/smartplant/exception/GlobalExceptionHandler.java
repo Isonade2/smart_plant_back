@@ -92,4 +92,9 @@ public class GlobalExceptionHandler {
         return build("올바르지 않은 형식이 있습니다.", BAD_REQUEST, errors);
 //        return ResponseEntity.badRequest().body(errors);
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ResponseDTO<?>> handleIllegalStateException(IllegalStateException ex) {
+        return build(ex.getMessage(), NOT_ACCEPTABLE);
+    }
 }

@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.Item;
+import wku.smartplant.domain.Member;
+import wku.smartplant.domain.MemberPlatform;
 import wku.smartplant.domain.OrderItem;
 import wku.smartplant.dto.ResponseDTO;
 import wku.smartplant.repository.ItemRepository;
@@ -32,19 +34,8 @@ class SmartPlantApplicationTests {
 
 	@Test
 	void test(){
-		Item item = new Item();
-		item.setName("상추");
-		item.setPrice(1000);
-		item.setStockQuantity(10);
-		itemRepository.save(item);
-
-		Item findItem = itemRepository.findById(item.getId()).get();
-//		OrderItem orderItem = OrderItem.builder()
-//				.item(itemRepository.findById(1L).get())
-//				.count(10)
-//				.orderPrice(2000)
-//				.build();
-//		em.persist(orderItem);
+		//given
+		Member member = new Member("koala","playgm1@naver.com","00000000",null, MemberPlatform.LOCAL,true);
 	}
 
 }

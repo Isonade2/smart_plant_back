@@ -9,5 +9,6 @@ import java.util.Optional;
 public interface PlantRepository extends JpaRepository<Plant, Long> {
 
     Optional<Plant> findByUuid(String uuid);
+    Optional<Plant> findByIdAndMemberId(Long plantId, Long memberId);
     List<Plant> findAllByMemberId(Long memberId);
 }

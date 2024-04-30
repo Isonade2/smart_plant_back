@@ -32,6 +32,9 @@ public class KakaoLoginController {
     @Value("${kakao.client_id}")
     private String client_id;
 
+    @Value("${client.url}")
+    private String clientUrl;
+
     @Operation(summary = "카카오 로그인 콜백",
             description = "성공 시 사용자는 지정된 URL로 리다이렉트됩니다. 리다이렉트 URL은 다음과 같은 쿼리 파라미터를 포함합니다: 'email', 'username', 'token'. 각 파라미터는 URL 인코딩됩니다.",
             responses = {
@@ -53,10 +56,10 @@ public class KakaoLoginController {
             String tokenParam = URLEncoder.encode(memberLoginResponse.getToken(), StandardCharsets.UTF_8.toString());
 
             String params = "email=" + emailParam + "&username=" + usernameParam + "&token=" + tokenParam;
-            response.sendRedirect("http://localhost:5173/loginSuccess?" + params);
+            response.sendRedirect(clientUrl + "/loginSuccess?" + params);
         } catch (EmailAlreadyExistsException ex) { //이미 다른플랫폼으로 가입 했을시
             String errorMessage = URLEncoder.encode("이미 다른 플랫폼으로 가입한 이메일입니다.", StandardCharsets.UTF_8);
-            response.sendRedirect("http://localhost:5173/errorPage?message=" + errorMessage);
+            response.sendRedirect(clientUrl + "/errorPage?message=" + errorMessage);
         }
 
     }

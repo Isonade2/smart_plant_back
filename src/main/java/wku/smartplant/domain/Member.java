@@ -38,7 +38,7 @@ public class Member extends BaseTimeEntity {
     private Address address;
 
     @JsonIgnore @BatchSize(size = 50)
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Plant> plants = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
@@ -51,6 +51,8 @@ public class Member extends BaseTimeEntity {
     public void changeActivate(Boolean activate) {
         this.activate = activate;
     }
+
+    public void changePassword(String password) { this.password = password; }
 
     @Builder
     public Member(String username, String email, String password, Address address, MemberPlatform memberPlatform, Boolean activate){

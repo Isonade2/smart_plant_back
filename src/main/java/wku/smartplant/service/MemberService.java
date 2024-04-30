@@ -9,7 +9,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.EmailVerify;
-import wku.smartplant.domain.MemberPlatform;
 import wku.smartplant.jwt.JwtTokenUtil;
 import wku.smartplant.domain.Member;
 import wku.smartplant.dto.member.MemberJoinRequest;
@@ -19,6 +18,8 @@ import wku.smartplant.exception.EmailAlreadyExistsException;
 import wku.smartplant.repository.EmailVerifyRepository;
 import wku.smartplant.repository.MemberRepository;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static wku.smartplant.domain.MemberPlatform.*;
@@ -49,7 +50,7 @@ public class MemberService {
         if (member.getMemberPlatform() == LOCAL) {
             EmailVerify emailVerify = new EmailVerify(member, member.getEmail());
             member.changeEmailVerify(emailVerify);
-            emailService.sendVerifyMail(memberJoinRequest.getEmail(), emailVerify.getUuid());
+            emailService.sendJoinVerifyMail(memberJoinRequest.getEmail(), emailVerify.getUuid());
         }
         return memberRepository.save(member);
     }
@@ -96,6 +97,8 @@ public class MemberService {
         EmailVerify findEmailVerify = emailVerifyRepository.findByUuid(uuid)
                 .orElseThrow(() -> new EntityNotFoundException("잘못되거나 만료된 인증입니다."));
 
+        timeExpiredCheck(findEmailVerify);
+
         System.out.println("findEmailVerify.getMember() = " + findEmailVerify.getMember());
         findEmailVerify.getMember().changeActivate(true);
         findEmailVerify.getMember().changeEmailVerify(null);
@@ -103,10 +106,62 @@ public class MemberService {
 
         log.info("{} 계정 활성화. UUID = {}", findEmailVerify.getEmail(), findEmailVerify.getUuid());
     }
+
     @Transactional
     public Member findMemberById(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다."));
     }
 
+    @Transactional
+    public void resendActivateMail(String email) {
+        Member findMember = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("가입 이력이 없는 이메일입니다."));
+
+        if (findMember.getActivate()) {
+            throw new IllegalStateException("이미 활성화 된 메일입니다.");
+        }
+
+        EmailVerify newEmailVerify = new EmailVerify(findMember, email);
+        findMember.changeEmailVerify(newEmailVerify);
+        emailService.sendJoinVerifyMail(email, newEmailVerify.getUuid());
+    }
+
+    @Transactional
+    public void passwordResetRequest(String email) {
+        Member findMember = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("잘못된 이메일 입니다."));
+
+        if (!findMember.getActivate()) {
+            throw new IllegalStateException("아직 가입이 완료되지 않은 이메일입니다.");
+        }
+
+        EmailVerify emailVerify = new EmailVerify(findMember, email);
+        findMember.changeEmailVerify(emailVerify);
+
+        emailService.sendPasswordResetMail(email, emailVerify.getUuid());
+    }
+
+    @Transactional
+    public void changePassword(String email, String password, String uuid) {
+        EmailVerify findEmailVerify = emailVerifyRepository.findByEmailAndUuid(email, uuid)
+                .orElseThrow(() -> new IllegalArgumentException("인증 정보가 잘못됐습니다."));
+
+        timeExpiredCheck(findEmailVerify);
+
+        Member findMember = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("해당 유저가 존재하지 않습니다."));
+
+        findMember.changePassword(passwordEncoder.encode(password));
+    }
+
+    private void timeExpiredCheck(EmailVerify findEmailVerify) {
+        Duration duration = Duration.between(findEmailVerify.getCreatedDate(), LocalDateTime.now());
+        if (duration.toMinutes() > 120) {
+            log.info("{} 활성화 이메일 만료", findEmailVerify.getEmail());
+            emailVerifyRepository.delete(findEmailVerify);
+
+            throw new IllegalStateException("메일 인증 시간이 만료되었습니다.");
+        }
+    }
 }

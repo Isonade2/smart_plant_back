@@ -49,10 +49,28 @@ public class PlantService {
                 .collect(toList());
     }
 
-    public PlantDTO findPlantById(Long id){
+    public List<PlantDTO> getAllPlants() {
+        List<Plant> plants = plantRepository.findAll();
+
+        return plants.stream()
+                .map(PlantDTO::new)
+                .collect(toList());
+    }
+
+    public PlantDTO findPlantById(Long id) {
         Plant plant = plantRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("식물을 찾을 수 없습니다."));
         return new PlantDTO(plant);
+    }
+
+    @Transactional
+    public Boolean changeGiveWater(Long memberId, Long plantId) {
+        Plant plant = plantRepository.findByIdAndMemberId(plantId, memberId)
+                .orElseThrow(() -> new EntityNotFoundException("식물을 찾을 수 없습니다."));
+
+        Boolean giveWaterState = plant.getGiveWater();
+        plant.changeGiveWater(!giveWaterState);
+        return plant.getGiveWater();
     }
 
 
