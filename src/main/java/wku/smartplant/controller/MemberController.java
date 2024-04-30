@@ -1,7 +1,10 @@
 package wku.smartplant.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -36,6 +39,10 @@ public class MemberController {
         return build("가입 성공 " + joinedMember.getEmail() + " 메일함을 확인하여 계정을 활성화시켜주세요.", OK);
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = MemberLoginResponse.class))
+                    , useReturnTypeSchema = true)
+    })
     @PostMapping("/login")
     public ResponseEntity<ResponseDTO<?>> login(@Valid @RequestBody MemberLoginRequest memberLoginRequest) {
         MemberLoginResponse memberLoginResponse = memberService.loginMember(memberLoginRequest);

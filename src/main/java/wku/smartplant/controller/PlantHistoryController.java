@@ -3,6 +3,8 @@ package wku.smartplant.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,8 +36,9 @@ public class PlantHistoryController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDTO<?>> getAll() {
-        List<PlantHistoryDTO> allHistory = plantHistoryService.findAllHistory();
+    public ResponseEntity<ResponseDTO<?>> getAll(@PageableDefault(size = 30, sort = "createdAt", direction = Sort.Direction.DESC)
+                                                     Pageable pageable) {
+        Page<PlantHistoryDTO> allHistory = plantHistoryService.findAllHistory(pageable);
         return ResponseEntityBuilder.build("전체 식물 기록입니다.", OK, allHistory);
     }
 

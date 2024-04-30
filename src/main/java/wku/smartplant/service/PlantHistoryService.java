@@ -3,6 +3,7 @@ package wku.smartplant.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,8 +31,11 @@ public class PlantHistoryService {
         return plantHistoryPage.map(PlantHistoryDTO::new);
     }
 
-    public List<PlantHistoryDTO> findAllHistory( ) {
-        List<PlantHistory> plantHistoryList = plantHistoryRepository.findAll();
-        return plantHistoryList.stream().map(PlantHistoryDTO::new).collect(Collectors.toList());
+    public Page<PlantHistoryDTO> findAllHistory(Pageable pageable) {
+        if (pageable.getPageSize() > 30) {
+            pageable = PageRequest.of(pageable.getPageNumber(), 30, pageable.getSort());
+        }
+        Page<PlantHistory> plantHistoryList = plantHistoryRepository.findAll(pageable);
+        return plantHistoryList.map(PlantHistoryDTO::new);
     }
 }
