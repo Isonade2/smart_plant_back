@@ -42,7 +42,7 @@ public class OrderController {
     }
 
     @PostMapping // 주문 생성
-    public ResponseEntity<ResponseDTO<Long>> createOrder(@Valid @RequestBody OrderRequest orderRequest, BindingResult bindingResult){
+    public ResponseEntity<ResponseDTO<OrderDTO>> createOrder(@Valid @RequestBody OrderRequest orderRequest, BindingResult bindingResult){
         log.info("OrderController.createOrder");
         log.info("orderRequest : {}", orderRequest);
 //        if (bindingResult.hasErrors()) {
