@@ -40,6 +40,8 @@ public class PlantController {
     }
 
     @GetMapping("{plantId}")
+    @Operation(summary = "사용자의 특정 식물 조회",
+            description = "사용자가 가지고 있는 특정 식물의 상세 정보를 조회함")
     public ResponseEntity<ResponseDTO<PlantDTO>> getPlant(@PathVariable Long plantId) {
         PlantDTO plantDTO = plantService.findPlantById(plantId);
         return build("식물 조회 성공", HttpStatus.OK, plantDTO);
