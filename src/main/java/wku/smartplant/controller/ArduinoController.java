@@ -19,7 +19,7 @@ public class ArduinoController {
     public String savePlantHistoryAndReturnWaterState(@PathVariable("uuid") String uuid,
                             @ModelAttribute PlantHistoryDTO plantHistoryDTO) {
         getCount++;
-        if (getCount % 15 == 0) {
+        if (getCount % 30 == 0) {
             return arduinoService.saveHistoryByArduino(uuid, plantHistoryDTO);
         }
         return "not saved";
