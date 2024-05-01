@@ -12,6 +12,7 @@ import wku.smartplant.dto.order.OrderRequest;
 import wku.smartplant.dto.orderitem.OrderItemDTO;
 import wku.smartplant.dto.plant.PlantRequestDTO;
 import wku.smartplant.exception.OrderNotFoundException;
+import wku.smartplant.jwt.SecurityUtil;
 import wku.smartplant.repository.ItemRepository;
 import wku.smartplant.repository.MemberRepository;
 import wku.smartplant.repository.OrderItemRepository;

@@ -20,13 +20,8 @@ public class InitDb {
     private final InitService initService;
 
 
-<<<<<<< HEAD
-    //@PostConstruct
-    public void init(){
-=======
     @PostConstruct
     public void init() {
->>>>>>> main
         initService.dbInit();
         initService.dbInit2();
     }

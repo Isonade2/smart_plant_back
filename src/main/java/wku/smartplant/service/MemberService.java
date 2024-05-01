@@ -15,6 +15,7 @@ import wku.smartplant.dto.member.MemberJoinRequest;
 import wku.smartplant.dto.member.MemberLoginRequest;
 import wku.smartplant.dto.member.MemberLoginResponse;
 import wku.smartplant.exception.EmailAlreadyExistsException;
+import wku.smartplant.jwt.SecurityUtil;
 import wku.smartplant.repository.EmailVerifyRepository;
 import wku.smartplant.repository.MemberRepository;
 

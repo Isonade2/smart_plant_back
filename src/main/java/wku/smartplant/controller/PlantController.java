@@ -33,11 +33,7 @@ public class PlantController {
     }
 
     @PostMapping("/join")
-<<<<<<< HEAD
     public ResponseEntity<ResponseDTO<?>> join(@Valid @RequestBody PlantRequestDTO plantRequestDTO){
-=======
-    public ResponseEntity<ResponseDTO<?>> join(PlantRequestDTO plantRequestDTO) {
->>>>>>> main
         log.info("join");
         log.info(plantRequestDTO.toString());
         Long currentMemberId = SecurityUtil.getCurrentMemberId();
