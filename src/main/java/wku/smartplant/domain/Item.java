@@ -11,6 +11,8 @@ public class Item {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     private Long id;
+
+    @Enumerated(EnumType.STRING)
     private PlantType plantType;
     private String name;
     private int price;

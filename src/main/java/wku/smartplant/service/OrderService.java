@@ -83,6 +83,7 @@ public class OrderService {
 
 
     private Address convertToAddress(AddressDTO addressDTO) {
+        if (addressDTO == null) return null;
         return new Address(addressDTO.getCity(), addressDTO.getStreet(), addressDTO.getZipcode(), addressDTO.getSpecify());
     }
 }
