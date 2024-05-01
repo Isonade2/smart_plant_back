@@ -33,7 +33,7 @@ public class OrderController {
 
 
     @GetMapping // 주문 목록 조회
-    public ResponseEntity<ResponseDTO<?>> getOrder(){
+    public ResponseEntity<ResponseDTO<List<OrderDTO>>> getOrder(){
         log.info("OrderController.getOrder");
         Long currentMemberId = SecurityUtil.getCurrentMemberId();
         List<OrderDTO> orders = orderService.getOrders(currentMemberId);
@@ -41,12 +41,12 @@ public class OrderController {
     }
 
     @PostMapping // 주문 생성
-    public ResponseEntity<ResponseDTO<?>> createOrder(@Valid @RequestBody OrderRequest orderRequest, BindingResult bindingResult){
+    public ResponseEntity<ResponseDTO<Long>> createOrder(@Valid @RequestBody OrderRequest orderRequest, BindingResult bindingResult){
         log.info("OrderController.createOrder");
         log.info("orderRequest : {}", orderRequest);
-        if (bindingResult.hasErrors()) {
-            return ResponseEntityBuilder.build(bindingResult.getAllErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST);
-        }
+//        if (bindingResult.hasErrors()) {
+//            return ResponseEntityBuilder.build(bindingResult.getAllErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST);
+//        }
         Long currentMemberId = SecurityUtil.getCurrentMemberId();
         Long orderOne = orderService.createOrderOne(currentMemberId, orderRequest);
 

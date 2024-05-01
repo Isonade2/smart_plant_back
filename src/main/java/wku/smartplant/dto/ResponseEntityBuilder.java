@@ -8,8 +8,8 @@ public class ResponseEntityBuilder {
     //HTTP 응답을 생성하는데 사용
 
     //응답에 데이터를 포함시킬때 사용
-    public static <T> ResponseEntity<ResponseDTO<?>> build(String message, HttpStatus statusCode, T content) {
-        return new ResponseEntity<>(ResponseDTO.builder()
+    public static <T> ResponseEntity<ResponseDTO<T>> build(String message, HttpStatus statusCode, T content) {
+        return new ResponseEntity<>(ResponseDTO.<T>builder()
                 .message(message)
                 .content(content)
                 .build(),statusCode);
