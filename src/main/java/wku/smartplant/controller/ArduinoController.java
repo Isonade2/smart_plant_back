@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import wku.smartplant.dto.plant.PlantHistoryDTO;
 import wku.smartplant.service.ArduinoService;
+import wku.smartplant.service.DiscordService;
 import wku.smartplant.service.PlantHistoryService;
 import wku.smartplant.service.PlantService;
 
@@ -13,6 +14,7 @@ import wku.smartplant.service.PlantService;
 public class ArduinoController {
 
     private final ArduinoService arduinoService;
+    private final DiscordService discordService;
     private int getCount = 0; //저장 횟수를 줄이기 위해. 배포 시 삭제
 
     @GetMapping("/{uuid}")
@@ -20,6 +22,7 @@ public class ArduinoController {
                             @ModelAttribute PlantHistoryDTO plantHistoryDTO) {
         getCount++;
         if (getCount % 30 == 0) {
+            discordService.sendDiscordMessage(plantHistoryDTO.toString());
             return arduinoService.saveHistoryByArduino(uuid, plantHistoryDTO);
         }
         return "not saved";
