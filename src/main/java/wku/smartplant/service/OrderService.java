@@ -14,10 +14,7 @@ import wku.smartplant.dto.orderitem.OrderItemDTO;
 import wku.smartplant.dto.plant.PlantRequestDTO;
 import wku.smartplant.exception.OrderNotFoundException;
 import wku.smartplant.jwt.SecurityUtil;
-import wku.smartplant.repository.ItemRepository;
-import wku.smartplant.repository.MemberRepository;
-import wku.smartplant.repository.OrderItemRepository;
-import wku.smartplant.repository.OrderRepository;
+import wku.smartplant.repository.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +29,7 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final OrderItemRepository orderItemRepository;
     private final PlantService plantService;
+    private final PlantRepository plantRepository;
 
 
     // 상품 주문 서비스
@@ -51,13 +49,18 @@ public class OrderService {
         //AddressDTO -> AddressEntity로 변경
         Address address = convertToAddress(orderRequest.getAddress());
 
-        Order order = new Order(member, OrderStatus.준비, address);
-        order.addOrderItem(orderItem);
-        orderRepository.save(order);
-        log.info("order : {}", order);
         PlantRequestDTO plantRequestDTO = new PlantRequestDTO(item.getPlantType(), orderRequest.getName());
         log.info("plantRequestDTO : {}", plantRequestDTO);
-        plantService.createPlant(plantRequestDTO, memberid);
+        Long plantId = plantService.createPlant(plantRequestDTO, memberid);
+        Plant plant = plantRepository.findById(plantId).orElseThrow(() -> new OrderNotFoundException("존재하지 않는 식물입니다."));
+
+        Order order = new Order(member, OrderStatus.준비, address, plant);
+        order.addOrderItem(orderItem);
+
+
+        orderRepository.save(order);
+        log.info("order : {}", order);
+
 
         return new OrderDTO(order.getId(), order.getStatus(), order.getAddress(), order.getOrderItems().stream().map(OrderItemDTO::new).collect(Collectors.toList()));
     }

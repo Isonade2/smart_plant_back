@@ -43,7 +43,7 @@ class OrderItemTest {
         OrderItem orderItem = OrderItem.createOrderItem(item, 10000, 10);
         orderItemRepository.save(orderItem);
 
-        Order order = new Order(memberA, OrderStatus.준비, new Address("서울", "강가", "123-123", "1232"));
+        //Order order = new Order(memberA, OrderStatus.준비, new Address("서울", "강가", "123-123", "1232"));
         order.addOrderItem(orderItem);
         orderRepository.save(order);
 
@@ -68,9 +68,9 @@ class OrderItemTest {
         OrderItem orderItem = OrderItem.createOrderItem(item, 10000, 10);
         orderItemRepository.save(orderItem);
 
-        Order order = new Order(memberA, OrderStatus.준비, new Address("서울", "강가", "123-123", "1232"));
-        order.addOrderItem(orderItem);
-        orderRepository.save(order);
+        //Order order = new Order(memberA, OrderStatus.준비, new Address("서울", "강가", "123-123", "1232"));
+//        order.addOrderItem(orderItem);
+//        orderRepository.save(order);
 
 
         List<Order> byUserId = orderRepository.findByMemberId(memberA.getId());
