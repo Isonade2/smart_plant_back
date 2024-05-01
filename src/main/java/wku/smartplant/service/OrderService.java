@@ -7,6 +7,7 @@ import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.*;
+import wku.smartplant.dto.order.AddressDTO;
 import wku.smartplant.dto.order.OrderDTO;
 import wku.smartplant.dto.order.OrderRequest;
 import wku.smartplant.dto.orderitem.OrderItemDTO;
@@ -46,11 +47,16 @@ public class OrderService {
         orderItemRepository.save(orderItem);
 
         log.info("orderItem : {}", orderItem);
-        Order order = new Order(member, OrderStatus.준비, member.getAddress());
+
+        //AddressDTO -> AddressEntity로 변경
+        Address address = convertToAddress(orderRequest.getAddress());
+
+        Order order = new Order(member, OrderStatus.준비, address);
         order.addOrderItem(orderItem);
         orderRepository.save(order);
         log.info("order : {}", order);
-        PlantRequestDTO plantRequestDTO = new PlantRequestDTO(item.getPlantType(), item.getName());
+        PlantRequestDTO plantRequestDTO = new PlantRequestDTO(item.getPlantType(), orderRequest.getName());
+        log.info("plantRequestDTO : {}", plantRequestDTO);
         plantService.createPlant(plantRequestDTO, memberid);
 
         return new OrderDTO(order.getId(), order.getStatus(), order.getAddress(), order.getOrderItems().stream().map(OrderItemDTO::new).collect(Collectors.toList()));
@@ -73,5 +79,10 @@ public class OrderService {
     public void cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException("존재하지 않는 주문입니다."));
         order.cancel();
+    }
+
+
+    private Address convertToAddress(AddressDTO addressDTO) {
+        return new Address(addressDTO.getCity(), addressDTO.getStreet(), addressDTO.getZipcode(), addressDTO.getSpecify());
     }
 }

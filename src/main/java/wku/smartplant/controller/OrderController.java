@@ -41,15 +41,15 @@ public class OrderController {
         return ResponseEntityBuilder.build("주문 조회 성공", HttpStatus.OK,orders);
     }
 
-    @PostMapping // 주문 생성
+    @PostMapping // 클라이언트로부터 주문을 받는 컨트롤러
     public ResponseEntity<ResponseDTO<OrderDTO>> createOrder(@Valid @RequestBody OrderRequest orderRequest, BindingResult bindingResult){
         log.info("OrderController.createOrder");
         log.info("orderRequest : {}", orderRequest);
-//        if (bindingResult.hasErrors()) {
-//            return ResponseEntityBuilder.build(bindingResult.getAllErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST);
-//        }
-        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+
+        Long currentMemberId = SecurityUtil.getCurrentMemberId(); // 로그인 되었는지 확인
+
         OrderDTO orderDTO = orderService.createOrderOne(currentMemberId, orderRequest);
+
         return ResponseEntityBuilder.build("주문 성공", HttpStatus.OK, orderDTO);
     }
 
