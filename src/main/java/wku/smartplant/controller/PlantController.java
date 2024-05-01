@@ -1,7 +1,8 @@
 package wku.smartplant.controller;
 
 
-import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
@@ -9,11 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import wku.smartplant.dto.ResponseDTO;
+import wku.smartplant.dto.plant.PlantDTO;
 import wku.smartplant.dto.plant.PlantRequestDTO;
 import wku.smartplant.jwt.SecurityUtil;
 import wku.smartplant.service.AuthenticationSevice;
 import wku.smartplant.service.PlantService;
 
+
+import java.util.List;
 
 import static wku.smartplant.dto.ResponseEntityBuilder.*;
 
@@ -26,14 +30,8 @@ public class PlantController {
     private final PlantService plantService;
     private final AuthenticationSevice authenticationSevice;
 
-    @GetMapping("/test")
-    public ResponseEntity<ResponseDTO<?>> test(){
-        int num = 2;
-        return build("test", HttpStatus.OK,num);
-    }
-
     @PostMapping("/join")
-    public ResponseEntity<ResponseDTO<?>> join(@Valid @RequestBody PlantRequestDTO plantRequestDTO){
+    public ResponseEntity<ResponseDTO<Long>> join(PlantRequestDTO plantRequestDTO) {
         log.info("join");
         log.info(plantRequestDTO.toString());
         Long currentMemberId = SecurityUtil.getCurrentMemberId();
@@ -50,7 +48,7 @@ public class PlantController {
     }
 
     @GetMapping("/{plantId}/water")
-    public ResponseEntity<ResponseDTO<?>> changeWaterState(@PathVariable Long plantId) {
+    public ResponseEntity<ResponseDTO<Boolean>> changeWaterState(@PathVariable Long plantId) {
         //Long currentMemberId = SecurityUtil.getCurrentMemberId(); 테스트 할떄만 주석
         Boolean changedState = plantService.changeGiveWater(1L, plantId); //바뀐 상태
         String msg = "바뀐 상태는 " + changedState + "입니다.";
@@ -58,7 +56,10 @@ public class PlantController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDTO<?>> getPlantList() {
-        return build("식물 리스트", HttpStatus.OK, plantService.getAllPlants());
+    @Operation(summary = "특정 멤버의 식물 정보 얻기",
+            description = "요청 시 헤더 토큰 필요. 해당 멤버의 식물들을 리턴해줌")
+    public ResponseEntity<ResponseDTO<List<PlantDTO>>> getMemberPlantList() {
+        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+        return build(currentMemberId + " 멤버의 식물 리스트", HttpStatus.OK, plantService.getAllPlantsByMemberId(currentMemberId));
     }
 }

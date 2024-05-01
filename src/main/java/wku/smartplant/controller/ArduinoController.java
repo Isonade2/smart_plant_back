@@ -13,11 +13,16 @@ import wku.smartplant.service.PlantService;
 public class ArduinoController {
 
     private final ArduinoService arduinoService;
+    private int getCount = 0; //저장 횟수를 줄이기 위해. 배포 시 삭제
 
     @GetMapping("/{uuid}")
     public String savePlantHistoryAndReturnWaterState(@PathVariable("uuid") String uuid,
                             @ModelAttribute PlantHistoryDTO plantHistoryDTO) {
-        return arduinoService.saveHistoryByArduino(uuid, plantHistoryDTO);
+        getCount++;
+        if (getCount % 30 == 0) {
+            return arduinoService.saveHistoryByArduino(uuid, plantHistoryDTO);
+        }
+        return "not saved";
     }
 
     @GetMapping("/{uuid}/water")
