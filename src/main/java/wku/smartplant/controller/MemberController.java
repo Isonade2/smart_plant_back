@@ -60,13 +60,13 @@ public class MemberController {
         return build("로그인 성공", OK, memberLoginResponse);
     }
 
+    @GetMapping("/verify")
     @Operation(summary = "이메일 활성화",
             description = "이메일 활성화 링크를 클릭하면 서버측 /verify 로 이동되고 유저 활성화 후 " +
                     "'프론트/signin?activate=true' 로 리다이렉트 시킴. 프론트에서는 activate param을 보고 활성화가 완료됐다는 알림을 로그인 화면에 표시해야됨 ",
             responses = {
                     @ApiResponse(responseCode = "302", description = "'프론트주소/signin?activate=true' 성공 시 리턴")
             })
-    @GetMapping("/verify")
     public void callback(@RequestParam("code") String uuid, HttpServletResponse response) throws IOException {
         try {
             memberService.verifyAndActivateMember(uuid);
@@ -112,7 +112,8 @@ public class MemberController {
 
     @PostMapping("/password/change") //바꿀 비밀번호 받기
     @Operation(summary = "새 비밀번호로 변경",
-            description = "새로운 비밀번호를 받아서 변경함",
+            description = "요청 시 비밀번호, 비밀번호 확인, email, uuid 필요" +
+                    "<br>email과 uuid는 /password/reset 문서 확인",
             responses = {
                     @ApiResponse(responseCode = "200", description = "패스워드 변경이 완료되었습니다. 메세지 리턴"),
                     @ApiResponse(responseCode = "400", description = "uuid와 email이 일치하지 않거나, 비밀번호와 비밀번호 확인란이 일치하지 않을 경우, 만료되었을 경우")

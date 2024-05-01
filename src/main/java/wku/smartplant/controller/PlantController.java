@@ -57,14 +57,9 @@ public class PlantController {
 
     @GetMapping
     @Operation(summary = "특정 멤버의 식물 정보 얻기",
-            description = "요청 시 멤버 토큰 필요. 해당 멤버의 식물들을 리턴해줌",
-            responses = {
-                    @ApiResponse(responseCode = "201", description = ""),
-                    @ApiResponse(responseCode = "400", description = "가입 이력이 없을 경우, 가입은 했는데 활성화를 안했을 경우" +
-                            "<br> 정규식 에러 시에는 다음 내용을 content에 포함 content : {email : '메세지'} ")
-            })
-    public ResponseEntity<ResponseDTO<List<PlantDTO>>> getPlantList() {
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.<List<PlantDTO>>builder().message("식물 리스트").content(plantService.getAllPlants()).build());
-        //return build("식물 리스트", HttpStatus.OK, plantService.getAllPlants());
+            description = "요청 시 헤더 토큰 필요. 해당 멤버의 식물들을 리턴해줌")
+    public ResponseEntity<ResponseDTO<List<PlantDTO>>> getMemberPlantList() {
+        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+        return build(currentMemberId + " 멤버의 식물 리스트", HttpStatus.OK, plantService.getAllPlantsByMemberId(currentMemberId));
     }
 }
