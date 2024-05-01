@@ -73,5 +73,9 @@ public class PlantService {
         return plant.getGiveWater();
     }
 
+    //클라이언트가 가지고 있는 식물의 수
+    public Long getPlantCount(Long memberId){
+        return plantRepository.countByMemberId(memberId);
+    }
 
 }
