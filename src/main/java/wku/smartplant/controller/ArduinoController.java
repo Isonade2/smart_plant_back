@@ -15,17 +15,13 @@ public class ArduinoController {
 
     private final ArduinoService arduinoService;
     private final DiscordService discordService;
-    private int getCount = 0; //저장 횟수를 줄이기 위해. 배포 시 삭제
 
     @GetMapping("/{uuid}")
     public String savePlantHistoryAndReturnWaterState(@PathVariable("uuid") String uuid,
                             @ModelAttribute PlantHistoryDTO plantHistoryDTO) {
-        getCount++;
-        if (getCount % 30 == 0) {
-            discordService.sendDiscordMessage(plantHistoryDTO.toString());
-            return arduinoService.saveHistoryByArduino(uuid, plantHistoryDTO);
-        }
-        return "not saved";
+
+        discordService.sendDiscordMessage(plantHistoryDTO.toString());
+        return arduinoService.saveHistoryByArduino(uuid, plantHistoryDTO);
     }
 
     @GetMapping("/{uuid}/water")
