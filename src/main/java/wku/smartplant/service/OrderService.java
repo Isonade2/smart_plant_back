@@ -54,15 +54,15 @@ public class OrderService {
         Long plantId = plantService.createPlant(plantRequestDTO, memberid);
         Plant plant = plantRepository.findById(plantId).orElseThrow(() -> new OrderNotFoundException("존재하지 않는 식물입니다."));
 
-        Order order = new Order(member, OrderStatus.준비, address, plant);
+        Order order = new Order(member, OrderStatus.완료, address, plant);
         order.addOrderItem(orderItem);
 
 
         orderRepository.save(order);
         log.info("order : {}", order);
 
-
-        return new OrderDTO(order.getId(), order.getStatus(), order.getAddress(), order.getOrderItems().stream().map(OrderItemDTO::new).collect(Collectors.toList()));
+//        return new OrderDTO(order.getId(), order.getStatus(), order.getAddress(), order.getOrderItems().stream().map(OrderItemDTO::new).collect(Collectors.toList()));
+        return new OrderDTO(order.getId(), order.getStatus(), order.getAddress());
     }
 
     public List<OrderDTO> getOrders(Long memberId) {

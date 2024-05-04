@@ -55,6 +55,6 @@ public class Plant extends BaseTimeEntity {
         this.exp = 0L;
         this.id = null;
         this.giveWater = false;
-        this.activate = false;
+        this.activate = true;
     }
 }

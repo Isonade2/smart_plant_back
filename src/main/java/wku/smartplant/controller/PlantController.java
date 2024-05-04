@@ -3,6 +3,7 @@ package wku.smartplant.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.websocket.OnError;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
@@ -47,24 +48,26 @@ public class PlantController {
         return build("식물 조회 성공", HttpStatus.OK, plantDTO);
     }
 
-    @PostMapping("/join")
-    public ResponseEntity<ResponseDTO<Long>> join(PlantRequestDTO plantRequestDTO) {
-        log.info("join");
-        log.info(plantRequestDTO.toString());
-        Long currentMemberId = SecurityUtil.getCurrentMemberId();
-
-        Long plantid = plantService.createPlant(plantRequestDTO, currentMemberId);
-
-
-        return build("식물 등록 성공", HttpStatus.OK, plantid);
-//        try{
-//            Long id = authenticationSevice.isLoggedIn();
-//        } catch (Exception e){
-//            return build(e.getMessage(), HttpStatus.UNAUTHORIZED);
-//        }
-    }
+//    @PostMapping("/join")
+//    public ResponseEntity<ResponseDTO<Long>> join(PlantRequestDTO plantRequestDTO) {
+//        log.info("join");
+//        log.info(plantRequestDTO.toString());
+//        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+//
+//        Long plantid = plantService.createPlant(plantRequestDTO, currentMemberId);
+//
+//
+//        return build("식물 등록 성공", HttpStatus.OK, plantid);
+////        try{
+////            Long id = authenticationSevice.isLoggedIn();
+////        } catch (Exception e){
+////            return build(e.getMessage(), HttpStatus.UNAUTHORIZED);
+////        }
+//    }
 
     @GetMapping("/{plantId}/water")
+    @Operation(summary = "물 공급",
+            description = "해당 식물에 물을 공급하는 컨트롤러")
     public ResponseEntity<ResponseDTO<Boolean>> changeWaterState(@PathVariable Long plantId) {
         //Long currentMemberId = SecurityUtil.getCurrentMemberId(); 테스트 할떄만 주석
         Boolean changedState = plantService.changeGiveWater(1L, plantId); //바뀐 상태

@@ -1,6 +1,7 @@
 package wku.smartplant.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,8 @@ public class OrderController {
 
 
     @GetMapping // 주문 목록 조회
+    @Operation(summary = "주문 목록 조회",
+            description = "요청 시 헤더 토큰 필요. 해당 멤버의 주문정보들을 리턴해줌")
     public ResponseEntity<ResponseDTO<List<OrderDTO>>> getOrder(){
         log.info("OrderController.getOrder");
         Long currentMemberId = SecurityUtil.getCurrentMemberId();
@@ -42,6 +45,8 @@ public class OrderController {
     }
 
     @PostMapping // 클라이언트로부터 주문을 받는 컨트롤러
+    @Operation(summary = "식물 주문",
+            description = "요청 시 헤더 토큰 필요. 식물을 주문할 때 사용하는 컨트롤러")
     public ResponseEntity<ResponseDTO<OrderDTO>> createOrder(@Valid @RequestBody OrderRequest orderRequest, BindingResult bindingResult){
         log.info("OrderController.createOrder");
         log.info("orderRequest : {}", orderRequest);
@@ -54,6 +59,8 @@ public class OrderController {
     }
 
     @PostMapping("/{orderId}/cancel") // 주문 취소
+    @Operation(summary = "주문 취소",
+            description = "요청 시 헤더 토큰 필요. 주문을 취소할 때 사용하는 컨트롤러")
     public ResponseEntity<ResponseDTO<?>> cancelOrder(
             @Valid @RequestBody OrderCancelRequest orderCancelRequest, BindingResult bindingResult){
         log.info("OrderController.cancelOrder");

@@ -1,6 +1,7 @@
 package wku.smartplant.dto.order;
 
 
+import lombok.Builder;
 import lombok.Data;
 import wku.smartplant.domain.Address;
 import wku.smartplant.domain.OrderStatus;
@@ -22,4 +23,10 @@ public class OrderDTO {
         this.orderItems = orderItems;
     }
 
+    @Builder
+    public OrderDTO(Long id, OrderStatus status, Address address){
+        this.id = id;
+        this.status = status;
+        this.address = address;
+    }
 }
