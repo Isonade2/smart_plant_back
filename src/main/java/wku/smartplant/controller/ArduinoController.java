@@ -22,6 +22,7 @@ public class ArduinoController {
         if (getCount % 30 == 0) {
             return arduinoService.saveHistoryByArduino(uuid, plantHistoryDTO);
         }
+
         return "not saved";
     }
 

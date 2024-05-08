@@ -49,7 +49,7 @@ public class OrderService {
         //AddressDTO -> AddressEntity로 변경
         Address address = convertToAddress(orderRequest.getAddress());
 
-        PlantRequestDTO plantRequestDTO = new PlantRequestDTO(item.getPlantType(), orderRequest.getName());
+        PlantRequestDTO plantRequestDTO = new PlantRequestDTO(item.getPlantType(), orderRequest.getPlantName());
         log.info("plantRequestDTO : {}", plantRequestDTO);
         Long plantId = plantService.createPlant(plantRequestDTO, memberid);
         Plant plant = plantRepository.findById(plantId).orElseThrow(() -> new OrderNotFoundException("존재하지 않는 식물입니다."));
@@ -87,6 +87,6 @@ public class OrderService {
 
     private Address convertToAddress(AddressDTO addressDTO) {
         if (addressDTO == null) return null;
-        return new Address(addressDTO.getCity(), addressDTO.getStreet(), addressDTO.getZipcode(), addressDTO.getSpecify());
+        return new Address(addressDTO.getStreet(), addressDTO.getZipcode(), addressDTO.getSpecify());
     }
 }

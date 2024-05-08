@@ -20,10 +20,11 @@ public class OrderRequest {
     @Min(value = 1, message = "상품의 수량은 1개 이상이어야 합니다.")
     @Max(value = 100, message = "상품의 수량은 100개 이하이어야 합니다.")
     private final int count;
-    @NotNull
+    @NotNull(message = "주소 정보를 입력해주세요.")
     private AddressDTO address;
-    @NotNull
-    private String name;
+    @NotNull(message = "받으실 분의 이름을 입력해주세요.")
+    private String plantName;
+    private String userName;
 
 //    public OrderRequest() {
 //    }
