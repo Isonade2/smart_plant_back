@@ -65,13 +65,14 @@ public class MemberController {
             description = "이메일 활성화 링크를 클릭하면 서버측 /verify 로 이동되고 유저 활성화 후 " +
                     "'프론트/login?activate=true' 로 리다이렉트 시킴. 프론트에서는 activate param을 보고 활성화가 완료됐다는 알림을 로그인 화면에 표시해야됨 ",
             responses = {
-                    @ApiResponse(responseCode = "302", description = "'프론트주소/login?activate=true' 성공 시 리턴")
+                    @ApiResponse(responseCode = "302", description = "'프론트주소/login?activate=true' 성공 시 리턴," +
+                            "<br>만료 시 프론트주소/resend-mail?expired=true 로 리다이렉트 ")
             })
     public void callback(@RequestParam("code") String uuid, HttpServletResponse response) throws IOException {
         try {
             memberService.verifyAndActivateMember(uuid);
         } catch (IllegalStateException | EntityNotFoundException ex) {
-            response.sendRedirect(clientId + "/needActivate?expired=true");
+            response.sendRedirect(clientId + "/resend-mail?expired=true");
         }
 
         response.sendRedirect(clientId + "/login?activate=true");
@@ -131,6 +132,21 @@ public class MemberController {
         memberService.changePassword(email, password, uuid);
 
         return build("패스워드 변경이 완료되었습니다.", OK);
+
+    }
+
+    @DeleteMapping 
+    @Operation(summary = "회원 탈퇴 요청",
+            description = "탈퇴 요청 시 비밀번호를 body에 담아서 보내야함, 토큰 정보도 헤더로 보내야함",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "유저 삭제 성공. 프론트에서 로그아웃 처리를 해줘야함"),                     
+                    @ApiResponse(responseCode = "400", description = "비밀번호가 일치하지 않거나 유저가 없을 경우")
+            })
+    public ResponseEntity<ResponseDTO<?>> passwordReset(@RequestBody MemberDeleteRequest memberDeleteRequest) {
+        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+        memberService.deleteMember(currentMemberId, memberDeleteRequest.getPassword());
+
+        return build("회원 탈퇴가 완료되었습니다. 그동안 서비스를 이용해 주셔서 감사합니다.", OK);
 
     }
 

@@ -38,9 +38,9 @@ public class KakaoLoginController {
     @Operation(summary = "카카오 로그인 콜백",
             description = "성공 시 사용자는 지정된 URL로 리다이렉트됩니다. 리다이렉트 URL은 다음과 같은 쿼리 파라미터를 포함합니다: 'email', 'username', 'token'. 각 파라미터는 URL 인코딩됩니다.",
             responses = {
-                    @ApiResponse(responseCode = "302", description = "'프론트주소/loginSuccess?email=xxx&username=xxx&token=xxx' 성공 시 이런식으로 리턴",
+                    @ApiResponse(responseCode = "302", description = "'프론트주소/login-success?email=xxx&username=xxx&token=xxx' 성공 시 이런식으로 리턴",
                             content = @Content(schema = @Schema(implementation = Void.class))),
-                    @ApiResponse(responseCode = "400", description = "'프론트주소/errorPage?message=xxx' 실패 시 파람에 에러메세지 담아서 리다이렉트"),
+                    @ApiResponse(responseCode = "400", description = "'프론트주소/error-page?message=xxx' 실패 시 파람에 에러메세지 담아서 리다이렉트"),
                     @ApiResponse(responseCode = "500", description = "서버 에러")
             })
     @GetMapping("/user/kakao/callback")
@@ -56,10 +56,10 @@ public class KakaoLoginController {
             String tokenParam = URLEncoder.encode(memberLoginResponse.getToken(), StandardCharsets.UTF_8.toString());
 
             String params = "email=" + emailParam + "&username=" + usernameParam + "&token=" + tokenParam;
-            response.sendRedirect(clientUrl + "/loginSuccess?" + params);
+            response.sendRedirect(clientUrl + "/login-success?" + params);
         } catch (EmailAlreadyExistsException ex) { //이미 다른플랫폼으로 가입 했을시
             String errorMessage = URLEncoder.encode("이미 다른 플랫폼으로 가입한 이메일입니다.", StandardCharsets.UTF_8);
-            response.sendRedirect(clientUrl + "/errorPage?message=" + errorMessage);
+            response.sendRedirect(clientUrl + "/error-page?message=" + errorMessage);
         }
 
     }
