@@ -155,6 +155,7 @@ public class MemberService {
         findMember.changePassword(passwordEncoder.encode(password));
     }
 
+
     private void timeExpiredCheck(EmailVerify findEmailVerify) {
         Duration duration = Duration.between(findEmailVerify.getCreatedDate(), LocalDateTime.now());
         if (duration.toMinutes() > 120) {
