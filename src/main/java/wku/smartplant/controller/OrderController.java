@@ -50,7 +50,9 @@ public class OrderController {
     public ResponseEntity<ResponseDTO<OrderDTO>> createOrder(@Valid @RequestBody OrderRequest orderRequest, BindingResult bindingResult){
         log.info("OrderController.createOrder");
         log.info("orderRequest : {}", orderRequest);
-
+        if (bindingResult.hasErrors()) {
+            return ResponseEntityBuilder.build(bindingResult.getAllErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST,null);
+        }
         Long currentMemberId = SecurityUtil.getCurrentMemberId(); // 로그인 되었는지 확인
 
         OrderDTO orderDTO = orderService.createOrderOne(currentMemberId, orderRequest);

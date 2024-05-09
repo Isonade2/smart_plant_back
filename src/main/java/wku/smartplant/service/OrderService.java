@@ -86,7 +86,10 @@ public class OrderService {
 
 
     private Address convertToAddress(AddressDTO addressDTO) {
-        if (addressDTO == null) return null;
+        //addressDTO의 내용이 하나라도 비어있다면
+        if (addressDTO.getSpecify() == null || addressDTO.getStreet() == null || addressDTO.getZipcode() == null) {
+            throw new IllegalArgumentException("주소를 입력해주세요.");
+        }
         return new Address(addressDTO.getStreet(), addressDTO.getZipcode(), addressDTO.getSpecify());
     }
 }
