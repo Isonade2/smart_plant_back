@@ -3,17 +3,18 @@ package wku.smartplant.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.*;
+import wku.smartplant.dto.order.AddressDTO;
 import wku.smartplant.dto.order.OrderDTO;
 import wku.smartplant.dto.order.OrderRequest;
 import wku.smartplant.dto.orderitem.OrderItemDTO;
+import wku.smartplant.dto.plant.PlantRequestDTO;
 import wku.smartplant.exception.OrderNotFoundException;
-import wku.smartplant.repository.ItemRepository;
-import wku.smartplant.repository.MemberRepository;
-import wku.smartplant.repository.OrderItemRepository;
-import wku.smartplant.repository.OrderRepository;
+import wku.smartplant.jwt.SecurityUtil;
+import wku.smartplant.repository.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,26 +29,40 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final OrderItemRepository orderItemRepository;
     private final PlantService plantService;
+    private final PlantRepository plantRepository;
 
 
     // 상품 주문 서비스
-    public Long createOrderOne(Long memberid, OrderRequest orderRequest) {
+    public OrderDTO createOrderOne(Long memberid, OrderRequest orderRequest) {
         log.info("OrderService.createOrder");
         log.info("orderRequest : {}", orderRequest);
 
-        Member member = memberRepository.findById(memberid).get();
+        Member member = memberRepository.findById(memberid).orElseThrow(() -> new OrderNotFoundException("존재하지 않는 회원입니다."));
         log.info("member : {}", member);
-        Item item = itemRepository.findById(orderRequest.getItemId()).get();
+        Item item = itemRepository.findById(orderRequest.getItemId()).orElseThrow(() -> new OrderNotFoundException("존재하지 않는 상품입니다."));
 
         OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), orderRequest.getCount());
         orderItemRepository.save(orderItem);
 
-        Order order = new Order(member, OrderStatus.준비, new Address("서울", "강가", "123-123", "1232"));
+        log.info("orderItem : {}", orderItem);
+
+        //AddressDTO -> AddressEntity로 변경
+        Address address = convertToAddress(orderRequest.getAddress());
+
+        PlantRequestDTO plantRequestDTO = new PlantRequestDTO(item.getPlantType(), orderRequest.getPlantName());
+        log.info("plantRequestDTO : {}", plantRequestDTO);
+        Long plantId = plantService.createPlant(plantRequestDTO, memberid);
+        Plant plant = plantRepository.findById(plantId).orElseThrow(() -> new OrderNotFoundException("존재하지 않는 식물입니다."));
+
+        Order order = new Order(member, OrderStatus.완료, address, plant);
         order.addOrderItem(orderItem);
+
+
         orderRepository.save(order);
+        log.info("order : {}", order);
 
-
-        return order.getId();
+//        return new OrderDTO(order.getId(), order.getStatus(), order.getAddress(), order.getOrderItems().stream().map(OrderItemDTO::new).collect(Collectors.toList()));
+        return new OrderDTO(order.getId(), order.getStatus(), order.getAddress());
     }
 
     public List<OrderDTO> getOrders(Long memberId) {
@@ -67,5 +82,14 @@ public class OrderService {
     public void cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException("존재하지 않는 주문입니다."));
         order.cancel();
+    }
+
+
+    private Address convertToAddress(AddressDTO addressDTO) {
+        //addressDTO의 내용이 하나라도 비어있다면
+        if (addressDTO.getSpecify() == null || addressDTO.getStreet() == null || addressDTO.getZipcode() == null) {
+            throw new IllegalArgumentException("주소를 입력해주세요.");
+        }
+        return new Address(addressDTO.getStreet(), addressDTO.getZipcode(), addressDTO.getSpecify());
     }
 }

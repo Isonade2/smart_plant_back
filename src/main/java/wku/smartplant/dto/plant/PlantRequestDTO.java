@@ -1,5 +1,6 @@
 package wku.smartplant.dto.plant;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import wku.smartplant.domain.Member;
@@ -10,11 +11,12 @@ import wku.smartplant.domain.PlantType;
 @Data
 public class PlantRequestDTO {
     private Long memberId;
+    @NotNull
     private PlantType plantType;
+    @NotNull
     private String name;
 
 
-    @Builder
     public PlantRequestDTO(PlantType plantType, String name) {
         this.plantType = plantType;
         this.name = name;

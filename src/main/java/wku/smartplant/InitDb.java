@@ -68,16 +68,16 @@ public class InitDb {
 //            Plant plant5 = createPlant("메타몽", PlantType.대파, member3);
 //            em.persist(plant1); em.persist(plant2); em.persist(plant3); em.persist(plant4); em.persist(plant5);
 
-            Item item1 = createItem("상추", 3000, 50);
-            Item item2 = createItem("양파", 4000, 60);
-            Item item3 = createItem("대파", 5000, 70);
+            Item item1 = createItem("상추", 3000, 50,PlantType.상추);
+            Item item2 = createItem("양파", 4000, 60,PlantType.양파);
+            Item item3 = createItem("대파", 5000, 70,PlantType.대파);
             em.persist(item1);
             em.persist(item2);
             em.persist(item3);
 
-            orderService.createOrderOne(1L, new OrderRequest(1L, 1));
-            orderService.createOrderOne(1L, new OrderRequest(1L, 2));
-            orderService.createOrderOne(1L, new OrderRequest(1L, 3));
+//            orderService.createOrderOne(1L, new OrderRequest(1L, 1));
+//            orderService.createOrderOne(1L, new OrderRequest(1L, 2));
+//            orderService.createOrderOne(1L, new OrderRequest(1L, 3));
 
         }
 
@@ -87,11 +87,12 @@ public class InitDb {
         }
 
 
-        public static Item createItem(String name, int price, int stockQuantity) {
+        public static Item createItem(String name, int price, int stockQuantity,PlantType plantType) {
             return Item.builder()
                     .name(name)
                     .price(price)
                     .stockQuantity(stockQuantity)
+                    .plantType(plantType)
                     .build();
         }
 

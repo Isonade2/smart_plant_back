@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -42,6 +43,9 @@ public class Plant extends BaseTimeEntity {
         this.giveWater = bool;
     }
 
+    public LocalDateTime getCreateDate() {
+        return super.getCreatedDate();
+    }
     @Builder
     public Plant(String name,Member member, PlantType plantType) {
         this.name = name;
@@ -51,6 +55,6 @@ public class Plant extends BaseTimeEntity {
         this.exp = 0L;
         this.id = null;
         this.giveWater = false;
-        this.activate = false;
+        this.activate = true;
     }
 }

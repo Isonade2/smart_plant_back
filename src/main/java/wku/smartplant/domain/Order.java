@@ -46,16 +46,21 @@ public class Order {
         this.address = address;
     }
 
-    public Order(Member member, OrderStatus status, Address address){
+    public Order(Member member, OrderStatus status, Address address,Plant plant){
         changeMember(member);
         this.status = status;
         this.address = address;
+        this.plant = plant;
     }
 
     public void addOrderItem(OrderItem orderItem){
         orderItems.add(orderItem);
         System.out.println("OrderItem added");
         orderItem.changeOrder(this);
+    }
+
+    public void addPlant(Plant plant){
+        this.plant = plant;
     }
 
     public void changeMember(Member member){

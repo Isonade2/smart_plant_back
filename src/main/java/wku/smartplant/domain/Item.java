@@ -12,16 +12,19 @@ public class Item {
     @Column(name = "item_id")
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    private PlantType plantType;
     private String name;
     private int price;
     private int stockQuantity;
 
     @Builder
-    public Item(String name, int price, int stockQuantity){
+    public Item(String name, int price, int stockQuantity,PlantType plantType){
         this.id = null;
         this.name = name;
         this.price = price;
         this.stockQuantity = stockQuantity;
+        this.plantType = plantType;
     }
 
     public void removeStock(int count){
