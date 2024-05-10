@@ -12,6 +12,7 @@ import wku.smartplant.dto.member.MemberJoinRequest;
 import wku.smartplant.dto.order.OrderRequest;
 import wku.smartplant.repository.MemberRepository;
 import wku.smartplant.repository.PlantRepository;
+import wku.smartplant.repository.QuestRepository;
 import wku.smartplant.service.MemberService;
 import wku.smartplant.service.OrderService;
 
@@ -39,6 +40,7 @@ public class InitDb {
         private final MemberService memberService;
         private final PlantRepository plantRepository;
         private final MemberRepository memberRepository;
+        private final QuestRepository questRepository;
 
         public void dbInit() { // 초기 더미데이터 생성. Member, Plant 엔티티 생성
             List<Member> allMember = memberRepository.findAll();
@@ -84,6 +86,11 @@ public class InitDb {
         }
 
         public void dbInit2() { // 초기 더미데이터 생성, Item 엔티티 생성
+            List<Quest> all = questRepository.findAll();
+            if(all.isEmpty()){
+                log.info("이미 데이터가 있으므로 데이터 생성을 하지않았음");
+                return;
+            }
             Quest quest1 = createQuest("출석체크", "기간 내에 3번 이상 출석하세요.", 1000, 3);
             Quest quest2 = createQuest("수분 공급", "기간 내에 무선 물주기 기능 1번 사용해보세요.", 1000, 1);
             Quest quest3 = createQuest("식물과 대화하기", "AI챗봇 기능을 이용해 식물과 대화해보세요.", 1000, 1);
