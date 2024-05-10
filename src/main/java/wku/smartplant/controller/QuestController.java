@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import wku.smartplant.dto.ResponseEntityBuilder;
 import wku.smartplant.dto.quest.QuestAcceptRequestDTO;
 import wku.smartplant.dto.quest.QuestAcceptResponseDTO;
+import wku.smartplant.dto.quest.QuestCompleteRequestDTO;
 import wku.smartplant.jwt.SecurityUtil;
 import wku.smartplant.service.QuestService;
 
@@ -34,4 +35,15 @@ public class QuestController {
         QuestAcceptResponseDTO questAcceptResponse = questService.acceptQuest(requestDTO.getQuestId(), currentMemberId);
         return ResponseEntityBuilder.build("퀘스트 수락 성공", HttpStatus.OK, questAcceptResponse);
     }
+
+    //퀘스트 완료 API
+    @PostMapping("/weekly/complete")
+    public ResponseEntity<?> completeWeeklyQuest(@RequestBody QuestCompleteRequestDTO requestDTO){
+        log.info("completeWeeklyQuest questId : {}",requestDTO.getQuestId());
+        //Long currentMemberId = SecurityUtil.getCurrentMemberId();
+        Long currentMemberId = 52L;
+        questService.completeQuest(requestDTO.getQuestId(), currentMemberId);
+        return ResponseEntityBuilder.build("퀘스트 완료", HttpStatus.OK);
+    }
+
 }

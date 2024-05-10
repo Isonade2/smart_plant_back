@@ -34,11 +34,15 @@ public class QuestProgress {
 
     public void updateProgress(int progress) {
         this.progress = progress;
-        this.completed = quest.isQuestCompleted(progress);
     }
 
-    public void checkCompleted() {
-        this.completed = quest.isQuestCompleted(progress);
+    public boolean checkCompleted() {
+        if(quest.isQuestCompleted(progress)) {
+            this.completed = true;
+            return true;
+        }else {
+            return false;
+        }
     }
 
     public QuestProgress createQuestProgress(Member member, Quest quest) {

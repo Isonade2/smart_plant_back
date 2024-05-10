@@ -23,8 +23,9 @@ public class QuestService {
     private final QuestProgressRepository questProgressRepository;
 
 
+    // 퀘스트를 수락하는 로직
     public QuestAcceptResponseDTO acceptQuest(Long questId, Long memberId){
-        // 퀘스트를 수락하는 로직
+
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("해당 멤버가 존재하지 않습니다."));
         Quest quest = questRepository.findById(questId).orElseThrow(() -> new IllegalArgumentException("해당 퀘스트가 존재하지 않습니다."));
         //이미 퀘스트를 수락했다면
@@ -44,6 +45,23 @@ public class QuestService {
 
         QuestAcceptResponseDTO questResponse = createQuestResponse(progress, quest);
         return questResponse;
+    }
+
+    // 퀘스트를 완료하는 로직
+    public void completeQuest(Long questId, Long memberId){
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("해당 멤버가 존재하지 않습니다."));
+        Quest quest = questRepository.findById(questId).orElseThrow(() -> new IllegalArgumentException("해당 퀘스트가 존재하지 않습니다."));
+        QuestProgress questProgress = questProgressRepository.findByMemberAndQuest(member, quest).orElseThrow(() -> new IllegalArgumentException("해당 퀘스트 진행 정보가 존재하지 않습니다."));
+
+        //퀘스트가 이미 완료됐는지?
+        if (questProgress.isCompleted()) {
+            throw new IllegalArgumentException("이미 완료한 퀘스트입니다.");
+        }
+
+        if(questProgress.checkCompleted()){
+            log.info("퀘스트 완료");
+        }
+
     }
 
     private QuestAcceptResponseDTO createQuestResponse(QuestProgress progress, Quest quest) {
