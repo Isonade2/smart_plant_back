@@ -10,8 +10,11 @@ import wku.smartplant.dto.ResponseEntityBuilder;
 import wku.smartplant.dto.quest.QuestAcceptRequestDTO;
 import wku.smartplant.dto.quest.QuestAcceptResponseDTO;
 import wku.smartplant.dto.quest.QuestCompleteRequestDTO;
+import wku.smartplant.dto.quest.QuestDTO;
 import wku.smartplant.jwt.SecurityUtil;
 import wku.smartplant.service.QuestService;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,8 +25,9 @@ public class QuestController {
 
     @GetMapping("/weekly")
     public ResponseEntity<?> getWeeklyQuest(){
-        Long currentMemberId = SecurityUtil.getCurrentMemberId();
-        return null;
+        //Long currentMemberId = SecurityUtil.getCurrentMemberId();
+        List<QuestDTO> weeklyQuest = questService.getWeeklyQuest();
+        return ResponseEntityBuilder.build("주간 퀘스트 조회 성공", HttpStatus.OK, weeklyQuest);
     }
 
     @PostMapping("/weekly/accept")

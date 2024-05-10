@@ -9,9 +9,12 @@ import wku.smartplant.domain.Member;
 import wku.smartplant.domain.Quest;
 import wku.smartplant.domain.QuestProgress;
 import wku.smartplant.dto.quest.QuestAcceptResponseDTO;
+import wku.smartplant.dto.quest.QuestDTO;
 import wku.smartplant.repository.MemberRepository;
 import wku.smartplant.repository.QuestProgressRepository;
 import wku.smartplant.repository.QuestRepository;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +24,21 @@ public class QuestService {
     private final QuestRepository questRepository;
     private final MemberRepository memberRepository;
     private final QuestProgressRepository questProgressRepository;
+
+
+
+
+    public List<QuestDTO> getWeeklyQuest(){
+        List<Quest> quests = questRepository.findAll();
+
+        return quests.stream().map(quest -> QuestDTO.builder()
+                .questId(quest.getId())
+                .title(quest.getTitle())
+                .description(quest.getDescription())
+                .reward(quest.getReward())
+                .goal(quest.getGoal())
+                .build()).toList();
+    }
 
 
     // 퀘스트를 수락하는 로직
