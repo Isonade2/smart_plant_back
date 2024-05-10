@@ -23,7 +23,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/plantHistory")
+@RequestMapping("/plant-history")
 public class PlantHistoryController {
 
     private final PlantHistoryService plantHistoryService;
@@ -31,8 +31,8 @@ public class PlantHistoryController {
     @GetMapping("/{plantId}")
     public ResponseEntity<ResponseDTO<Page<PlantHistoryDTO>>> getAllByPlantId(@PathVariable Long plantId, Pageable pageable) {
         Long currentMemberId = SecurityUtil.getCurrentMemberId();
-        Page<PlantHistoryDTO> allHistory = plantHistoryService.findAllHistoryByPlantId(currentMemberId, plantId, pageable);
-        return ResponseEntityBuilder.build("식물 기록입니다.", OK, allHistory);
+        Page<PlantHistoryDTO> pageHistory = plantHistoryService.getPlantHistoryByPlantIdAndMemberId(plantId, currentMemberId, pageable);
+        return ResponseEntityBuilder.build(currentMemberId + " 회원의" + plantId +" 식물 기록입니다.", OK, pageHistory);
     }
 
     @GetMapping
