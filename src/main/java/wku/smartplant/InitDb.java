@@ -89,7 +89,11 @@ public class InitDb {
             Quest quest3 = createQuest("식물과 대화하기", "AI챗봇 기능을 이용해 식물과 대화해보세요.", 1000, 1);
             Quest quest4 = createQuest("물병 채우기", "식물의 물병을 새로 리필해주세요.", 1000, 1);
             Quest quest5 = createQuest("질병 체크", "질병 확인 기능을 이용하여 식물의 이상을 확인해보세요.", 1000, 1);
-
+            em.persist(quest1);
+            em.persist(quest2);
+            em.persist(quest3);
+            em.persist(quest4);
+            em.persist(quest5);
 
         }
 
