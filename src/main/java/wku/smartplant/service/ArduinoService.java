@@ -31,7 +31,6 @@ public class ArduinoService {
         }
 
         Plant findPlant = findPlantOptional.get();
-        findPlant.changeExp(findPlant.getExp() + 10);
 
         PlantHistory plantHistory = new PlantHistory(plantHistoryDTO, findPlant);
 
@@ -42,6 +41,7 @@ public class ArduinoService {
         if (findPlant.getGiveWater()) {
             msg = "water";
             findPlant.changeGiveWater(false);
+            findPlant.changeExp(findPlant.getExp() + 10);
         } else {
             msg = "saved";
         }

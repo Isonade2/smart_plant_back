@@ -156,6 +156,18 @@ public class MemberService {
         findMember.changePassword(passwordEncoder.encode(password));
     }
 
+    @Transactional
+    public void deleteMember(Long memberId, String password) {
+        Member findMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 유저가 존재하지 않습니다."));
+        if (!passwordEncoder.matches(password, findMember.getPassword())) {
+            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+        }
+
+        memberRepository.delete(findMember);
+    }
+
+
     private void timeExpiredCheck(EmailVerify findEmailVerify) {
         Duration duration = Duration.between(findEmailVerify.getCreatedDate(), LocalDateTime.now());
         if (duration.toMinutes() > 120) {
