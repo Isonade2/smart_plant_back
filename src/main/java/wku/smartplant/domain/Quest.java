@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class Quest {
     @Id
-    @GeneratedValue
+    @GeneratedValue()
     @Column(name = "quest_id")
     private Long id;
     private String title;
