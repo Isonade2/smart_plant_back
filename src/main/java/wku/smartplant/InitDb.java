@@ -26,6 +26,7 @@ public class InitDb {
 
     @PostConstruct
     public void init() {
+        System.out.println("init start");
         initService.dbInit();
         initService.dbInit2();
     }
@@ -87,7 +88,8 @@ public class InitDb {
 
         public void dbInit2() { // 초기 더미데이터 생성, Item 엔티티 생성
             List<Quest> all = questRepository.findAll();
-            if(all.isEmpty()){
+            if(!all.isEmpty()){
+                log.info(all.toString());
                 log.info("이미 데이터가 있으므로 데이터 생성을 하지않았음");
                 return;
             }
