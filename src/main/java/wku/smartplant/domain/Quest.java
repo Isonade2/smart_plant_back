@@ -8,10 +8,12 @@ import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @RequiredArgsConstructor
 @Getter
+@ToString
 public class Quest {
     @Id
     @GeneratedValue()

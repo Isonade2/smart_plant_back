@@ -5,10 +5,12 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @RequiredArgsConstructor
 @Getter
+@ToString(exclude = {"quest", "member"})
 public class QuestProgress {
     @Id
     @GeneratedValue

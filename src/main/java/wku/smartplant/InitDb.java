@@ -20,15 +20,17 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class InitDb {
     private final InitService initService;
 
 
     @PostConstruct
     public void init() {
-        System.out.println("init start");
+        log.info("초기 데이터 생성 시작");
         initService.dbInit();
         initService.dbInit2();
+        log.info("초기 데이터 생성 완료");
     }
 
     @Component

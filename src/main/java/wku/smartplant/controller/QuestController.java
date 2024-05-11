@@ -7,10 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import wku.smartplant.dto.ResponseEntityBuilder;
-import wku.smartplant.dto.quest.QuestAcceptRequestDTO;
-import wku.smartplant.dto.quest.QuestAcceptResponseDTO;
-import wku.smartplant.dto.quest.QuestCompleteRequestDTO;
-import wku.smartplant.dto.quest.QuestDTO;
+import wku.smartplant.dto.quest.*;
 import wku.smartplant.jwt.SecurityUtil;
 import wku.smartplant.service.QuestService;
 
@@ -25,8 +22,10 @@ public class QuestController {
 
     @GetMapping("/weekly")
     public ResponseEntity<?> getWeeklyQuest(){
+        log.info("getWeeklyQuest");
         //Long currentMemberId = SecurityUtil.getCurrentMemberId();
-        List<QuestDTO> weeklyQuest = questService.getWeeklyQuest();
+        Long currentMemberId = 52L;
+        List<QuestListDTO> weeklyQuest = questService.getWeeklyQuest(currentMemberId);
         return ResponseEntityBuilder.build("주간 퀘스트 조회 성공", HttpStatus.OK, weeklyQuest);
     }
 

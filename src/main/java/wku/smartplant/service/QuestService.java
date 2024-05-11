@@ -10,11 +10,12 @@ import wku.smartplant.domain.Quest;
 import wku.smartplant.domain.QuestProgress;
 import wku.smartplant.dto.quest.QuestAcceptResponseDTO;
 import wku.smartplant.dto.quest.QuestDTO;
+import wku.smartplant.dto.quest.QuestListDTO;
 import wku.smartplant.repository.MemberRepository;
 import wku.smartplant.repository.QuestProgressRepository;
 import wku.smartplant.repository.QuestRepository;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -27,19 +28,22 @@ public class QuestService {
 
 
 
-
-    public List<QuestDTO> getWeeklyQuest(){
+    public List<QuestListDTO> getWeeklyQuest(Long memberId){
+        //퀘스트 목록을 불러온다.
         List<Quest> quests = questRepository.findAll();
+        log.info("quests : {}", quests.toString());
 
-        return quests.stream().map(quest -> QuestDTO.builder()
-                .questId(quest.getId())
-                .title(quest.getTitle())
-                .description(quest.getDescription())
-                .reward(quest.getReward())
-                .goal(quest.getGoal())
-                .build()).toList();
+        //현재 멤버의 퀘스트 진행 정보를 가져온다.
+        List<QuestProgress> questProgresses = questProgressRepository.findAllByMemberId(memberId);
+        log.warn("questProgresses : {}", questProgresses.toString());
+
+        //퀘스트 목록을 불러오는데 그 퀘스트가 QuestProgress에 있는지 확인한다.
+        //Quests와 QuestProgresses를 비교해서 QuestProgress에 있는 퀘스트는 제외한 QuestListDTO를 만든다.
+        List<QuestListDTO> questListDTO = createQuestListDTO(quests, questProgresses);
+        questListDTO.forEach(quest -> log.info("quest : {}", quest.toString()));
+
+        return questListDTO;
     }
-
 
     // 퀘스트를 수락하는 로직
     public QuestAcceptResponseDTO acceptQuest(Long questId, Long memberId){
@@ -80,6 +84,43 @@ public class QuestService {
             log.info("퀘스트 완료");
         }
 
+    }
+
+    // 퀘스트목록을 불러온다. QuestProgress에 있는 퀘스트에 같은 퀘스트가 있다면 QuestProgress에 있는 퀘스트로 QuestListDTO를 만든다.
+    private List<QuestListDTO> createQuestListDTO(List<Quest> quests, List<QuestProgress> questProgresses) {
+        Map<Long, QuestProgress> questProgressMap = new HashMap<>();
+        for (QuestProgress questProgress : questProgresses) {
+            questProgressMap.put(questProgress.getQuest().getId(), questProgress);
+        }
+
+        List<QuestListDTO> questList = new ArrayList<>();
+        for (Quest quest : quests) {
+            QuestProgress questProgress = questProgressMap.get(quest.getId());
+            if (questProgress == null) {
+                questList.add(QuestListDTO.builder()
+                        .isAccepted(false)
+                        .isCompleted(false)
+                        .questId(quest.getId())
+                        .title(quest.getTitle())
+                        .description(quest.getDescription())
+                        .reward(quest.getReward())
+                        .goal(quest.getGoal())
+                        .progress(0)
+                        .build());
+            } else {
+                questList.add(QuestListDTO.builder()
+                        .isAccepted(true)
+                        .isCompleted(questProgress.isCompleted())
+                        .questId(quest.getId())
+                        .title(quest.getTitle())
+                        .description(quest.getDescription())
+                        .reward(quest.getReward())
+                        .goal(quest.getGoal())
+                        .progress(questProgress.getProgress())
+                        .build());
+            }
+        }
+        return questList;
     }
 
     private QuestAcceptResponseDTO createQuestResponse(QuestProgress progress, Quest quest) {
