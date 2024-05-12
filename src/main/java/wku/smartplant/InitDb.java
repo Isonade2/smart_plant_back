@@ -12,6 +12,7 @@ import wku.smartplant.dto.member.MemberJoinRequest;
 import wku.smartplant.dto.order.OrderRequest;
 import wku.smartplant.repository.MemberRepository;
 import wku.smartplant.repository.PlantRepository;
+import wku.smartplant.repository.QuestRepository;
 import wku.smartplant.service.MemberService;
 import wku.smartplant.service.OrderService;
 
@@ -19,14 +20,17 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class InitDb {
     private final InitService initService;
 
 
     @PostConstruct
     public void init() {
+        log.info("초기 데이터 생성 시작");
         initService.dbInit();
         initService.dbInit2();
+        log.info("초기 데이터 생성 완료");
     }
 
     @Component
@@ -39,6 +43,7 @@ public class InitDb {
         private final MemberService memberService;
         private final PlantRepository plantRepository;
         private final MemberRepository memberRepository;
+        private final QuestRepository questRepository;
 
         public void dbInit() { // 초기 더미데이터 생성. Member, Plant 엔티티 생성
             List<Member> allMember = memberRepository.findAll();
@@ -71,9 +76,11 @@ public class InitDb {
             Item item1 = createItem("상추", 3000, 50,PlantType.상추);
             Item item2 = createItem("양파", 4000, 60,PlantType.양파);
             Item item3 = createItem("대파", 5000, 70,PlantType.대파);
+            Item item4 = createItem("딸기", 10000, 70,PlantType.딸기);
             em.persist(item1);
             em.persist(item2);
             em.persist(item3);
+            em.persist(item4);
 
 //            orderService.createOrderOne(1L, new OrderRequest(1L, 1));
 //            orderService.createOrderOne(1L, new OrderRequest(1L, 2));
@@ -82,7 +89,22 @@ public class InitDb {
         }
 
         public void dbInit2() { // 초기 더미데이터 생성, Item 엔티티 생성
-
+            List<Quest> all = questRepository.findAll();
+            if(!all.isEmpty()){
+                log.info(all.toString());
+                log.info("이미 데이터가 있으므로 데이터 생성을 하지않았음");
+                return;
+            }
+            Quest quest1 = createQuest("출석체크", "기간 내에 3번 이상 출석하세요.", 1000, 3);
+            Quest quest2 = createQuest("수분 공급", "기간 내에 무선 물주기 기능 1번 사용해보세요.", 1000, 1);
+            Quest quest3 = createQuest("식물과 대화하기", "AI챗봇 기능을 이용해 식물과 대화해보세요.", 1000, 1);
+            Quest quest4 = createQuest("물병 채우기", "식물의 물병을 새로 리필해주세요.", 1000, 1);
+            Quest quest5 = createQuest("질병 체크", "질병 확인 기능을 이용하여 식물의 이상을 확인해보세요.", 1000, 1);
+            em.persist(quest1);
+            em.persist(quest2);
+            em.persist(quest3);
+            em.persist(quest4);
+            em.persist(quest5);
 
         }
 
@@ -113,6 +135,15 @@ public class InitDb {
                     .memberPlatform(memberPlatform)
                     .activate(false)
                     .address(address)
+                    .build();
+        }
+
+        public static Quest createQuest(String title, String description, int reward, int goal) {
+            return Quest.builder()
+                    .title(title)
+                    .description(description)
+                    .reward(reward)
+                    .goal(goal)
                     .build();
         }
     }
