@@ -78,4 +78,13 @@ public class PlantService {
         return plantRepository.countByMemberId(memberId);
     }
 
+    public void setFavPlant(Long memberId, Long plantId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다."));
+        Plant plant = plantRepository.findById(plantId)
+                .orElseThrow(() -> new EntityNotFoundException("식물을 찾을 수 없습니다."));
+
+        //대표식물 설정 + 오류제어
+        member.setFavPlant(plant);
+    }
 }

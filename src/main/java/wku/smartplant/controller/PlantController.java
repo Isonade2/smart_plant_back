@@ -75,5 +75,12 @@ public class PlantController {
         return build(msg, HttpStatus.OK, changedState);
     }
 
+    @GetMapping("/{plantId}/setfavplant")
+    public ResponseEntity<ResponseDTO<?>> setFavPlant(@PathVariable Long plantId) {
+        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+        plantService.setFavPlant(currentMemberId, plantId);
+        String msg = "대표식물 설정 완료";
+        return build(msg, HttpStatus.OK);
+    }
 
 }
