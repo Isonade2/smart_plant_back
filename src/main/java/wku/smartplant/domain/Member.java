@@ -47,6 +47,9 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<QuestProgress> questProgresses = new ArrayList<>();
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Plant favPlant;
+
 
 
     public void changeEmailVerify(EmailVerify emailVerify) {
@@ -58,6 +61,10 @@ public class Member extends BaseTimeEntity {
     }
 
     public void changePassword(String password) { this.password = password; }
+
+    public void setFavPlant(Plant plant) {
+        this.favPlant = plant;
+    }
 
     @Builder
     public Member(String username, String email, String password, Address address, MemberPlatform memberPlatform, Boolean activate){
