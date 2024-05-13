@@ -17,6 +17,7 @@ import wku.smartplant.jwt.SecurityUtil;
 import wku.smartplant.domain.Member;
 import wku.smartplant.dto.ResponseDTO;
 import wku.smartplant.service.MemberService;
+import wku.smartplant.service.RefreshTokenService;
 
 import java.io.IOException;
 
@@ -58,6 +59,18 @@ public class MemberController {
 
         //return ResponseEntity.status(OK).body(ResponseDTO.<MemberLoginResponse>builder().message("로그인 성공").content(memberLoginResponse).build());
         return build("로그인 성공", OK, memberLoginResponse);
+    }
+
+    @GetMapping("/logout")
+    @Operation(summary = "로그아웃",
+            description = "리프레시 토큰 삭제를 위한 로그아웃" ,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "로그아웃 성공. 프론트에 있는 유저 정보는 프론트에서 삭제 처리 해야됨.")
+            })
+    public ResponseEntity<ResponseDTO<?>> logout() {
+        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+        memberService.logoutMember(currentMemberId);
+        return build("로그아웃 성공", OK);
     }
 
     @GetMapping("/verify")

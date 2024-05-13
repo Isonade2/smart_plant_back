@@ -28,12 +28,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal (HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (authorizationHeader == null) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        if (!authorizationHeader.startsWith("Bearer ")) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -41,11 +36,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String token = authorizationHeader.split(" ")[1];
         System.out.println("token = " + token);
 
+        // 토큰이 Access Token인지 확인
+        if (!JwtTokenUtil.isAccessToken(token)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         try {
             if (JwtTokenUtil.isExpired(token)) {
+                throw new JwtTokenUtil.TokenValidationException("Token expired");
             }
-
         } catch (JwtTokenUtil.TokenValidationException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 코드 설정
             response.setContentType("application/json");
@@ -55,22 +55,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
 
+        // Access Token인 경우 처리
+        Long memberId = Long.parseLong(JwtTokenUtil.getMemberId(token));
 
-        //jwt token에서 memberId 추출
-        String memberIdStr = JwtTokenUtil.getMemberId(token);
-
-        Long memberId = Long.parseLong(memberIdStr);
-
-//        Member loginMember = memberService.findMemberById(memberId);
-
-        // loginMember 로 UsernamePasswordAuthenticationToken 발급
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 memberId, null, List.of(new SimpleGrantedAuthority("USER"))
         );
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
 
     }
 }

@@ -1,5 +1,6 @@
 package wku.smartplant.exception;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -66,6 +67,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ResponseDTO<?>> handleBadCredentialsException(BadCredentialsException ex) {
         return build(ex.getMessage(), BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ExpiredRefreshTokenException.class)
+    public ResponseEntity<ResponseDTO<?>> handleExpiredRefreshTokenException(ExpiredRefreshTokenException ex) {
+        return build(ex.getMessage(), NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler(RuntimeException.class)

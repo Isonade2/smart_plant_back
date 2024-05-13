@@ -15,7 +15,6 @@ import wku.smartplant.dto.member.MemberJoinRequest;
 import wku.smartplant.dto.member.MemberLoginRequest;
 import wku.smartplant.dto.member.MemberLoginResponse;
 import wku.smartplant.exception.EmailAlreadyExistsException;
-import wku.smartplant.jwt.SecurityUtil;
 import wku.smartplant.repository.EmailVerifyRepository;
 import wku.smartplant.repository.MemberRepository;
 
@@ -33,6 +32,7 @@ public class MemberService {
     private final EmailService emailService;
     private final MemberRepository memberRepository;
     private final EmailVerifyRepository emailVerifyRepository;
+    private final RefreshTokenService refreshTokenService;
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -82,15 +82,24 @@ public class MemberService {
                     "메일이 보이지 않을 경우 스팸 메일함을 확인해보세요.");
         }
 
-        String token = JwtTokenUtil.createToken(findMember.getId().toString(),  1000000);
+        //예외 처리 끝, 로직 시작
+        String accessToken = JwtTokenUtil.createAccessToken(findMember.getId().toString(), 3600000); // 1시간
+        String refreshToken = JwtTokenUtil.createRefreshToken(findMember.getId().toString(), 604800000); // 7일
 
-        log.info("{} 로그인. 토근 = {}", findMember.getEmail(), token);
+        refreshTokenService.saveRefreshToken(findMember.getId(), refreshToken);
+
+        log.info("{} 로그인. 토근 = {}, {}", findMember.getEmail(), accessToken, refreshToken);
 
         return MemberLoginResponse.builder()
                 .email(findMember.getEmail())
                 .username(findMember.getUsername())
-                .token(token).build();
+                .accessToken(accessToken)
+                .refreshToken(refreshToken).build();
+    }
 
+    @Transactional
+    public void logoutMember(Long memberId) {
+        refreshTokenService.deleteByMemberId(memberId);
     }
 
     @Transactional
@@ -152,6 +161,7 @@ public class MemberService {
 
         Member findMember = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("해당 유저가 존재하지 않습니다."));
+        refreshTokenService.deleteByMemberId(findMember.getId()); //비밀번호 변경시 기존에 발급한 리프레시 토큰 삭제
 
         findMember.changePassword(passwordEncoder.encode(password));
     }

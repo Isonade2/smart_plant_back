@@ -5,7 +5,6 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.nio.charset.MalformedInputException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,11 +15,24 @@ public class JwtTokenUtil {
 
     private static final String SECRET_KEY = "여기에는안전한비밀키를넣어주세요비밀키는적어도256비트여야합니다"; // 실제 환경에서는 환경 변수 등에서 가져오는 것이 좋습니다.
     private static final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+    private static final String ACCESS_TOKEN_TYPE = "access";
+    private static final String REFRESH_TOKEN_TYPE = "refresh";
 
-    // Jwt Token 발급
-    public static String createToken(String memberId, long expireTimeMs) {
+    // Access Token 발급
+    public static String createAccessToken(String memberId, long expireTimeMs) {
+        return createToken(memberId, expireTimeMs, ACCESS_TOKEN_TYPE);
+    }
+
+    // Refresh Token 발급
+    public static String createRefreshToken(String memberId, long expireTimeMs) {
+        return createToken(memberId, expireTimeMs, REFRESH_TOKEN_TYPE);
+    }
+
+    // Token 발급
+    private static String createToken(String memberId, long expireTimeMs, String tokenType) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("memberId", memberId);
+        claims.put("tokenType", tokenType);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -38,6 +50,26 @@ public class JwtTokenUtil {
     public static boolean isExpired(String token) {
         Date expiration = extractClaims(token).getExpiration();
         return expiration.before(new Date());
+    }
+
+    // 토큰이 Access Token인지 확인
+    public static boolean isAccessToken(String token) {
+        return ACCESS_TOKEN_TYPE.equals(extractClaims(token).get("tokenType", String.class));
+    }
+
+    // Refresh Token 유효성 검증
+    public static boolean validateRefreshToken(String token) {
+        try {
+            Claims claims = extractClaims(token);
+            String tokenType = claims.get("tokenType", String.class);
+
+            if(isExpired(token)) {
+                return false; //시간 만료시 실패 반환
+            };
+            return REFRESH_TOKEN_TYPE.equals(tokenType); //만료되지 않고 리프레시 토큰일 경우 true 반환 
+        } catch (TokenValidationException e) {
+            return false;
+        }
     }
 
     // token 파싱
