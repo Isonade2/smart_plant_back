@@ -3,6 +3,7 @@ package wku.smartplant.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.Member;
@@ -27,6 +28,13 @@ public class QuestService {
     private final QuestProgressRepository questProgressRepository;
 
 
+    //주마다 퀘스트 진행도를 초기화 한다.
+    @Scheduled(cron = "0 0 0 * * MON")
+    public void resetWeeklyQuests(){
+        List<QuestProgress> QuestProgresses = questProgressRepository.findAll();
+        //모두 삭제
+        questProgressRepository.deleteAll(QuestProgresses);
+    }
 
     public List<QuestListDTO> getWeeklyQuest(Long memberId){
         //퀘스트 목록을 불러온다.
