@@ -47,6 +47,10 @@ public class QuestProgress {
         }
     }
 
+    public void changeCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
     public QuestProgress createQuestProgress(Member member, Quest quest) {
         return QuestProgress.builder()
                 .member(member)

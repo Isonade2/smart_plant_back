@@ -23,8 +23,8 @@ public class QuestController {
     @GetMapping("/weekly")
     public ResponseEntity<?> getWeeklyQuest(){
         log.info("getWeeklyQuest");
-        //Long currentMemberId = SecurityUtil.getCurrentMemberId();
-        Long currentMemberId = 52L;
+        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+        //Long currentMemberId = 52L;
         List<QuestListDTO> weeklyQuest = questService.getWeeklyQuest(currentMemberId);
         return ResponseEntityBuilder.build("주간 퀘스트 조회 성공", HttpStatus.OK, weeklyQuest);
     }
@@ -32,8 +32,8 @@ public class QuestController {
     @PostMapping("/weekly/accept")
     public ResponseEntity<?> acceptWeeklyQuest(@RequestBody QuestAcceptRequestDTO requestDTO){
         log.info("acceptWeeklyQuest questId : {}",requestDTO.getQuestId());
-        //Long currentMemberId = SecurityUtil.getCurrentMemberId();
-        Long currentMemberId = 52L;
+        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+//        Long currentMemberId = 52L;
 
         QuestAcceptResponseDTO questAcceptResponse = questService.acceptQuest(requestDTO.getQuestId(), currentMemberId);
         return ResponseEntityBuilder.build("퀘스트 수락 성공", HttpStatus.OK, questAcceptResponse);
@@ -43,8 +43,8 @@ public class QuestController {
     @PostMapping("/weekly/complete")
     public ResponseEntity<?> completeWeeklyQuest(@RequestBody QuestCompleteRequestDTO requestDTO){
         log.info("completeWeeklyQuest questId : {}",requestDTO.getQuestId());
-        //Long currentMemberId = SecurityUtil.getCurrentMemberId();
-        Long currentMemberId = 52L;
+        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+        //Long currentMemberId = 52L;
         questService.completeQuest(requestDTO.getQuestId(), currentMemberId);
         return ResponseEntityBuilder.build("퀘스트 완료", HttpStatus.OK);
     }

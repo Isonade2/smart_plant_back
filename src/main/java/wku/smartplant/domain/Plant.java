@@ -57,4 +57,8 @@ public class Plant extends BaseTimeEntity {
         this.giveWater = false;
         this.activate = true;
     }
+
+    public void addExp(Long exp) {
+        this.exp += exp;
+    }
 }

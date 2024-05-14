@@ -81,7 +81,15 @@ public class QuestService {
         }
 
         if(questProgress.checkCompleted()){
-            log.info("퀘스트 완료");
+            //만약 FavPlant가 없다면
+            if(member.getFavPlant() == null){
+                questProgress.changeCompleted(false);
+                throw new IllegalArgumentException("대표식물이 없습니다.");
+            }
+            member.getFavPlant().addExp(Long.valueOf(quest.getReward()));
+        }
+        else{
+            throw new IllegalArgumentException("퀘스트 완료 조건을 만족하지 못했습니다.");
         }
 
     }
