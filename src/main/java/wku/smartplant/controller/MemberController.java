@@ -16,6 +16,7 @@ import wku.smartplant.dto.member.*;
 import wku.smartplant.jwt.SecurityUtil;
 import wku.smartplant.domain.Member;
 import wku.smartplant.dto.ResponseDTO;
+import wku.smartplant.service.MemberCheckInService;
 import wku.smartplant.service.MemberService;
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ import static wku.smartplant.dto.ResponseEntityBuilder.*;
 public class MemberController {
 
     private final MemberService memberService;
+    private final MemberCheckInService memberCheckInService;
 
     @Value("${client.url}")
     private String clientId;
@@ -154,5 +156,13 @@ public class MemberController {
     public Member findMember(@PathVariable Long memberId) {
         Member findMember = memberService.findMemberById(memberId);
         return findMember;
+    }
+
+    //출석체크
+    @GetMapping("/checkin")
+    public ResponseEntity<ResponseDTO<?>> checkInMember(){
+        Long memberId = SecurityUtil.getCurrentMemberId();
+        memberCheckInService.checkIn(memberId);
+        return build("출석체크 완료", OK);
     }
 }

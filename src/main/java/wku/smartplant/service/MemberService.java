@@ -177,4 +177,5 @@ public class MemberService {
             throw new IllegalStateException("메일 인증 시간이 만료되었습니다.");
         }
     }
+
 }
