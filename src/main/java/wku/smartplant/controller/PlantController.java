@@ -86,4 +86,14 @@ public class PlantController {
         return build(msg, HttpStatus.OK);
     }
 
+    @DeleteMapping("/{plantId}")
+    @Operation(summary = "식물 삭제",
+            description = "해당 식물을 삭제함")
+    public ResponseEntity<ResponseDTO<?>> deletePlant(@PathVariable Long plantId) {
+        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+        plantService.deletePlant(currentMemberId, plantId);
+        String msg = "식물 삭제 완료";
+        return build(msg, HttpStatus.OK);
+    }
+
 }
