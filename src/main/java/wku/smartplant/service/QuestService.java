@@ -7,12 +7,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.Member;
+import wku.smartplant.domain.Plant;
 import wku.smartplant.domain.Quest;
 import wku.smartplant.domain.QuestProgress;
 import wku.smartplant.dto.quest.QuestAcceptResponseDTO;
 import wku.smartplant.dto.quest.QuestDTO;
 import wku.smartplant.dto.quest.QuestListDTO;
 import wku.smartplant.repository.MemberRepository;
+import wku.smartplant.repository.PlantRepository;
 import wku.smartplant.repository.QuestProgressRepository;
 import wku.smartplant.repository.QuestRepository;
 
@@ -26,6 +28,7 @@ public class QuestService {
     private final QuestRepository questRepository;
     private final MemberRepository memberRepository;
     private final QuestProgressRepository questProgressRepository;
+    private final PlantRepository plantRepository;
 
 
     //주마다 퀘스트 진행도를 초기화 한다.
@@ -89,12 +92,15 @@ public class QuestService {
         }
 
         if(questProgress.checkCompleted()){
-            //만약 FavPlant가 없다면
-            if(member.getFavPlant() == null){
-                questProgress.changeCompleted(false);
-                throw new IllegalArgumentException("대표식물이 없습니다.");
+            //멤버의 모든 식물을 불러온다.
+
+            List<Plant> Plants = plantRepository.findAllByMemberId(memberId);
+            if (Plants.isEmpty()) {
+                throw new IllegalArgumentException("식물이 존재하지 않습니다.");
             }
-            member.getFavPlant().addExp(Long.valueOf(quest.getReward()));
+            for (Plant plant : Plants) {
+                plant.addExp(Long.valueOf(quest.getReward()));
+            }
         }
         else{
             throw new IllegalArgumentException("퀘스트 완료 조건을 만족하지 못했습니다.");

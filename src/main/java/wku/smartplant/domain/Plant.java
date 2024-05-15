@@ -61,4 +61,5 @@ public class Plant extends BaseTimeEntity {
     public void addExp(Long exp) {
         this.exp += exp;
     }
+
 }
