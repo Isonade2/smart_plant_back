@@ -44,7 +44,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         try {
             if (JwtTokenUtil.isExpired(token)) {
-                throw new JwtTokenUtil.TokenValidationException("Token expired");
+                //throw new JwtTokenUtil.TokenValidationException("Token expired");
             }
         } catch (JwtTokenUtil.TokenValidationException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 코드 설정
