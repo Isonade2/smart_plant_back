@@ -35,7 +35,7 @@ public class QuestProgress {
     }
 
     public void updateProgress(int progress) {
-        this.progress = progress;
+        this.progress += progress;
     }
 
     public boolean checkCompleted() {

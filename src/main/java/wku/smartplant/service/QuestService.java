@@ -156,4 +156,14 @@ public class QuestService {
                 .completed(progress.isCompleted())
                 .build();
     }
+
+    public void updateQuestProgress(Long memberId,Long questId){
+        QuestProgress questProgress = questProgressRepository.findByMemberIdAndQuestId(memberId, questId).orElseGet(() -> {
+            log.info("퀘스트 진행 정보가 없습니다.");
+            return null;
+        });
+        if (questProgress != null) {
+            questProgress.updateProgress(1);
+        }
+    }
 }
