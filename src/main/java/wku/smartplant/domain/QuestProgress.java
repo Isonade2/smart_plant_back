@@ -59,4 +59,8 @@ public class QuestProgress {
                 .completed(false)
                 .build();
     }
+
+    public boolean isCanComplete(){
+        return progress >= quest.getGoal();
+    }
 }

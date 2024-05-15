@@ -165,5 +165,9 @@ public class QuestService {
         if (questProgress != null) {
             questProgress.updateProgress(1);
         }
+        //퀘스트 목표를 달성했다면
+        if(questProgress.isCanComplete()){
+            log.info("퀘스트 완료 가능");
+        }
     }
 }

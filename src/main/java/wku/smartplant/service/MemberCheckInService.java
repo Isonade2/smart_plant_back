@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 public class MemberCheckInService {
     private final MemberRepository memberRepository;
     private final MemberCheckInRepository memberCheckInRepository;
+    private final QuestService questService;
 
     public void checkIn(Long memberId) {
         log.info("checkIn memberId : {}", memberId);
@@ -33,6 +34,8 @@ public class MemberCheckInService {
         }
 
         memberCheckInRepository.save(memberCheckIn);
+        questService.updateQuestProgress(memberId, 1L);
+
     }
     //매일 자정마다 초기화
     @Scheduled(cron = "0 0 0 * * *")
