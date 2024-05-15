@@ -105,8 +105,26 @@ public class QuestService {
         else{
             throw new IllegalArgumentException("퀘스트 완료 조건을 만족하지 못했습니다.");
         }
-
     }
+
+    //퀘스트 진행도를 업데이트 한다.
+    public void updateQuestProgress(Long memberId,Long questId){
+        QuestProgress questProgress = questProgressRepository.findByMemberIdAndQuestId(memberId, questId).orElseGet(() -> {
+            log.info("퀘스트 진행 정보가 없습니다.");
+            return null;
+        });
+        if (questProgress != null) {
+            questProgress.updateProgress(1);
+        }
+        //퀘스트 목표를 달성했다면
+        if(questProgress.isCanComplete()){
+            log.info("퀘스트 완료 가능");
+            /*
+            여기에 알림 기능 추가
+             */
+        }
+    }
+
 
     // 퀘스트목록을 불러온다. QuestProgress에 있는 퀘스트에 같은 퀘스트가 있다면 QuestProgress에 있는 퀘스트로 QuestListDTO를 만든다.
     private List<QuestListDTO> createQuestListDTO(List<Quest> quests, List<QuestProgress> questProgresses) {
@@ -157,17 +175,5 @@ public class QuestService {
                 .build();
     }
 
-    public void updateQuestProgress(Long memberId,Long questId){
-        QuestProgress questProgress = questProgressRepository.findByMemberIdAndQuestId(memberId, questId).orElseGet(() -> {
-            log.info("퀘스트 진행 정보가 없습니다.");
-            return null;
-        });
-        if (questProgress != null) {
-            questProgress.updateProgress(1);
-        }
-        //퀘스트 목표를 달성했다면
-        if(questProgress.isCanComplete()){
-            log.info("퀘스트 완료 가능");
-        }
-    }
+
 }
