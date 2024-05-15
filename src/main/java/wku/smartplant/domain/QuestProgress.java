@@ -16,10 +16,10 @@ public class QuestProgress {
     @GeneratedValue
     @Column(name = "quest_progress_id")
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quest_id")
     private Quest quest;
     private int progress;
@@ -35,7 +35,7 @@ public class QuestProgress {
     }
 
     public void updateProgress(int progress) {
-        this.progress = progress;
+        this.progress += progress;
     }
 
     public boolean checkCompleted() {
@@ -47,6 +47,10 @@ public class QuestProgress {
         }
     }
 
+    public void changeCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
     public QuestProgress createQuestProgress(Member member, Quest quest) {
         return QuestProgress.builder()
                 .member(member)
@@ -54,5 +58,9 @@ public class QuestProgress {
                 .progress(0)
                 .completed(false)
                 .build();
+    }
+
+    public boolean isCanComplete(){
+        return progress >= quest.getGoal();
     }
 }

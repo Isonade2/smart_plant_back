@@ -33,16 +33,16 @@ public class PlantController {
 
     // 클라이언트의 식물 정보 조회
     @GetMapping
-    @Operation(summary = "사용자의 식물 정보 조회",
-            description = "요청 시 헤더 토큰 필요. 해당 멤버의 식물들을 리턴해줌")
+    @Operation(summary = "식물 정보 조회",
+            description = "사용자가 가지고 있는 식물들을 조회함")
     public ResponseEntity<ResponseDTO<List<PlantDTO>>> getMemberPlantList() {
         Long currentMemberId = SecurityUtil.getCurrentMemberId();
         return build(currentMemberId + " 멤버의 식물 리스트", HttpStatus.OK, plantService.getAllPlantsByMemberId(currentMemberId));
     }
 
     @GetMapping("{plantId}")
-    @Operation(summary = "사용자의 특정 식물 조회",
-            description = "사용자가 가지고 있는 특정 식물의 상세 정보를 조회함")
+    @Operation(summary = "특정 식물 조회",
+            description = "사용자의 식물 중 특정 식물을 조회함")
     public ResponseEntity<ResponseDTO<PlantDTO>> getPlant(@PathVariable Long plantId) {
         PlantDTO plantDTO = plantService.findPlantById(plantId);
         return build("식물 조회 성공", HttpStatus.OK, plantDTO);
@@ -67,7 +67,7 @@ public class PlantController {
 
     @GetMapping("/{plantId}/water")
     @Operation(summary = "물 공급",
-            description = "해당 식물에 물을 공급하는 컨트롤러")
+            description = "해당 식물에 물을 공급함")
     public ResponseEntity<ResponseDTO<Boolean>> changeWaterState(@PathVariable Long plantId) {
         //Long currentMemberId = SecurityUtil.getCurrentMemberId(); 테스트 할떄만 주석
         Boolean changedState = plantService.changeGiveWater(1L, plantId); //바뀐 상태
@@ -75,5 +75,25 @@ public class PlantController {
         return build(msg, HttpStatus.OK, changedState);
     }
 
+
+    @Operation(summary = "대표식물 설정",
+            description = "해당 식물을 대표 식물로 설정")
+    @GetMapping("/{plantId}/setfavplant")
+    public ResponseEntity<ResponseDTO<?>> setFavPlant(@PathVariable Long plantId) {
+        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+        plantService.setFavPlant(currentMemberId, plantId);
+        String msg = "대표식물 설정 완료";
+        return build(msg, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{plantId}")
+    @Operation(summary = "식물 삭제",
+            description = "해당 식물을 삭제함")
+    public ResponseEntity<ResponseDTO<?>> deletePlant(@PathVariable Long plantId) {
+        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+        plantService.deletePlant(currentMemberId, plantId);
+        String msg = "식물 삭제 완료";
+        return build(msg, HttpStatus.OK);
+    }
 
 }

@@ -12,6 +12,8 @@ public interface QuestProgressRepository extends JpaRepository<QuestProgress,Lon
     boolean existsByMemberAndQuest(Member member, Quest quest);
     Optional<QuestProgress> findByMemberAndQuest(Member member, Quest quest);
 
+    Optional<QuestProgress> findByMemberIdAndQuestId(Long memberId, Long questId);
+
     //멤버의 아이디가 일치하는 퀘스트정보들을 가져온다.
     List<QuestProgress> findAllByMemberId(Long memberId);
 }

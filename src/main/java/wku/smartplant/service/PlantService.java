@@ -6,12 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.Member;
+import wku.smartplant.domain.Order;
 import wku.smartplant.domain.Plant;
 import wku.smartplant.domain.PlantHistory;
 import wku.smartplant.dto.plant.PlantDTO;
 import wku.smartplant.dto.plant.PlantHistoryDTO;
 import wku.smartplant.dto.plant.PlantRequestDTO;
 import wku.smartplant.repository.MemberRepository;
+import wku.smartplant.repository.OrderRepository;
 import wku.smartplant.repository.PlantHistoryRepository;
 import wku.smartplant.repository.PlantRepository;
 
@@ -30,6 +32,7 @@ public class PlantService {
     private final PlantRepository plantRepository;
     private final PlantHistoryRepository plantHistoryRepository;
     private final MemberRepository memberRepository;
+    private final OrderRepository orderRepository;
 
     public Long createPlant(PlantRequestDTO plantRequestDTO, Long memberId) {
         Member member = memberRepository.findById(memberId)
@@ -77,5 +80,30 @@ public class PlantService {
     public Long getPlantCount(Long memberId){
         return plantRepository.countByMemberId(memberId);
     }
+
+    public void setFavPlant(Long memberId, Long plantId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다."));
+        Plant plant = plantRepository.findById(plantId)
+                .orElseThrow(() -> new EntityNotFoundException("식물을 찾을 수 없습니다."));
+
+        //대표식물 설정 + 오류제어
+        member.setFavPlant(plant);
+    }
+
+    public void deletePlant(Long memberId, Long plantId){
+        Plant plant = plantRepository.findByIdAndMemberId(plantId, memberId)
+                .orElseThrow(() -> new EntityNotFoundException("식물을 찾을 수 없습니다."));
+
+        Order order = orderRepository.findByPlantId(plantId).orElseThrow(() -> new EntityNotFoundException("식물을 찾을 수 없습니다."));
+        try{
+            orderRepository.delete(order);
+            plantRepository.delete(plant);
+        }catch (Exception e){
+            log.error("삭제 실패");
+            throw new IllegalArgumentException("삭제 실패");
+        }
+    }
+
 
 }

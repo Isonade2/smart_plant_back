@@ -3,15 +3,18 @@ package wku.smartplant.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.Member;
+import wku.smartplant.domain.Plant;
 import wku.smartplant.domain.Quest;
 import wku.smartplant.domain.QuestProgress;
 import wku.smartplant.dto.quest.QuestAcceptResponseDTO;
 import wku.smartplant.dto.quest.QuestDTO;
 import wku.smartplant.dto.quest.QuestListDTO;
 import wku.smartplant.repository.MemberRepository;
+import wku.smartplant.repository.PlantRepository;
 import wku.smartplant.repository.QuestProgressRepository;
 import wku.smartplant.repository.QuestRepository;
 
@@ -25,8 +28,16 @@ public class QuestService {
     private final QuestRepository questRepository;
     private final MemberRepository memberRepository;
     private final QuestProgressRepository questProgressRepository;
+    private final PlantRepository plantRepository;
 
 
+    //주마다 퀘스트 진행도를 초기화 한다.
+    @Scheduled(cron = "0 0 0 * * MON")
+    public void resetWeeklyQuests(){
+        List<QuestProgress> QuestProgresses = questProgressRepository.findAll();
+        //모두 삭제
+        questProgressRepository.deleteAll(QuestProgresses);
+    }
 
     public List<QuestListDTO> getWeeklyQuest(Long memberId){
         //퀘스트 목록을 불러온다.
@@ -81,10 +92,39 @@ public class QuestService {
         }
 
         if(questProgress.checkCompleted()){
-            log.info("퀘스트 완료");
-        }
+            //멤버의 모든 식물을 불러온다.
 
+            List<Plant> Plants = plantRepository.findAllByMemberId(memberId);
+            if (Plants.isEmpty()) {
+                throw new IllegalArgumentException("식물이 존재하지 않습니다.");
+            }
+            for (Plant plant : Plants) {
+                plant.addExp(Long.valueOf(quest.getReward()));
+            }
+        }
+        else{
+            throw new IllegalArgumentException("퀘스트 완료 조건을 만족하지 못했습니다.");
+        }
     }
+
+    //퀘스트 진행도를 업데이트 한다.
+    public void updateQuestProgress(Long memberId,Long questId){
+        QuestProgress questProgress = questProgressRepository.findByMemberIdAndQuestId(memberId, questId).orElseGet(() -> {
+            log.info("퀘스트 진행 정보가 없습니다.");
+            return null;
+        });
+        if (questProgress != null) {
+            questProgress.updateProgress(1);
+        }
+        //퀘스트 목표를 달성했다면
+        if(questProgress.isCanComplete()){
+            log.info("퀘스트 완료 가능");
+            /*
+            여기에 알림 기능 추가
+             */
+        }
+    }
+
 
     // 퀘스트목록을 불러온다. QuestProgress에 있는 퀘스트에 같은 퀘스트가 있다면 QuestProgress에 있는 퀘스트로 QuestListDTO를 만든다.
     private List<QuestListDTO> createQuestListDTO(List<Quest> quests, List<QuestProgress> questProgresses) {
@@ -134,4 +174,6 @@ public class QuestService {
                 .completed(progress.isCompleted())
                 .build();
     }
+
+
 }

@@ -11,6 +11,7 @@ import wku.smartplant.dto.order.AddressDTO;
 import wku.smartplant.dto.order.OrderDTO;
 import wku.smartplant.dto.order.OrderRequest;
 import wku.smartplant.dto.orderitem.OrderItemDTO;
+import wku.smartplant.dto.plant.PlantDTO;
 import wku.smartplant.dto.plant.PlantRequestDTO;
 import wku.smartplant.exception.OrderNotFoundException;
 import wku.smartplant.jwt.SecurityUtil;
@@ -33,13 +34,17 @@ public class OrderService {
 
 
     // 상품 주문 서비스
-    public OrderDTO createOrderOne(Long memberid, OrderRequest orderRequest) {
+    public OrderDTO createOrderOne(Long memberId, OrderRequest orderRequest) {
         log.info("OrderService.createOrder");
         log.info("orderRequest : {}", orderRequest);
 
-        Member member = memberRepository.findById(memberid).orElseThrow(() -> new OrderNotFoundException("존재하지 않는 회원입니다."));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new OrderNotFoundException("존재하지 않는 회원입니다."));
         log.info("member : {}", member);
         Item item = itemRepository.findById(orderRequest.getItemId()).orElseThrow(() -> new OrderNotFoundException("존재하지 않는 상품입니다."));
+
+        if(plantService.getPlantCount(memberId)>=4){
+            throw new IllegalArgumentException("식물은 최대 4개까지만 등록 가능합니다.");
+        }
 
         OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), orderRequest.getCount());
         orderItemRepository.save(orderItem);
@@ -51,7 +56,7 @@ public class OrderService {
 
         PlantRequestDTO plantRequestDTO = new PlantRequestDTO(item.getPlantType(), orderRequest.getPlantName());
         log.info("plantRequestDTO : {}", plantRequestDTO);
-        Long plantId = plantService.createPlant(plantRequestDTO, memberid);
+        Long plantId = plantService.createPlant(plantRequestDTO, memberId);
         Plant plant = plantRepository.findById(plantId).orElseThrow(() -> new OrderNotFoundException("존재하지 않는 식물입니다."));
 
         Order order = new Order(member, OrderStatus.완료, address, plant);
