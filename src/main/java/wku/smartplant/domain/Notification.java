@@ -15,7 +15,9 @@ public class Notification extends BaseTimeEntity {
 
     private String description;
 
+    private String link;
+
     @JoinColumn(name = "member_id")
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 }
