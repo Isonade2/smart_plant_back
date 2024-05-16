@@ -36,6 +36,8 @@ public class ArduinoService {
 
         plantHistoryRepository.save(plantHistory);
 
+        if (plantHistoryDTO.getTemp() < 10)
+
         log.info("{} uuid 식물 기록 성공", uuid);
         String msg;
         if (findPlant.getGiveWater()) {
