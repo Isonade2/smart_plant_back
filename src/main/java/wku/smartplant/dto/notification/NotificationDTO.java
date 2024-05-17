@@ -18,7 +18,7 @@ public class NotificationDTO {
     private Long id;
     private String description;
     private String link;
-    private Boolean read;
+    private Boolean isRead;
     private NotificationType notificationType;
     private LocalDateTime createdDate;
 
@@ -26,7 +26,7 @@ public class NotificationDTO {
         id = notification.getId();
         description = notification.getDescription();
         link = notification.getLink();
-        read = notification.getRead();
+        isRead = notification.getIsRead();
         notificationType = notification.getNotificationType();
         createdDate = notification.getCreatedDate();
     }

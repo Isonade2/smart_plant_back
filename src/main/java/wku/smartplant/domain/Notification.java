@@ -21,7 +21,7 @@ public class Notification extends BaseTimeEntity {
 
     private String link;
 
-    private Boolean read = false;
+    private Boolean isRead = false;
 
     @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
@@ -31,6 +31,6 @@ public class Notification extends BaseTimeEntity {
     private Member member;
 
     public void changeRead() {
-        read = true;
+        isRead = true;
     }
 }
