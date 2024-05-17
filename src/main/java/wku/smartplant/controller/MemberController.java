@@ -176,7 +176,7 @@ public class MemberController {
             description = "출석체크를 하면 출석체크 테이블에 데이터가 추가되고, 퀘스트 진행도가 업데이트 됨",
             responses = {
                     @ApiResponse(responseCode = "200", description = "출석체크 완료"),
-                    @ApiResponse(responseCode = "400", description = "이미 출석체크를 했을 경우")
+                    @ApiResponse(responseCode = "406", description = "이미 출석체크를 했을 경우")
             })
     @GetMapping("/checkin")
     public ResponseEntity<ResponseDTO<?>> checkInMember(){
