@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.Member;
 import wku.smartplant.domain.Notification;
+import wku.smartplant.domain.NotificationType;
 import wku.smartplant.dto.notification.NotificationDTO;
 import wku.smartplant.repository.MemberRepository;
 import wku.smartplant.repository.NotificationRepository;
@@ -19,11 +20,16 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final MemberRepository memberRepository;
 
-    public void createNotification(Long memberId, String description, String link) {
+    public void createNotification(Long memberId, String description, String link, NotificationType type) {
         Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new EntityNotFoundException("해당 회원이 없습니다."));
+
+        if (type != NotificationType.퀘스트)
+            notificationRepository.deleteByNotificationTypeAndMemberId(type, memberId); //기존 같은 타입의 식물 알림은 제거함
+
         Notification notification = Notification.builder()
                 .description(description)
                 .link(link)
+                .notificationType(type)
                 .member(findMember)
                 .build();
 
@@ -31,19 +37,26 @@ public class NotificationService {
     }
 
     @Transactional
-    public void readNotification(Long notificationId, Long memberId) {
-        Notification findNotification = notificationRepository.findByNotificationIdAndMemberId(notificationId, memberId)
+    public Long readNotification(Long notificationId, Long memberId) {
+        Notification findNotification = notificationRepository.findByIdAndMemberId(notificationId, memberId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 기록이 없습니다."));
 
         findNotification.changeRead(); //read를 true로 변경
+        return findNotification.getId();
     }
 
     @Transactional
-    public void deleteNotification(Long notificationId, Long memberId) {
-        Notification findNotification = notificationRepository.findByNotificationIdAndMemberId(notificationId, memberId)
+    public Long deleteOneNotification(Long notificationId, Long memberId) {
+        Notification findNotification = notificationRepository.findByIdAndMemberId(notificationId, memberId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 기록이 없습니다."));
 
         notificationRepository.delete(findNotification);
+        return findNotification.getId();
+    }
+
+    @Transactional
+    public void deleteAllNotification(Long memberId) {
+        notificationRepository.deleteAllByMemberId(memberId);
     }
 
 

@@ -23,6 +23,9 @@ public class Notification extends BaseTimeEntity {
 
     private Boolean read = false;
 
+    @Enumerated(EnumType.STRING)
+    private NotificationType notificationType;
+
     @JoinColumn(name = "member_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;

@@ -45,7 +45,7 @@ public class Member extends BaseTimeEntity {
     private EmailVerify emailVerify;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
-    private List<Notification> notification;
+    private List<Notification> notifications = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<QuestProgress> questProgresses = new ArrayList<>();

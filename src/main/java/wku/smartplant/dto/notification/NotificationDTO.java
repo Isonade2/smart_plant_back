@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import wku.smartplant.domain.Notification;
+import wku.smartplant.domain.NotificationType;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +19,7 @@ public class NotificationDTO {
     private String description;
     private String link;
     private Boolean read;
+    private NotificationType notificationType;
     private LocalDateTime createdDate;
 
     public NotificationDTO(Notification notification) {
@@ -25,6 +27,7 @@ public class NotificationDTO {
         description = notification.getDescription();
         link = notification.getLink();
         read = notification.getRead();
+        notificationType = notification.getNotificationType();
         createdDate = notification.getCreatedDate();
     }
 }

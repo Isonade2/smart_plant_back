@@ -6,10 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import wku.smartplant.domain.Member;
-import wku.smartplant.domain.Plant;
-import wku.smartplant.domain.Quest;
-import wku.smartplant.domain.QuestProgress;
+import wku.smartplant.domain.*;
 import wku.smartplant.dto.quest.QuestAcceptResponseDTO;
 import wku.smartplant.dto.quest.QuestDTO;
 import wku.smartplant.dto.quest.QuestListDTO;
@@ -29,6 +26,7 @@ public class QuestService {
     private final MemberRepository memberRepository;
     private final QuestProgressRepository questProgressRepository;
     private final PlantRepository plantRepository;
+    private final NotificationService notificationService;
 
 
     //주마다 퀘스트 진행도를 초기화 한다.
@@ -119,9 +117,9 @@ public class QuestService {
         //퀘스트 목표를 달성했다면
         if(questProgress.isCanComplete()){
             log.info("퀘스트 완료 가능");
-            /*
-            여기에 알림 기능 추가
-             */
+
+            notificationService.createNotification(memberId, "완료된 퀘스트가 있습니다.", null, NotificationType.퀘스트);
+            //알림 생성
         }
     }
 
