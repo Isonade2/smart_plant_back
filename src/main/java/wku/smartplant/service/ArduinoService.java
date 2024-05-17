@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import wku.smartplant.domain.Plant;
 import wku.smartplant.domain.PlantHistory;
 import wku.smartplant.dto.plant.PlantHistoryDTO;
+import wku.smartplant.jwt.SecurityUtil;
 import wku.smartplant.repository.PlantHistoryRepository;
 import wku.smartplant.repository.PlantRepository;
 
@@ -20,6 +21,7 @@ public class ArduinoService {
 
     private final PlantRepository plantRepository;
     private final PlantHistoryRepository plantHistoryRepository;
+    private final QuestService questService;
 
     @Transactional
     public String saveHistoryByArduino(String uuid, PlantHistoryDTO plantHistoryDTO) {
@@ -42,6 +44,8 @@ public class ArduinoService {
             msg = "water";
             findPlant.changeGiveWater(false);
             findPlant.changeExp(findPlant.getExp() + 10);
+            Long memberId = findPlant.getMember().getId();
+            questService.updateQuestProgress(memberId, 2L);
         } else {
             msg = "saved";
         }
@@ -60,6 +64,8 @@ public class ArduinoService {
         if (findPlant.getGiveWater()) {
             findPlant.changeGiveWater(false);
             findPlant.changeExp(findPlant.getExp() + 10);
+            Long memberId = findPlant.getMember().getId();
+            questService.updateQuestProgress(memberId, 2L);
             return "water"; //아두이노에서 water 문자를 받으면 물을 줌
         } else {
             return "water state false";
