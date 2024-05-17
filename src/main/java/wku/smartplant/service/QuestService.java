@@ -111,6 +111,10 @@ public class QuestService {
             log.info("퀘스트 진행 정보가 없습니다.");
             return null;
         });
+        if(questProgress == null){
+            return;
+        }
+        log.info("퀘스트 진행정보가 있음");
         if (questProgress != null) {
             questProgress.updateProgress(1);
         }
