@@ -10,12 +10,14 @@ import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import wku.smartplant.domain.QuestProgress;
 import wku.smartplant.dto.ResponseDTO;
 import wku.smartplant.dto.plant.PlantDTO;
 import wku.smartplant.dto.plant.PlantRequestDTO;
 import wku.smartplant.jwt.SecurityUtil;
 import wku.smartplant.service.AuthenticationSevice;
 import wku.smartplant.service.PlantService;
+import wku.smartplant.service.QuestService;
 
 
 import java.util.List;
@@ -28,6 +30,7 @@ import static wku.smartplant.dto.ResponseEntityBuilder.*;
 @Slf4j
 public class PlantController {
 
+    private final QuestService questService;
     private final PlantService plantService;
     private final AuthenticationSevice authenticationSevice;
 
@@ -69,10 +72,17 @@ public class PlantController {
     @Operation(summary = "물 공급",
             description = "해당 식물에 물을 공급함")
     public ResponseEntity<ResponseDTO<Boolean>> changeWaterState(@PathVariable Long plantId) {
-        //Long currentMemberId = SecurityUtil.getCurrentMemberId(); 테스트 할떄만 주석
-        Boolean changedState = plantService.changeGiveWater(1L, plantId); //바뀐 상태
-        String msg = "바뀐 상태는 " + changedState + "입니다.";
-        return build(msg, HttpStatus.OK, changedState);
+        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+        if (currentMemberId == 1L) {
+            Boolean changedState = plantService.changeGiveWater(1L, plantId); //바뀐 상태
+            String msg = "바뀐 상태는 " + changedState + "입니다.";
+            return build(msg, HttpStatus.OK, changedState);
+        }
+        else{
+            questService.updateQuestProgress(currentMemberId, 2L);
+            return build("물 공급 완료", HttpStatus.OK, true);
+        }
+
     }
 
 
