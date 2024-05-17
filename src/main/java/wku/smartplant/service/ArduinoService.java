@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import wku.smartplant.domain.NotificationType;
 import wku.smartplant.domain.Plant;
 import wku.smartplant.domain.PlantHistory;
 import wku.smartplant.dto.plant.PlantHistoryDTO;
@@ -22,6 +23,7 @@ public class ArduinoService {
     private final PlantRepository plantRepository;
     private final PlantHistoryRepository plantHistoryRepository;
     private final QuestService questService;
+    private final NotificationService notificationService;
 
     @Transactional
     public String saveHistoryByArduino(String uuid, PlantHistoryDTO plantHistoryDTO) {
@@ -38,6 +40,8 @@ public class ArduinoService {
 
         plantHistoryRepository.save(plantHistory);
 
+        createNotification(plantHistoryDTO, findPlant);
+
         log.info("{} uuid 식물 기록 성공", uuid);
         String msg;
         if (findPlant.getGiveWater()) {
@@ -50,6 +54,15 @@ public class ArduinoService {
             msg = "saved";
         }
         return msg;
+    }
+
+    private void createNotification(PlantHistoryDTO plantHistoryDTO, Plant findPlant) {
+        if (plantHistoryDTO.getTemp() < 10)
+            notificationService.createNotification(findPlant.getMember().getId(), "식물의 온도가 낮습니다.","history", NotificationType.온도);
+        if (plantHistoryDTO.getSoilHumidity() < 300)
+            notificationService.createNotification(findPlant.getMember().getId(), "식물의 토양습도가 낮습니다.","history", NotificationType.토양습도);
+        if (plantHistoryDTO.getRemainingWater() < 800)
+            notificationService.createNotification(findPlant.getMember().getId(), "남은 물통의 물양이 부족합니다.","history", NotificationType.남은물);
     }
 
     @Transactional
