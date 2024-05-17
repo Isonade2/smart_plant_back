@@ -47,7 +47,10 @@ public class ArduinoService {
         if (findPlant.getGiveWater()) {
             msg = "water";
             findPlant.changeGiveWater(false);
-            findPlant.changeExp(findPlant.getExp() + 10);
+            boolean isLevelUp = findPlant.addExpAndIsLevelUp(20); //경험치를 추가 함과 레벨업을 했는지 확인
+            if (isLevelUp)
+                notificationService.createNotification(findPlant.getMember().getId(), findPlant.getName() + " 식물이 레벨 업을 하였습니다! 축하합니다!", "home", NotificationType.레벨업);
+
             Long memberId = findPlant.getMember().getId();
             questService.updateQuestProgress(memberId, 2L);
         } else {
@@ -76,7 +79,11 @@ public class ArduinoService {
 
         if (findPlant.getGiveWater()) {
             findPlant.changeGiveWater(false);
-            findPlant.changeExp(findPlant.getExp() + 10);
+
+            boolean isLevelUp = findPlant.addExpAndIsLevelUp(20); //경험치를 추가 함과 레벨업을 했는지 확인
+            if (isLevelUp)
+                notificationService.createNotification(findPlant.getMember().getId(), findPlant.getName() + " 식물이 레벨 업을 하였습니다! 축하합니다!", "home", NotificationType.레벨업);
+
             Long memberId = findPlant.getMember().getId();
             questService.updateQuestProgress(memberId, 2L);
             return "water"; //아두이노에서 water 문자를 받으면 물을 줌

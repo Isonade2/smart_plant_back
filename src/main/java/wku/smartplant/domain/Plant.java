@@ -18,10 +18,9 @@ public class Plant extends BaseTimeEntity {
     @Id @GeneratedValue
     @Column(name = "plant_id")
     private Long id;
-
     private String name;
-
-    private Long exp;
+    private Integer level;
+    private Integer exp;
     private String uuid;
     private Boolean giveWater;
     private Boolean activate;
@@ -36,7 +35,7 @@ public class Plant extends BaseTimeEntity {
     @OneToMany(mappedBy = "plant", cascade = CascadeType.REMOVE)
     private List<PlantHistory> plantHistory = new ArrayList<>();
 
-    public void changeExp(Long exp) {
+    public void changeExp(int exp) {
         this.exp = exp;
     }
     public void changeGiveWater(Boolean bool) {
@@ -52,14 +51,24 @@ public class Plant extends BaseTimeEntity {
         this.member = member;
         this.plantType = plantType;
         this.uuid = UUID.randomUUID().toString();
-        this.exp = 0L;
+        this.exp = 0;
+        this.level = 1;
         this.id = null;
         this.giveWater = false;
         this.activate = true;
     }
 
-    public void addExp(Long exp) {
+    public boolean addExpAndIsLevelUp(int exp) { //경험치 추가와 레벨업 했는지 확인
         this.exp += exp;
+        if (this.exp >= 100) {
+            if (level < 4)
+            {
+                level += 1;
+                this.exp = this.exp - 100;
+                return true; //레벨 업을 하였음
+            }
+        }
+        return false; //레벨 업 x
     }
 
 }
