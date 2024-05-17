@@ -97,7 +97,10 @@ public class QuestService {
                 throw new IllegalArgumentException("식물이 존재하지 않습니다.");
             }
             for (Plant plant : Plants) {
-                plant.addExp(Long.valueOf(quest.getReward()));
+                boolean isLevelUp = plant.addExpAndIsLevelUp(quest.getReward());
+                if (isLevelUp) { //레벨 업을 하였을 경우 알림 추가
+                    notificationService.createNotification(memberId, plant.getName() + " 식물이 레벨 업을 하였습니다! 축하합니다!", "home", NotificationType.레벨업);
+                }
             }
         }
         else{
