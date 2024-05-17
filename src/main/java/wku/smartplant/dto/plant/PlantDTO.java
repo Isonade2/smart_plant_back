@@ -15,7 +15,8 @@ import java.time.LocalDateTime;
 public class PlantDTO {
     private Long id;
     private String name;
-    private Long exp;
+    private Integer exp;
+    private Integer level;
     private PlantType plantType;
     private String uuid; //테스트 때만 사용
     private Boolean giveWater;
@@ -26,6 +27,7 @@ public class PlantDTO {
         id = plant.getId();
         name = plant.getName();
         exp = plant.getExp();
+        level = plant.getLevel();
         plantType = plant.getPlantType();
         uuid = plant.getUuid(); //추후 삭제
         giveWater = plant.getGiveWater();
