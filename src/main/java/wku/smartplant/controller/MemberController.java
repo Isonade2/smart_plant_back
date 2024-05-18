@@ -172,8 +172,8 @@ public class MemberController {
     }
 
     //출석체크
-    @Operation(summary = "출석체크",
-            description = "출석체크를 하면 출석체크 테이블에 데이터가 추가되고, 퀘스트 진행도가 업데이트 됨",
+    @Operation(summary = "출석체크 여부 확인",
+            description = "출석체크 여부를 확인 함",
             responses = {
                     @ApiResponse(responseCode = "200", description = "출석체크 완료"),
                     @ApiResponse(responseCode = "406", description = "이미 출석체크를 했을 경우")
@@ -181,8 +181,13 @@ public class MemberController {
     @GetMapping("/checkin")
     public ResponseEntity<ResponseDTO<?>> checkInMember(){
         Long memberId = SecurityUtil.getCurrentMemberId();
-        memberCheckInService.checkIn(memberId);
-        return build("출석체크 완료", OK);
+        boolean B = memberCheckInService.ischeckIn(memberId);
+        if(!B){
+            return build("출석체크가 되어있지 않습니다. 출석체크를 해주세요", PARTIAL_CONTENT);
+        }
+        else{
+            return build("이미 출석처리 되었습니다.", NOT_ACCEPTABLE);
+        }
     }
 
     @Operation(summary = "출석체크",
