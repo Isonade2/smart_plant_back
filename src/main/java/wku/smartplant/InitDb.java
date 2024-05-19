@@ -90,22 +90,34 @@ public class InitDb {
 
         public void dbInit2() { // 초기 더미데이터 생성, Item 엔티티 생성
             List<Quest> all = questRepository.findAll();
+
             if(!all.isEmpty()){
                 log.info(all.toString());
                 log.info("이미 데이터가 있으므로 데이터 생성을 하지않았음");
                 return;
             }
-            Quest quest1 = createQuest("출석체크", "기간 내에 3번 이상 출석하세요.", 1000, 3);
-            Quest quest2 = createQuest("수분 공급", "기간 내에 무선 물주기 기능 1번 사용해보세요.", 1000, 1);
-            Quest quest3 = createQuest("식물과 대화하기", "AI챗봇 기능을 이용해 식물과 대화해보세요.", 1000, 1);
-            Quest quest4 = createQuest("물병 채우기", "식물의 물병을 새로 리필해주세요.", 1000, 1);
-            Quest quest5 = createQuest("질병 체크", "질병 확인 기능을 이용하여 식물의 이상을 확인해보세요.", 1000, 1);
+            Quest quest1 = createQuest("출석체크", "기간 내에 3번 이상 출석하세요.", 15, 3);
+            Quest quest2 = createQuest("수분 공급", "기간 내에 무선 물주기 기능 1번 사용해보세요.", 15, 1);
+            Quest quest3 = createQuest("식물과 대화하기", "AI챗봇 기능을 이용해 식물과 대화해보세요.", 15, 1);
+            Quest quest4 = createQuest("물병 채우기", "식물의 물병을 새로 리필해주세요.", 15, 1);
+            Quest quest5 = createQuest("질병 체크", "질병 확인 기능을 이용하여 식물의 이상을 확인해보세요.", 15, 1);
             em.persist(quest1);
             em.persist(quest2);
             em.persist(quest3);
             em.persist(quest4);
             em.persist(quest5);
-
+            Achievement achievement1 = createAchievement("물 뿌리개", "물 주기 기능 5번 이상 사용", 5);
+            Achievement achievement2 = createAchievement("뽀빠이", "최고 레벨 달성",300);
+            Achievement achievement3 = createAchievement("수다왕", "식물과 5번 이상 대화",5);
+            Achievement achievement4 = createAchievement("선인장", "일정 습도 달성", 1);
+            Achievement achievement5 = createAchievement("개근상", "일주일 동안 빠지지않고 출석",3);
+            Achievement achievement6 = createAchievement("소울메이트", "식물과 일정 애정도 이상 달성",360);
+            em.persist(achievement1);
+            em.persist(achievement2);
+            em.persist(achievement3);
+            em.persist(achievement4);
+            em.persist(achievement5);
+            em.persist(achievement6);
         }
 
 
@@ -143,6 +155,14 @@ public class InitDb {
                     .title(title)
                     .description(description)
                     .reward(reward)
+                    .goal(goal)
+                    .build();
+        }
+
+        public static Achievement createAchievement(String title, String description, int goal) {
+            return Achievement.builder()
+                    .title(title)
+                    .description(description)
                     .goal(goal)
                     .build();
         }

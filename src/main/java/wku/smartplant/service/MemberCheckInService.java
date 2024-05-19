@@ -43,4 +43,14 @@ public class MemberCheckInService {
         log.info("resetDailyCheckIn");
         memberCheckInRepository.deleteAll();
     }
+
+    //출석체크가 되었는지 확인
+    public boolean ischeckIn(Long memberId) {
+        boolean b = memberCheckInRepository.existsByMemberId(memberId);
+        if (b) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
