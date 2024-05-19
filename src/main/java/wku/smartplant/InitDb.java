@@ -110,7 +110,7 @@ public class InitDb {
             Achievement achievement2 = createAchievement("뽀빠이", "최고 레벨 달성",300);
             Achievement achievement3 = createAchievement("수다왕", "식물과 5번 이상 대화",5);
             Achievement achievement4 = createAchievement("선인장", "일정 습도 달성", 1);
-            Achievement achievement5 = createAchievement("마음의 벽", "일정 기간동안 미 출석 시",3);
+            Achievement achievement5 = createAchievement("개근상", "일주일 동안 빠지지않고 출석",3);
             Achievement achievement6 = createAchievement("소울메이트", "식물과 일정 애정도 이상 달성",360);
             em.persist(achievement1);
             em.persist(achievement2);
