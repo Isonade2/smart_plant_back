@@ -70,7 +70,7 @@ public class PlantController {
 
     @GetMapping("/{plantId}/water")
     @Operation(summary = "물 공급",
-            description = "해당 식물에 물을 공급함")
+            description = "해당 식물에 물을 공급함 (토큰 필요)")
     public ResponseEntity<ResponseDTO<Boolean>> changeWaterState(@PathVariable Long plantId) {
         Long currentMemberId = SecurityUtil.getCurrentMemberId();
         if (currentMemberId == 1L) {

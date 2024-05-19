@@ -83,7 +83,7 @@ public class MemberService {
         }
 
         //예외 처리 끝, 로직 시작
-        String accessToken = JwtTokenUtil.createAccessToken(findMember.getId().toString(), 3600000); // 1시간
+        String accessToken = JwtTokenUtil.createAccessToken(findMember.getId().toString(), 604800000); // 7일 (원래는 1시간)
         String refreshToken = JwtTokenUtil.createRefreshToken(findMember.getId().toString(), 604800000); // 7일
 
         refreshTokenService.saveRefreshToken(findMember.getId(), refreshToken);
