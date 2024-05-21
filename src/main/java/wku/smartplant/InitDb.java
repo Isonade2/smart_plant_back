@@ -54,7 +54,9 @@ public class InitDb {
 
             Member koalaMember = memberService.joinMember(MemberJoinRequest.builder().username("koala").email("koala@naver.com").password("a1234567").memberPlatform(MemberPlatform.GOOGLE).build());
             koalaMember.changeActivate(true);
-            Plant savedPlant = plantRepository.save(new Plant("알라의 상추", koalaMember, PlantType.상추));
+            Plant plant1 = new Plant("알라의 상추", koalaMember, PlantType.상추);
+            plant1.setUuid("5b44da51-62bb-4aa3-8502-4627d3a2354c");
+            Plant savedPlant = plantRepository.save(plant1);
             log.info("첫번째 식물 uuid : {}", savedPlant.getUuid());
             plantRepository.save(new Plant("알라의 대파", koalaMember, PlantType.대파));
             plantRepository.save(new Plant("알라의 양파", koalaMember, PlantType.양파));

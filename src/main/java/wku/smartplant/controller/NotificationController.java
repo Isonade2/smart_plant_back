@@ -38,6 +38,19 @@ public class NotificationController {
 
         return build("알림 목록 입니다.", OK, notifications);
     }
+    @GetMapping("/count")
+    @Operation(summary = "유저의 읽지 않은 알림 수 얻기",
+            description = "현재 로그인한 유저의 읽지 않은 알림 갯수 얻기 (토큰 필요)" ,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "알림 리스트 반환 성공"),
+            })
+    public ResponseEntity<ResponseDTO<Long>> getNotReadCount() {
+
+        Long currentMemberId = SecurityUtil.getCurrentMemberId();
+        long count = notificationService.getNotReadCountByMemberId(currentMemberId);
+
+        return build("읽지 않은 알림 갯수 입니다.", OK, count);
+    }
     @PatchMapping("/{notificationId}")
     @Operation(summary = "유저의 알림 읽음 처리",
             description = "PathVariable의 알림을 읽음 처리 해줌 (토큰 필요)" ,
