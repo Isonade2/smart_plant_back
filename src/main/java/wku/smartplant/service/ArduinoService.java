@@ -64,10 +64,14 @@ public class ArduinoService {
 
     private void createNotification(PlantHistoryDTO plantHistoryDTO, Plant findPlant) {
         if (plantHistoryDTO.getTemp() < 10)
-            notificationService.createNotification(findPlant.getMember().getId(), "식물의 온도가 낮습니다.","history", NotificationType.온도);
+            notificationService.createNotification(findPlant.getMember().getId(), "식물의 주변 온도가 낮습니다.","history", NotificationType.온도);
+        if (plantHistoryDTO.getTemp() > 25)
+            notificationService.createNotification(findPlant.getMember().getId(), "식물의 주변 온도가 높습니다.","history", NotificationType.온도);
         if (plantHistoryDTO.getSoilHumidity() < 300)
             notificationService.createNotification(findPlant.getMember().getId(), "식물의 토양습도가 낮습니다.","history", NotificationType.토양습도);
-        if (plantHistoryDTO.getRemainingWater() < 800)
+        if (plantHistoryDTO.getSoilHumidity() > 2000)
+            notificationService.createNotification(findPlant.getMember().getId(), "식물의 토양습도가 높습니다.","history", NotificationType.토양습도);
+        if (plantHistoryDTO.getRemainingWater() < 700)
             notificationService.createNotification(findPlant.getMember().getId(), "남은 물통의 물양이 부족합니다.","history", NotificationType.남은물);
     }
 

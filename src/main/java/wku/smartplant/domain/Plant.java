@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ public class Plant extends BaseTimeEntity {
     private String name;
     private Integer level;
     private Integer exp;
+    //테스트용
+    @Setter
     private String uuid;
     private Boolean giveWater;
     private Boolean activate;
@@ -70,5 +73,6 @@ public class Plant extends BaseTimeEntity {
         }
         return false; //레벨 업 x
     }
+
 
 }

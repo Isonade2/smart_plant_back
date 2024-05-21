@@ -64,4 +64,8 @@ public class NotificationService {
         List<Notification> notifications = notificationRepository.findAllByMemberIdOrderByCreatedDateDesc(memberId);
         return notifications.stream().map(NotificationDTO::new).toList();
     }
+
+    public long getNotReadCountByMemberId(Long memberId) {
+        return notificationRepository.countByMemberIdAndIsReadFalse(memberId);
+    }
 }
