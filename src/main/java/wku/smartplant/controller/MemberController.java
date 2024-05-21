@@ -186,7 +186,7 @@ public class MemberController {
             return build("출석체크가 되어있지 않습니다. 출석체크를 해주세요", PARTIAL_CONTENT);
         }
         else{
-            return build("이미 출석처리 되었습니다.", NOT_ACCEPTABLE);
+            return build("이미 출석처리 되었습니다.", PAYMENT_REQUIRED);
         }
     }
 
