@@ -2,12 +2,14 @@ package wku.smartplant.controller;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wku.smartplant.dto.ResponseDTO;
+import wku.smartplant.dto.ResponseEntityBuilder;
 import wku.smartplant.dto.achievement.AchievementResponseDTO;
 import wku.smartplant.jwt.SecurityUtil;
 import wku.smartplant.service.AchievementService;
@@ -26,17 +28,7 @@ public class AchievementController {
     @GetMapping("/achievement")
     public ResponseEntity<ResponseDTO<List<AchievementResponseDTO>>> getAchievement() {
         Long currentMemberId = SecurityUtil.getCurrentMemberId();
-        achievementService.getAchievement(currentMemberId);
-        return build(achievementList, OK);
+        List<AchievementResponseDTO> achievement = achievementService.getAchievement(currentMemberId);
+        return ResponseEntityBuilder.build("업적 조회 성공", HttpStatus.OK, achievement);
     }
-
-
-    @PostMapping("/achievement")
-    public ResponseEntity<ResponseDTO<?>> achievement(@RequestBody AchievementRequest achievementRequest) {
-        Member member = memberService.getMember(SecurityUtil.getCurrentMemberId());
-        achievementService.achievement(member.getId(), achievementRequest.getAchievementId());
-        return build("성공", OK);
-    }
-
-
 }
