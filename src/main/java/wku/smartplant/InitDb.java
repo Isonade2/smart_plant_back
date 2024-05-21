@@ -106,12 +106,12 @@ public class InitDb {
             em.persist(quest3);
             em.persist(quest4);
             em.persist(quest5);
-            Achievement achievement1 = createAchievement("물 뿌리개", "물 주기 기능 5번 이상 사용", 5);
-            Achievement achievement2 = createAchievement("뽀빠이", "최고 레벨 달성",300);
-            Achievement achievement3 = createAchievement("수다왕", "식물과 5번 이상 대화",5);
-            Achievement achievement4 = createAchievement("선인장", "일정 습도 달성", 1);
-            Achievement achievement5 = createAchievement("개근상", "일주일 동안 빠지지않고 출석",3);
-            Achievement achievement6 = createAchievement("소울메이트", "식물과 일정 애정도 이상 달성",360);
+            Achievement achievement1 = createAchievement("물 뿌리개", "물 주기 기능 5번 이상 사용", 5,"누적");
+            Achievement achievement2 = createAchievement("뽀빠이", "최고 레벨 달성",300, "달성");
+            Achievement achievement3 = createAchievement("수다왕", "식물과 5번 이상 대화",5,"누적");
+            Achievement achievement4 = createAchievement("선인장", "일정 습도 달성", 1,"달성");
+            Achievement achievement5 = createAchievement("개근상", "일주일 동안 빠지지않고 출석",3,"누적");
+            Achievement achievement6 = createAchievement("소울메이트", "식물과 일정 애정도 이상 달성",360,"달성");
             em.persist(achievement1);
             em.persist(achievement2);
             em.persist(achievement3);
@@ -159,11 +159,12 @@ public class InitDb {
                     .build();
         }
 
-        public static Achievement createAchievement(String title, String description, int goal) {
+        public static Achievement createAchievement(String title, String description, int goal,String type) {
             return Achievement.builder()
                     .title(title)
                     .description(description)
                     .goal(goal)
+                    .type(type)
                     .build();
         }
     }

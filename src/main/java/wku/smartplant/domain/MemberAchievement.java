@@ -36,4 +36,14 @@ public class MemberAchievement {
         this.isCompleted = isCompleted;
 
     }
+
+    public void updateProgress(String type, int progress) {
+        if (type.equals("누적"))
+            this.progress += progress;
+        else
+            this.progress = progress;
+        if (this.progress >= achievement.getGoal()) {
+            this.isCompleted = true;
+        }
+    }
 }

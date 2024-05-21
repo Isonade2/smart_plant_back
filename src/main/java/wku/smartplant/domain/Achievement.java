@@ -21,13 +21,15 @@ public class Achievement {
     private String title;
     private String description;
     private int goal;
+    private String type;
 
 
     @Builder
-    public Achievement(String title, String description, int goal) {
+    public Achievement(String title, String description, int goal,String type) {
         this.id = null;
         this.title = title;
         this.description = description;
         this.goal = goal;
+        this.type = type;
     }
 }

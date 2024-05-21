@@ -21,6 +21,7 @@ public class MemberCheckInService {
     private final MemberRepository memberRepository;
     private final MemberCheckInRepository memberCheckInRepository;
     private final QuestService questService;
+    private final AchievementService achievementService;
 
     public void checkIn(Long memberId) {
         log.info("checkIn memberId : {}", memberId);
@@ -35,6 +36,7 @@ public class MemberCheckInService {
 
         memberCheckInRepository.save(memberCheckIn);
         questService.updateQuestProgress(memberId, 1L);
+        achievementService.updateMemberAchievement(memberId, 5L, 1);
 
     }
     //매일 자정마다 초기화
