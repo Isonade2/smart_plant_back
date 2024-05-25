@@ -37,20 +37,22 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         System.out.println("token = " + token);
 
         // 토큰이 Access Token인지 확인
-        if (!JwtTokenUtil.isAccessToken(token)) {
-            filterChain.doFilter(request, response);
+        try {
+            if (!JwtTokenUtil.isAccessToken(token)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+        } catch (JwtTokenUtil.TokenValidationException e) {
+            errorResponse(response);
             return;
         }
 
         try {
             if (JwtTokenUtil.isExpired(token)) {
-                //throw new JwtTokenUtil.TokenValidationException("Token expired");
+                throw new JwtTokenUtil.TokenValidationException("Token expired");
             }
         } catch (JwtTokenUtil.TokenValidationException e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 코드 설정
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("{\"message\": \"" + "로그인 정보에 문제가 있습니다. 다시 로그인 해주세요." + "\"}");
+            errorResponse(response);
             return;
         }
 
@@ -66,5 +68,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(request, response);
 
+    }
+
+    //토큰 자체에 문제가 있을때 리턴
+    private void errorResponse(HttpServletResponse response) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 코드 설정
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("{\"message\": \"" + "로그인 정보에 문제가 있습니다. 다시 로그인 해주세요." + "\"}");
     }
 }
