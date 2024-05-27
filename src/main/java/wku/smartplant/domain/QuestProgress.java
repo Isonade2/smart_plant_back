@@ -61,6 +61,6 @@ public class QuestProgress {
     }
 
     public boolean isCanComplete(){
-        return progress >= quest.getGoal();
+        return progress == quest.getGoal();
     }
 }
