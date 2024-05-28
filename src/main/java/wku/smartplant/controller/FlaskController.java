@@ -46,6 +46,11 @@ public class FlaskController {
 
         achievementService.updateMemberAchievement(memberId, 3L, 1);
         return ResponseEntityBuilder.build("식물과 식물 기록 정보입니다.", OK, contents);
-
     }
+
+    @GetMapping("/quest")
+    public ResponseEntity<ResponseDTO<?>> uploadQuest(){
+        return ResponseEntityBuilder.build("사진 업로드 성공", OK);
+    }
+
 }
