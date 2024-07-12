@@ -4,6 +4,8 @@
 ## 서비스링크
 - https://www.namoo.store
 ## 상세설명
+![image](https://github.com/Isonade2/MoramMoram-back/assets/67320022/583b3e87-db11-4d05-9b26-70403d397f36)
+
 식물을 키우는 데에 도움을 얻을 수 있는 스마트 맞춤형 식물 관리 서비스 입니다.
 
 주요 기능
@@ -92,16 +94,104 @@
 ### 시작하기
 <table>
   <tr>
-    <td>
-      <a >
+    <th align="center">회원가입</th>
+    <th align="center">메일 인증</th>
+    <th align="center">로그인 & 로그아웃</th>
+  </tr>
+  <tr>
+    <th align="center">
+      <img src="https://github.com/user-attachments/assets/7e4503c7-f34d-4a5e-8a11-310985f65743" style="width: 300px; height: auto;">
     </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/5d965f3b-d373-4f47-9de3-5c8a3b587659" style="width: 300px; height: auto;">
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/33d42c17-df38-4435-8f23-48d21b038180" style="width: 300px; height: auto;">
+    </td>    
   </tr>
 </table>
 
 
-![image](https://github.com/Isonade2/MoramMoram-back/assets/67320022/fde3ced5-e6b1-4767-85f4-83590e403670)
-![image](https://github.com/Isonade2/MoramMoram-back/assets/67320022/011fb268-41c8-4bc3-92dd-c008f2ffb525)
-![image](https://github.com/Isonade2/MoramMoram-back/assets/67320022/583b3e87-db11-4d05-9b26-70403d397f36)
+
+### 식물 등록
+<img src="https://github.com/user-attachments/assets/5bde7c62-58cf-47a6-8601-50bdf79c1b6e" style="width: 300px; height: auto;">
+
+
+
+### 홈
+<table>
+    <tr>
+    <th align="center">식물 터치 이벤트</th>
+    <th align="center">알림</th>
+    <th align="center">퀘스트</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/59309cae-64cc-4820-ba62-e434a28cd35d" style="width: 300px; height: auto;">
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/baa5ab01-5ebb-43c3-b862-10d594418987" style="width: 300px; height: auto;">
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/187addb3-45dd-4a93-9013-e16fe1e5d4b2" style="width: 300px; height: auto;">
+    </td>    
+  </tr>
+</table>
+
+
+
+### 원격 수분 공급 기능
+<table>
+    <tr>
+    <th align="center">물주기 버튼 클릭 시</th>
+    <th align="center">원격 수분 공급</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/0b2de7a9-4041-4411-a2d2-66ec4f76d96e" style="width: 300px; height: auto;">
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/10169e1f-355c-440e-af8e-e8e762387a4b" style="width: 300px; height: auto;">
+    </td>  
+  </tr>
+</table>
+
+
+
+### 식물 히스토리
+<img width="814" alt="history" src="https://github.com/user-attachments/assets/89f98653-cebd-474c-a4f6-3aaf8126aa3b">
+
+
+
+### 식물 페이지
+<table>
+  <tr>
+    <th align="center">식물 프로필 & 출석 체크</th>
+    <th align="center">식물 도감</th>
+    <th align="center">도전 과제</th>
+  </tr>
+  <tr>
+    <th align="center">
+      <img src="https://github.com/user-attachments/assets/df1759c8-b79a-4568-b50b-2f0bdec409f2" style="width: 300px; height: auto;">
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/fd42d2f7-19f4-4c33-a3ca-8701a1821c84" style="width: 300px; height: auto;">
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/e9a688c8-1989-42f3-acaf-45385a14ac4c" style="width: 300px; height: auto;">
+    </td>    
+  </tr>
+</table>
+
+### AI
+- 질병 감지
+
+![ai_resnet](https://github.com/user-attachments/assets/6a02e8eb-8d46-40f3-b95e-d0494fbbc1aa)
+
+- 챗봇
+  
+![ai_lang](https://github.com/user-attachments/assets/0b58db27-cd01-414d-8608-0231017d561b)
+
 
 
 
