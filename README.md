@@ -111,12 +111,14 @@
   </tr>
 </table>
 
-
+<br>
+<br>
 
 ### 식물 등록
 <img src="https://github.com/user-attachments/assets/5bde7c62-58cf-47a6-8601-50bdf79c1b6e" style="width: 300px; height: auto;">
 
-
+<br>
+<br>
 
 ### 홈
 <table>
@@ -138,7 +140,8 @@
   </tr>
 </table>
 
-
+<br>
+<br>
 
 ### 원격 수분 공급 기능
 <table>
@@ -151,17 +154,19 @@
       <img src="https://github.com/user-attachments/assets/0b2de7a9-4041-4411-a2d2-66ec4f76d96e" style="width: 300px; height: auto;">
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/10169e1f-355c-440e-af8e-e8e762387a4b" style="width: 300px; height: auto;">
+      <img src="src/asset/waterplant.gif" style="width: 300px; height: auto;">
     </td>  
   </tr>
 </table>
 
-
+<br>
+<br>
 
 ### 식물 히스토리
 <img width="814" alt="history" src="https://github.com/user-attachments/assets/89f98653-cebd-474c-a4f6-3aaf8126aa3b">
 
-
+<br>
+<br>
 
 ### 식물 페이지
 <table>
@@ -182,6 +187,9 @@
     </td>    
   </tr>
 </table>
+
+<br>
+<br>
 
 ### AI
 - 질병 감지
